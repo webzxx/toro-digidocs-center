@@ -22,16 +22,16 @@ model User {
   updateUt  DateTime @updatedAt
 }
 
+// schema.prisma
 model Certificate {
   id         Int      @id @default(autoincrement())
   precinct   String
   firstname  String
   middlename String
   lastname   String
-  email      String
-  birthdate  DateTime // Assuming birthdate should be stored as DateTime for better handling
+  email      String   @unique
+  birthdate  DateTime
   contact    String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
