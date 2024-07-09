@@ -1,6 +1,10 @@
+// api/certificate/route.ts
+
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/lib/db'; // Adjust import based on your path
-import { CertificateFormData } from '@/types/types'; // Adjust import based on your types setup
+import { createCertificate } from '@/lib/certificate';
+import { CertificateFormData } from '@/types/types';
+import { db } from '@/lib/db'; // Ensure db import is correct
+
 import * as z from 'zod';
 
 // Define a schema for input validation
@@ -14,7 +18,6 @@ const certificateSchema = z.object({
   contact: z.string().min(1, 'Contact is required').regex(/^\d+$/, 'Contact must be a valid number')
 });
 
-// Named export for POST method
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const body = req.body as CertificateFormData;
@@ -31,18 +34,8 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       return res.status(409).json({ user: null, message: 'User with this email already exists' });
     }
 
-    // Create a new certificate entry in the database
-    const newCertificate = await db.certificate.create({
-      data: {
-        precinct: validatedData.precinct,
-        firstname: validatedData.firstname,
-        middlename: validatedData.middlename,
-        lastname: validatedData.lastname,
-        email: validatedData.email,
-        birthdate: new Date(validatedData.birthdate), // Ensure birthdate is properly formatted
-        contact: validatedData.contact
-      }
-    });
+    // Create a new certificate entry using the createCertificate function
+    const newCertificate = await createCertificate(validatedData);
 
     // Return success response
     return res.status(201).json({ certificate: newCertificate, message: 'Certificate created successfully' });
@@ -58,11 +51,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-// Named export for other methods if needed
+
 export async function GET(req: NextApiRequest, res: NextApiResponse) {
   return res.status(405).json({ message: `Method ${req.method} not allowed. Use POST instead.` });
 }
-
-// Export other methods like PUT, DELETE similarly if needed
-// export async function PUT(req: NextApiRequest, res: NextApiResponse) { ... }
-// export async function DELETE(req: NextApiRequest, res: NextApiResponse) { ... }

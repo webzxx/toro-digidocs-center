@@ -21,7 +21,7 @@ export default function Services() {
           <h1 className="text-4xl text-green-primary font-semibold">Request Certificates</h1>
         </div>
         <div className="bg-white rounded-lg shadow-lg border border-stone-300 m-4 p-8 h-[80rem]">
-          <div className="text-center">
+          {/* <div className="text-center">
             <div className="p-10 flex flex-col items-center justify-center">
               <div className="flex container">
                 <div className="flex justify-center items-center">
@@ -55,7 +55,7 @@ export default function Services() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="flex flex-col justify-center items-center">
             <Link href="/" className={buttonVariants()}>Click for existing profile</Link>
             <h1 className="p-6">Please make sure to provide your correct Contact Number and Email Address</h1>

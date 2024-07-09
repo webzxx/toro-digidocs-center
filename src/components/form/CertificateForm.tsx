@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
+import { DatePicker } from "../DatePicker"; // Ensure this is correctly imported
 
 const FormSchema = z.object({
     precinct: z.string().min(1, 'Precinct is required'),
@@ -33,6 +34,7 @@ const CertificateForm = () => {
       });
 
       const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+        console.log("Form values on submit:", values); // Add this line to log values
         try {
           const response = await fetch('/api/certificate', {
             method: 'POST',
@@ -54,6 +56,7 @@ const CertificateForm = () => {
             variant: "success"
           });
         } catch (error) {
+          console.error('Error submitting form:', error); // Log detailed error message
           toast({
             title: "Error",
             description: error.message || "Oops! Something went wrong!",
@@ -61,12 +64,13 @@ const CertificateForm = () => {
           });
         }
       };
+    
       
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-2">
+        <div className="space-y-4">
           <FormField
             control={form.control}
             name="precinct"
@@ -137,9 +141,14 @@ const CertificateForm = () => {
             name="birthdate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Birthdate</FormLabel>
+                <FormLabel>Date of Birth</FormLabel>
                 <FormControl>
-                  <Input placeholder="YYYY-MM-DD" {...field} />
+                  <div>
+                    <DatePicker 
+                      selected={field.value ? new Date(field.value) : null}
+                      onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -161,7 +170,6 @@ const CertificateForm = () => {
         </div>
         <Button className="w-full mt-6" type="submit">Submit</Button>
       </form>
-      
     </Form>
   )
 }
