@@ -8,20 +8,22 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { toast } from "../ui/use-toast";
 import { DatePicker } from "../DatePicker"; // Ensure this is correctly imported
+import { CertificateSchema, CertificateInput } from "@/types/types";
+import { createCertificate } from "@/app/api/certificate/actions";
 
-const FormSchema = z.object({
-    precinct: z.string().min(1, 'Precinct is required'),
-    firstname: z.string().min(1, 'Firstname is required'),
-    middlename: z.string().min(1, 'Middlename is required'),
-    lastname: z.string().min(1, 'Lastname is required'),
-    email: z.string().min(1, 'Email is required').email('Invalid email'),
-    birthdate: z.string().min(1, 'Birthdate is required').regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (YYYY-MM-DD)'),
-    contact: z.string().min(1, 'Contact is required').regex(/^\d+$/, 'Contact must be a valid number')
-  });
+type FormFieldKey =
+  | "precinct"
+  | "firstname"
+  | "middlename"
+  | "lastname"
+  | "email"
+  | "birthdate"
+  | "contact"
+
 
 const CertificateForm = () => {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+    const form = useForm<CertificateInput>({
+        resolver: zodResolver(CertificateSchema),
         defaultValues: {
           precinct: '',
           firstname: '',
@@ -33,36 +35,64 @@ const CertificateForm = () => {
       },
       });
 
-      const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+      const onSubmit = async (values: CertificateInput) => {
         console.log("Form values on submit:", values); // Add this line to log values
-        try {
-          const response = await fetch('/api/certificate', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-          });
-      
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+
+        createCertificate(values).then((res)=>{
+          if (res?.fieldError) {
+             // fieldError: { email: "Invalid email "}
+            Object.entries(res.fieldError).forEach(([field, message]) => {
+              form.setError(field as FormFieldKey, {
+                type: "manual",
+                message,
+              });
+            });
           }
+
+          if (res?.serverError) {
+            toast({
+                title: "Error",
+                description: res.serverError || "Oops! Something went wrong!",
+                variant: "destructive"
+              });
+          }
+          
+          if (res?.success){
+            toast({
+              title: "Success",
+              description: "Certificate has been created successfully!",
+              variant: "default"
+            });
+          }
+        })
+        // try {
+        //   const response = await fetch('/api/certificate', {
+        //     method: 'POST',
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(values)
+        //   });
       
-          const result = await response.json();
+        //   if (!response.ok) {
+        //     throw new Error('Network response was not ok');
+        //   }
       
-          toast({
-            title: "Success",
-            description: "Certificate has been created successfully!",
-            variant: "success"
-          });
-        } catch (error) {
-          console.error('Error submitting form:', error); // Log detailed error message
-          toast({
-            title: "Error",
-            description: error.message || "Oops! Something went wrong!",
-            variant: "destructive"
-          });
-        }
+        //   const result = await response.json();
+      
+        //   toast({
+        //     title: "Success",
+        //     description: "Certificate has been created successfully!",
+        //     variant: "success"
+        //   });
+        // } catch (error) {
+        //   console.error('Error submitting form:', error); // Log detailed error message
+        //   toast({
+        //     title: "Error",
+        //     description: error.message || "Oops! Something went wrong!",
+        //     variant: "destructive"
+        //   });
+        // }
       };
     
       
