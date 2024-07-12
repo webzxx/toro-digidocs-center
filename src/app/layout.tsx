@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar'
 import Footer from "@/components/Footer";
 import Provider from "@/components/Provider";
 import { Toaster } from "@/components/ui/toaster";
+import Chat from "@/components/Chat";
+import Providers from "@/components/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,14 +22,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <Provider>
       <body className="min-h-screen bg-slate-50 antialiased">
-        <Provider>
+        <Chat />
         <Navbar />
         {children}
         <Toaster />
         <Footer />
-        </Provider>
       </body>
+      </Provider>
     </html>
   );
 }

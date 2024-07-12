@@ -53,7 +53,7 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         beige: {
-          primary: "#eae1d5",
+          primary: "#151c2c",
           medium: "#f1eee1",
           light: "#fffff0",
         },
@@ -84,7 +84,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config
+  plugins: [require('@tailwindcss/forms')],
+} 
 
 export default config

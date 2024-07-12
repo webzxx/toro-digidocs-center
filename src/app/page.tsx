@@ -304,9 +304,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <Link href="/pages/chat"><HelpWidget /></Link>
-      
       
     </main>
   );
