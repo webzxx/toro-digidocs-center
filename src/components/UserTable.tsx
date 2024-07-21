@@ -28,6 +28,16 @@ import {
   }
   
   export default function UserTable({ users, onReload }: UserTableProps) {
+    const formatDate = (date: Date) => {
+      return new Date(date).toLocaleString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      });
+    };
+
     return (
       <Card>
         <CardHeader className="px-7">
@@ -94,10 +104,10 @@ import {
                       </TooltipProvider>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {user.createdAt.toString()}
+                      {formatDate(user.createdAt)}
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {user.updateUt.toString()}
+                      {formatDate(user.updateUt)}
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
                       {user.role !== UserRole.ADMIN && (
