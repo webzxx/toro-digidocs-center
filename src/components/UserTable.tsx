@@ -113,9 +113,7 @@ import {
                       {formatDate(user.updateUt)}
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {user.role !== UserRole.ADMIN && (
-                        <UserActions userId={user.id.toString()} username={user.username} email={user.email} onReload={onReload} />
-                      )}
+                      <UserActions userId={user.id.toString()} username={user.username} email={user.email} role={user.role} onReload={onReload} />
                     </TableCell>
                   </TableRow>
                 ))
