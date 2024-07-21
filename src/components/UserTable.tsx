@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
     Card,
     CardContent,
@@ -86,7 +87,9 @@ import {
                       )}
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {user.role}
+                      <Badge className="text-xs" variant="secondary">
+                        {user.role}
+                      </Badge>
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
                        {/* Tooltip provides full password, shows only first 5 */}
