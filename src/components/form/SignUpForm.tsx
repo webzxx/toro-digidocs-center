@@ -95,12 +95,12 @@ const SignUpForm = () => {
           />
           <FormField
             control={form.control}
-            name="confirmPassword"
+            name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Re-enter your password</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Re-enter your password" type="password" {...field} />
+                  <Input placeholder="enter your password" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -108,12 +108,12 @@ const SignUpForm = () => {
           />
           <FormField
             control={form.control}
-            name="password"
+            name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Re-enter your password</FormLabel>
                 <FormControl>
-                  <Input placeholder="enter your password" type="password" {...field} />
+                  <Input placeholder="Re-enter your password" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
