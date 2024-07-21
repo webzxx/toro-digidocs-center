@@ -2,8 +2,7 @@ import { ReactNode } from "react"
 import DashboardSideBar from "./(components)/DashboardSideBar"
 // import DashboardTopNav from "./_components/dashbord-top-nav"
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
-
+export default function DashboardLayout({ children }: { children: ReactNode }) {  
   return (
     <div className="container grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <DashboardSideBar />
