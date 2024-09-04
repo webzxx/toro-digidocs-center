@@ -63,12 +63,12 @@ const Navbar = async () => {
               <div className="mx-16">
                 <Link href="/pages/services">Services</Link>
               </div>
-              <div className="mx-16">
+              {/* <div className="mx-16">
                 <Link href="/pages/news">News</Link>
-              </div>
-              <div className="mx-16">
+              </div> */}
+              {/* <div className="mx-16">
                 <Link href="/pages/faq">FAQ</Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
