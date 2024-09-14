@@ -10,6 +10,7 @@ import { toast } from "../ui/use-toast";
 import { DatePicker } from "../DatePicker"; // Ensure this is correctly imported
 import { CertificateSchema, CertificateInput } from "@/types/types";
 import { createCertificate } from "@/app/api/certificate/actions";
+import { House, Scroll, User, ScanFace } from "lucide-react"
 
 import {
   Step,
@@ -28,17 +29,17 @@ type FormFieldKey =
   | "contact"
 
 const steps = [
-  { label: "Personal" },
-  { label: "Address" },
-  { label: "Important Information" },
-  { label: "Proof of Identity" },
+  { label: "Step 1", description: "Personal Info", icon: User },
+  { label: "Step 2", description: "Address", icon: House },
+  { label: "Step 3", description: "Important Information", icon: Scroll },
+  { label: "Step 4", description: "Proof of Identity", icon: ScanFace },
 ] satisfies StepItem[]
 
 
 function StepperDemo() {
   return (
     <div className="flex w-full flex-col gap-4">
-      <Stepper initialStep={0} steps={steps}>
+      <Stepper initialStep={0} steps={steps} >
         {steps.map((stepProps, index) => {
           return (
             <Step key={stepProps.label} {...stepProps}>
