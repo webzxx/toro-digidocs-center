@@ -39,7 +39,7 @@ const steps = [
 function StepperDemo() {
   return (
     <div className="flex w-full flex-col gap-4">
-      <Stepper initialStep={0} steps={steps} >
+      <Stepper initialStep={0} steps={steps} variant="circle-alt">
         {steps.map((stepProps, index) => {
           return (
             <Step key={stepProps.label} {...stepProps}>
@@ -85,7 +85,7 @@ const Footer = () => {
               size="sm"
               variant="secondary"
             >
-              Prev
+              Back
             </Button>
             <Button size="sm" onClick={nextStep}>
               {isLastStep ? "Finish" : isOptionalStep ? "Skip" : "Next"}
