@@ -18,19 +18,130 @@ enum UserRole {
   USER
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  username String @unique
-  password String
-
-  role UserRole @default(USER)
-
-  createdAt DateTime @default(now())
-  updateUt  DateTime @updatedAt
+enum Gender {
+  MALE
+  FEMALE
+  LGBTQ
 }
 
-// schema.prisma
+enum Religion {
+  CATHOLIC
+  IGLESIA_NI_CRISTO
+  AGLIPAY
+  BAPTIST
+  DATING_DAAN
+  ISLAM
+  JEHOVAHS_WITNESSES
+  OTHERS
+}
+
+enum Sector {
+  SOLO_PARENT
+  PWD
+  SENIOR_CITIZEN
+  INDIGENT_INDIGENOUS_PEOPLE
+}
+
+enum ResidencyType {
+  HOME_OWNER
+  TENANT
+  HELPER
+  CONSTRUCTION_WORKER
+}
+
+enum CertificateType {
+  BARANGAY_CLEARANCE
+  BARANGAY_ID
+  SOLO_PARENT
+  COHABITATION
+  GOOD_MORAL
+  NO_INCOME
+  FIRST_TIME_JOB_SEEKER
+  RESIDENCY
+  TRANSFER_OF_RESIDENCY
+  LIVING_STILL
+  BIRTH_FACT
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resident {
+  id             Int       @id @default(autoincrement())
+  precinctNumber String?
+  firstName      String
+  middleName     String?
+  lastName       String
+  gender         Gender
+  birthDate      DateTime
+  email          String?   @unique
+  contact        String
+  religion       Religion?
+  status         String
+  sector         Sector?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  emergencyContact    EmergencyContact?
+  address             Address?
+  certificateRequests CertificateRequest[]
+  proofOfIdentity     ProofOfIdentity?
+}
+
+model EmergencyContact {
+  id           Int      @id @default(autoincrement())
+  residentId   Int      @unique
+  name         String
+  relationship String
+  contact      String
+  address      String
+  resident     Resident @relation(fields: [residentId], references: [id])
+}
+
+model Address {
+  id              Int           @id @default(autoincrement())
+  residentId      Int           @unique
+  residencyType   ResidencyType
+  yearsInMolinoIV Int
+  blockLot        String?
+  phase           String?
+  street          String
+  subdivision     String
+  barangay        String        @default("Molino IV")
+  city            String        @default("Bacoor")
+  province        String        @default("Cavite")
+  resident        Resident      @relation(fields: [residentId], references: [id])
+}
+
+model CertificateRequest {
+  id              Int             @id @default(autoincrement())
+  residentId      Int
+  certificateType CertificateType
+  purpose         String
+  additionalInfo  Json?
+  requestDate     DateTime        @default(now())
+  resident        Resident        @relation(fields: [residentId], references: [id])
+}
+
+model ProofOfIdentity {
+  id                  Int      @id @default(autoincrement())
+  residentId          Int      @unique
+  signaturePath       String
+  idPhoto1Path        String
+  idPhoto2Path        String
+  holdingIdPhoto1Path String
+  holdingIdPhoto2Path String
+  resident            Resident @relation(fields: [residentId], references: [id])
+}
+
+// Keeping the existing Certificate model for backwards compatibility
 model Certificate {
   id         Int      @id @default(autoincrement())
   precinct   String
