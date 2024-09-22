@@ -24,6 +24,16 @@ enum Gender {
   LGBTQ
 }
 
+enum CivilStatus {
+  SINGLE
+  MARRIED
+  WIDOW
+  LEGALLY_SEPARATED
+  LIVING_IN
+  SEPARATED
+  DIVORCED
+}
+
 enum Religion {
   CATHOLIC
   IGLESIA_NI_CRISTO
@@ -74,20 +84,20 @@ model User {
 }
 
 model Resident {
-  id             Int       @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   precinctNumber String?
   firstName      String
   middleName     String?
   lastName       String
   gender         Gender
   birthDate      DateTime
-  email          String?   @unique
+  email          String?     @unique
   contact        String
   religion       Religion?
-  status         String
+  status         CivilStatus
   sector         Sector?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
   emergencyContact    EmergencyContact?
   address             Address?
