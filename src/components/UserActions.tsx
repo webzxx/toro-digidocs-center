@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { Delete, Edit } from "lucide-react";
 import React, { useState } from "react";
 
@@ -28,11 +28,17 @@ interface UserActionsProps {
   userId: string;
   username: string;
   email: string;
-  role: string
+  role: string;
   onReload: () => void;
 }
 
-export default function UserActions({ userId, username, email, role, onReload }: UserActionsProps) {
+export default function UserActions({
+  userId,
+  username,
+  email,
+  role,
+  onReload,
+}: UserActionsProps) {
   const [editUserId, setEditUserId] = useState<string>("");
   const [deleteUserId, setDeleteUserId] = useState<string>("");
   const [editedUsername, setEditedUsername] = useState<string>(username);
@@ -48,27 +54,32 @@ export default function UserActions({ userId, username, email, role, onReload }:
   };
 
   const handleEditedUsernameChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setEditedUsername(e.target.value);
   };
 
   const handleEditedRoleChange = (selected: string) => {
     setEditedRole(selected);
-  }
+  };
 
   const handleDeleteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeleteUserId(e.target.value);
   };
 
   const handleEditUser = () => {
-    if (username === editedUsername && email === editedEmail && role === editedRole) return;
+    if (
+      username === editedUsername &&
+      email === editedEmail &&
+      role === editedRole
+    )
+      return;
     const id = parseInt(userId);
     const updatedData = {
       username: editedUsername,
       email: editedEmail,
       role: editedRole,
-    }
+    };
     updateUser(id, updatedData);
     onReload();
   };
@@ -91,9 +102,7 @@ export default function UserActions({ userId, username, email, role, onReload }:
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <h2>{username}</h2>
-            <DialogDescription>
-              Update user <b>{userId}</b> information
-            </DialogDescription>
+            <DialogDescription>Update user information</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -122,7 +131,11 @@ export default function UserActions({ userId, username, email, role, onReload }:
               <Label htmlFor="role" className="text-right">
                 Role
               </Label>
-              <Select onValueChange={handleEditedRoleChange} defaultValue={role}>                <SelectTrigger className="w-[180px]" id="role">
+              <Select
+                onValueChange={handleEditedRoleChange}
+                defaultValue={role}
+              >
+                <SelectTrigger className="w-[180px]" id="role">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -131,33 +144,17 @@ export default function UserActions({ userId, username, email, role, onReload }:
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="userId" className="text-right">
-                Confirm user ID
-              </Label>
-              <Input
-                id="userId"
-                value={editUserId}
-                placeholder="Type user ID to confirm"
-                className="col-span-3"
-                onChange={handleEditChange}
-              />
-            </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button
-                type="submit"
-                disabled={editUserId !== userId}
-                onClick={handleEditUser}
-              >
+              <Button type="submit" onClick={handleEditUser}>
                 Save changes
               </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      { role !== "ADMIN" && (
+      {role !== "ADMIN" && (
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="destructive" size="icon">
