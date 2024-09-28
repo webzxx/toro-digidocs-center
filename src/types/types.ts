@@ -42,44 +42,50 @@ const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   middleName: z.string().optional(),
   lastName: z.string().min(1, "Last name is required"),
-  gender: z.enum(["Male", "Female", "LGBTQ+"]),
+  gender: z.enum(["MALE", "FEMALE", "LGBTQ"]),
   birthDate: dateSchema("Invalid birth date"),
   email: z.string().email().optional(),
-  contact: z.string().min(1, "Contact is required"),
+  contact: z
+    .string()
+    .min(1, "Contact is required")
+    .regex(/^\d+$/, "Contact must be a valid number"),
   religion: z
     .enum([
-      "Catholic",
-      "Iglesia ni Cristo",
-      "Aglipay",
-      "Baptist",
-      "Dating Daan",
-      "Islam",
-      "Jehovah's Witnesses",
-      "Others",
+      "CATHOLIC",
+      "IGLESIA_NI_CRISTO",
+      "AGLIPAY",
+      "BAPTIST",
+      "DATING_DAAN",
+      "ISLAM",
+      "JEHOVAHS_WITNESSES",
+      "OTHERS",
     ])
     .optional(),
   status: z.enum([
-    "Single",
-    "Married",
-    "Widowed",
-    "Legally Separated",
-    "LIVING-IN",
+    "SINGLE",
+    "MARRIED",
+    "WIDOW",
+    "LEGALLY_SEPARATED",
+    "LIVING_IN",
     "SEPARATED",
     "DIVORCED",
   ]),
   sector: z
     .enum([
-      "Solo Parent",
+      "SOLO_PARENT",
       "PWD",
-      "Senior Citizen",
-      "Indigent Indigenous People",
+      "SENIOR_CITIZEN",
+      "INDIGENT_INDIGENOUS_PEOPLE",
     ])
     .optional(),
   emergencyContactName: z.string().min(1, "Emergency contact name is required"),
   emergencyRelationship: z
     .string()
     .min(1, "Emergency relationship is required"),
-  emergencyContact: z.string().min(1, "Emergency contact is required"),
+  emergencyContact: z
+    .string()
+    .min(1, "Emergency contact is required")
+    .regex(/^\d+$/, "Emergency Contact must be a valid number"),
   emergencyContactAddress: z
     .string()
     .min(1, "Emergency contact address is required"),
@@ -87,11 +93,13 @@ const personalInfoSchema = z.object({
 
 // Step 2: Address
 const addressSchema = z.object({
-  residency: z.enum(["Home owner", "Tenant", "Helper", "Construction Worker"]),
-  yearsInMolinoIV: z.number().int().positive(),
+  residency: z.enum(["HOME_OWNER", "TENANT", "HELPER", "CONSTRUCTION_WORKER"], {
+    required_error: "Residency is required",
+  }),
+  yearsInMolinoIV: z.number().int().nonnegative().optional(),
   blockLot: z.string().optional(),
   phase: z.string().optional(),
-  street: z.string().min(1, "Street is required"),
+  street: z.string().min(1),
   subdivision: z.string().min(1, "Subdivision is required"),
   barangay: z.literal("Molino IV"),
   city: z.literal("Bacoor"),
@@ -102,31 +110,31 @@ const addressSchema = z.object({
 const importantInfoSchema = z
   .object({
     certificateType: z.enum([
-      "Barangay Clearance",
-      "Barangay ID",
-      "Solo Parent",
-      "Cohabitation",
-      "Good Moral",
-      "No Income",
-      "First Time Job Seeker",
-      "Residency",
-      "Transfer of Residency",
-      "Living Still",
-      "Birth Fact",
+      "BARANGAY_CLEARANCE",
+      "BARANGAY_ID",
+      "SOLO_PARENT",
+      "COHABITATION",
+      "GOOD_MORAL",
+      "NO_INCOME",
+      "FIRST_TIME_JOB_SEEKER",
+      "RESIDENCY",
+      "TRANSFER_OF_RESIDENCY",
+      "LIVING_STILL",
+      "BIRTH_FACT",
     ]),
     purpose: z.string().min(1, "Purpose is required"),
   })
   .and(
     z.discriminatedUnion("certificateType", [
       z.object({
-        certificateType: z.enum(["Barangay Clearance", "Barangay ID"]),
+        certificateType: z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"]),
       }),
       z.object({
-        certificateType: z.literal("Good Moral"),
+        certificateType: z.literal("GOOD_MORAL"),
         requestOf: z.string().min(1, "Request of is required"),
       }),
       z.object({
-        certificateType: z.literal("Solo Parent"),
+        certificateType: z.literal("SOLO_PARENT"),
         childName: z.string().min(1, "Child name is required"),
         soloParentSince: dateSchema("Invalid solo parent since date"),
         presentedBy: z.string().min(1, "Presented by is required"),
@@ -134,7 +142,7 @@ const importantInfoSchema = z
         requestOf: z.string().min(1, "Request of is required"),
       }),
       z.object({
-        certificateType: z.literal("Cohabitation"),
+        certificateType: z.literal("COHABITATION"),
         birthAddress: z.string().min(1, "Birth address is required"),
         spouseName: z.string().min(1, "Spouse name is required"),
         spouseBirthAddress: z
@@ -144,32 +152,32 @@ const importantInfoSchema = z
         requestOf: z.string().min(1, "Request of is required"),
       }),
       z.object({
-        certificateType: z.literal("No Income"),
+        certificateType: z.literal("NO_INCOME"),
         noIncomeSince: dateSchema("Invalid no income since date"),
         requestOf: z.string().min(1, "Request of is required"),
       }),
       z.object({
-        certificateType: z.literal("First Time Job Seeker"),
+        certificateType: z.literal("FIRST_TIME_JOB_SEEKER"),
         dateOfResidency: dateSchema("Invalid date of residency"),
       }),
       z.object({
-        certificateType: z.literal("Residency"),
+        certificateType: z.literal("RESIDENCY"),
         birthAddress: z.string().min(1, "Birth address is required"),
         dateOfResidency: dateSchema("Invalid date of residency"),
         requestOf: z.string().min(1, "Request of is required"),
       }),
       z.object({
-        certificateType: z.literal("Transfer of Residency"),
+        certificateType: z.literal("TRANSFER_OF_RESIDENCY"),
         newAddress: z.string().min(1, "New address is required"),
         requestOf: z.string().min(1, "Request of is required"),
       }),
       z.object({
-        certificateType: z.literal("Living Still"),
+        certificateType: z.literal("LIVING_STILL"),
         dateOfTabloid: dateSchema("Invalid date of tabloid"),
         requestOf: z.string().min(1, "Request of is required"),
       }),
       z.object({
-        certificateType: z.literal("Birth Fact"),
+        certificateType: z.literal("BIRTH_FACT"),
         dateBorn: dateSchema("Invalid date born"),
         childName: z.string().min(1, "Child name is required"),
         birthAddress: z.string().min(1, "Birth address is required"),
