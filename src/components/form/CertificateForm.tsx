@@ -9,7 +9,9 @@ import {
   Stepper,
   useStepper,
 } from "@/components/ui/stepper"
-import PersonalInfoForm from "./PersonalInfoForm";
+import PersonalInfoForm, { PersonalInfoFormProps } from "./PersonalInfoForm";
+import AddressForm from "./AddressForm";
+import { useState } from "react";
 
 const steps = [
   { label: "Step 1", description: "Personal Info", icon: User },
@@ -20,6 +22,40 @@ const steps = [
 
 
 export default function CertificateForm() {
+  const [formData, setFormData] = useState({
+    personalInfo: {
+      precinctNumber: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      gender: undefined,
+      birthDate: "",
+      email: "",
+      contact: "",
+      religion: undefined,
+      status: undefined,
+      sector: undefined,
+      emergencyContactName: "",
+      emergencyRelationship: "",
+      emergencyContact: "",
+      emergencyContactAddress: "",
+    },
+    address: {},
+    importantInfo: {},
+    proofOfIdentity: {},
+  });
+
+  const handleChange = (section: string, field: string, value: string) => {
+    setFormData({
+      ...formData,
+      [section]: {
+        ...formData[section as keyof typeof formData],
+        [field]: value,
+      },
+    });
+  };
+
+
   return (
     <div className="flex w-full flex-col gap-4">
       <Stepper initialStep={0} steps={steps} variant="circle-alt">
@@ -27,7 +63,10 @@ export default function CertificateForm() {
           if(index === 0) {
             return (
               <Step key={stepProps.label} {...stepProps}>
-                <PersonalInfoForm />
+                <PersonalInfoForm
+                  data={formData.personalInfo}
+                  onChange={handleChange}
+                />
               </Step>
             )
           }
@@ -54,13 +93,6 @@ export default function CertificateForm() {
         <Footer />
       </Stepper>
     </div>
-  )
-}
-
-function AddressForm() {
-  return (
-    <>
-    </>
   )
 }
 

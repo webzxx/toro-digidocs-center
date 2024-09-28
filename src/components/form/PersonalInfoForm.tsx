@@ -15,28 +15,50 @@ import {
   useStepper,
 } from "@/components/ui/stepper"
 import { StepperFormActions } from "./StepperFormActions";
+import { CivilStatus, Gender, Religion, Sector } from "@prisma/client";
 
-export default function PersonalInfoForm(){
+export interface PersonalInfoFormProps {
+  data: {
+    precinctNumber: string;
+    firstName: string;
+    middleName: string;
+    lastName: string;
+    gender: Gender | undefined;
+    birthDate: string;
+    email: string;
+    contact: string;
+    religion: Religion | undefined;
+    status: CivilStatus | undefined;
+    sector: Sector | undefined;
+    emergencyContactName: string;
+    emergencyRelationship: string;
+    emergencyContact: string;
+    emergencyContactAddress: string;
+  };
+  onChange: (section: string, field: string, value: string) => void;
+}
+
+const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) => {
   const { nextStep } = useStepper();
 
   const form = useForm<PersonalInfoInput>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      precinctNumber: '',
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      gender: undefined,
-      birthDate: '',
-      email: '',
-      contact: '',
-      religion: undefined,
-      status: undefined,
-      sector: undefined,
-      emergencyContactName: '',
-      emergencyRelationship: '',
-      emergencyContact: '',
-      emergencyContactAddress: '',
+      precinctNumber: data.precinctNumber || '',
+      firstName: data.firstName || '',
+      middleName: data.middleName || '',
+      lastName: data.lastName || '',
+      gender: data.gender || undefined,
+      birthDate: data.birthDate || '',
+      email: data.email || '',
+      contact: data.contact || '',
+      religion: data.religion || undefined,
+      status: data.status || undefined,
+      sector: data.sector || undefined,
+      emergencyContactName: data.emergencyContactName || '',
+      emergencyRelationship: data.emergencyRelationship || '',
+      emergencyContact: data.emergencyContact || '',
+      emergencyContactAddress: data.emergencyContactAddress || '',
     },
   });
 
@@ -84,7 +106,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Precinct # (optional)</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,7 +119,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>First Name*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -110,7 +132,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Middle Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -123,7 +145,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Last Name*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -137,13 +159,13 @@ export default function PersonalInfoForm(){
               <FormLabel>Gender*</FormLabel>
               <FormControl>
                 <RadioGroup
-                  onValueChange={field.onChange}
+                  onValueChange={value => {onChange('personalInfo', field.name, value); field.onChange(value)}}
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value="Male" />
+                      <RadioGroupItem value="MALE" />
                     </FormControl>
                     <FormLabel className="font-normal">
                       Male
@@ -151,7 +173,7 @@ export default function PersonalInfoForm(){
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value="Female" />
+                      <RadioGroupItem value="FEMALE" />
                     </FormControl>
                     <FormLabel className="font-normal">
                       Female
@@ -159,7 +181,7 @@ export default function PersonalInfoForm(){
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
-                      <RadioGroupItem value="LGBTQ+" />
+                      <RadioGroupItem value="LGBTQ" />
                     </FormControl>
                     <FormLabel className="font-normal">
                       LGBTQ+
@@ -179,9 +201,9 @@ export default function PersonalInfoForm(){
               <FormLabel>Birth Date*</FormLabel>
               <FormControl>
                 <div>
-                  <DatePicker 
+                  <DatePicker
                     value={field.value ? new Date(field.value) : null}
-                    onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
+                    onChange={(date) => {onChange('personalInfo', field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
                   />
                 </div>
               </FormControl>
@@ -196,7 +218,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" {...field} />
+                <Input type="email" {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -209,7 +231,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Contact*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -221,21 +243,21 @@ export default function PersonalInfoForm(){
           render={({ field }) => (
             <FormItem>
               <FormLabel>Religion</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={value => { onChange('personalInfo', field.name, value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select religion" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Catholic">Catholic</SelectItem>
-                  <SelectItem value="Iglesia ni Cristo">Iglesia ni Cristo</SelectItem>
-                  <SelectItem value="Aglipay">Aglipay</SelectItem>
-                  <SelectItem value="Baptist">Baptist</SelectItem>
-                  <SelectItem value="Dating Daan">Dating Daan</SelectItem>
-                  <SelectItem value="Islam">Islam</SelectItem>
-                  <SelectItem value="Jehovah's Witnesses">Jehovah&apos;s Witnesses</SelectItem>
-                  <SelectItem value="Others">Others</SelectItem>
+                  <SelectItem value="CATHOLIC">Catholic</SelectItem>
+                  <SelectItem value="IGLESIA_NI_CRISTO">Iglesia ni Cristo</SelectItem>
+                  <SelectItem value="AGLIPAY">Aglipay</SelectItem>
+                  <SelectItem value="BAPTIST">Baptist</SelectItem>
+                  <SelectItem value="DATING_DAAN">Dating Daan</SelectItem>
+                  <SelectItem value="ISLAM">Islam</SelectItem>
+                  <SelectItem value="JEHOVAHS_WITNESSES">Jehovah&apos;s Witnesses</SelectItem>
+                  <SelectItem value="OTHERS">Others</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -248,18 +270,18 @@ export default function PersonalInfoForm(){
           render={({ field }) => (
             <FormItem>
               <FormLabel>Status*</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={value => { onChange('personalInfo', field.name, value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Single">Single</SelectItem>
-                  <SelectItem value="Married">Married</SelectItem>
-                  <SelectItem value="Widowed">Widowed</SelectItem>
-                  <SelectItem value="Legally Separated">Legally Separated</SelectItem>
-                  <SelectItem value="LIVING-IN">LIVING-IN</SelectItem>
+                  <SelectItem value="SINGLE">Single</SelectItem>
+                  <SelectItem value="MARRIED">Married</SelectItem>
+                  <SelectItem value="WIDOWED">Widowed</SelectItem>
+                  <SelectItem value="LEGALLY_SEPARATED">Legally Separated</SelectItem>
+                  <SelectItem value="LIVING_IN">LIVING-IN</SelectItem>
                   <SelectItem value="SEPARATED">SEPARATED</SelectItem>
                   <SelectItem value="DIVORCED">DIVORCED</SelectItem>
                 </SelectContent>
@@ -274,17 +296,17 @@ export default function PersonalInfoForm(){
           render={({ field }) => (
             <FormItem>
               <FormLabel>Sector</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={value => {onChange('personalInfo', field.name, value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select sector" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Solo Parent">Solo Parent</SelectItem>
+                  <SelectItem value="SOLO_PARENT">Solo Parent</SelectItem>
                   <SelectItem value="PWD">PWD</SelectItem>
-                  <SelectItem value="Senior Citizen">Senior Citizen</SelectItem>
-                  <SelectItem value="Indigent Indigenous People">Indigent Indigenous People</SelectItem>
+                  <SelectItem value="SENIOR_CITIZEN">Senior Citizen</SelectItem>
+                  <SelectItem value="INDIGENT_INDIGENOUS_PEOPLE">Indigent Indigenous People</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -298,7 +320,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Emergency Contact Name*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -311,7 +333,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Emergency Relationship*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -324,7 +346,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Emergency Contact*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -337,7 +359,7 @@ export default function PersonalInfoForm(){
             <FormItem>
               <FormLabel>Emergency Contact Address*</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -348,3 +370,5 @@ export default function PersonalInfoForm(){
     </Form>
   );
 }
+
+export default PersonalInfoForm;
