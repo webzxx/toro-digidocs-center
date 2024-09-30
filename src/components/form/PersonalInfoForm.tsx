@@ -14,7 +14,7 @@ import { createCertificate } from "@/app/api/certificate/actions";
 import {
   useStepper,
 } from "@/components/ui/stepper"
-import { StepperFormActions } from "./StepperFormActions";
+import { scrollToForm, StepperFormActions } from "./StepperFormActions";
 import { CivilStatus, Gender, Religion, Sector } from "@prisma/client";
 
 export interface PersonalInfoFormProps {
@@ -65,6 +65,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
   const onSubmit = async (values: PersonalInfoInput) => {
     console.log("Form values on submit:", values); // Add this line to log values
     nextStep()
+    scrollToForm()
 
   //   createCertificate(values).then((res)=>{
   //     if (res?.fieldError) {
@@ -279,7 +280,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
                 <SelectContent>
                   <SelectItem value="SINGLE">Single</SelectItem>
                   <SelectItem value="MARRIED">Married</SelectItem>
-                  <SelectItem value="WIDOWED">Widowed</SelectItem>
+                  <SelectItem value="WIDOW">Widow</SelectItem>
                   <SelectItem value="LEGALLY_SEPARATED">Legally Separated</SelectItem>
                   <SelectItem value="LIVING_IN">LIVING-IN</SelectItem>
                   <SelectItem value="SEPARATED">SEPARATED</SelectItem>

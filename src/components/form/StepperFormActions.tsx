@@ -11,6 +11,12 @@ export const StepperFormActions = () => {
     isOptionalStep,
     isDisabledStep,
   } = useStepper()
+
+  function backStep() {
+    prevStep()
+    scrollToForm()
+  }
+
   return (
     <div className="w-full flex justify-end gap-2">
       {hasCompletedAllSteps ? (
@@ -21,7 +27,7 @@ export const StepperFormActions = () => {
         <>
           <Button
             disabled={isDisabledStep}
-            onClick={prevStep}
+            onClick={backStep}
             size="sm"
             variant="secondary"
           >
@@ -34,4 +40,11 @@ export const StepperFormActions = () => {
       )}
     </div>
   )
+}
+
+export const scrollToForm = () => {
+  const formElement = document.querySelector("form");
+  if (formElement && formElement.previousElementSibling) {
+    formElement.previousElementSibling.scrollIntoView({ behavior: "smooth" });
+  }
 }
