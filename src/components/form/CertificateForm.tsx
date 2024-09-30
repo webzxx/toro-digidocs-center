@@ -73,7 +73,10 @@ export default function CertificateForm() {
           else if(index === 1) {
             return (
               <Step key={stepProps.label} {...stepProps}>
-                <AddressForm />
+                <AddressForm 
+                  data={formData.address}
+                  onChange={handleChange}
+                />
               </Step>
             )
           }
