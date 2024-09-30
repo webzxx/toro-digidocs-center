@@ -99,7 +99,7 @@ const addressSchema = z.object({
   yearsInMolinoIV: z.number().int().nonnegative().optional(),
   blockLot: z.string().optional(),
   phase: z.string().optional(),
-  street: z.string().min(1),
+  street: z.string().optional(),
   subdivision: z.string().min(1, "Subdivision is required"),
   barangay: z.literal("Molino IV"),
   city: z.literal("Bacoor"),
