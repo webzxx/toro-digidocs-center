@@ -15,30 +15,14 @@ import {
   useStepper,
 } from "@/components/ui/stepper"
 import { scrollToForm, StepperFormActions } from "./StepperFormActions";
-import { CivilStatus, Gender, Religion, Sector } from "@prisma/client";
 
 export interface PersonalInfoFormProps {
-  data: {
-    precinctNumber: string;
-    firstName: string;
-    middleName: string;
-    lastName: string;
-    gender: Gender | undefined;
-    birthDate: string;
-    email: string;
-    contact: string;
-    religion: Religion | undefined;
-    status: CivilStatus | undefined;
-    sector: Sector | undefined;
-    emergencyContactName: string;
-    emergencyRelationship: string;
-    emergencyContact: string;
-    emergencyContactAddress: string;
-  };
+  data: Partial<PersonalInfoInput>;
   onChange: (section: string, field: string, value: string) => void;
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) => {
+  const formName = 'personalInfo';
   const { nextStep } = useStepper();
 
   const form = useForm<PersonalInfoInput>({
@@ -107,7 +91,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Precinct # (optional)</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -120,7 +104,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>First Name*</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -133,7 +117,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Middle Name</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -146,7 +130,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Last Name*</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -160,7 +144,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
               <FormLabel>Gender*</FormLabel>
               <FormControl>
                 <RadioGroup
-                  onValueChange={value => {onChange('personalInfo', field.name, value); field.onChange(value)}}
+                  onValueChange={value => {onChange(formName, field.name, value); field.onChange(value)}}
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
@@ -204,7 +188,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
                 <div>
                   <DatePicker
                     value={field.value ? new Date(field.value) : null}
-                    onChange={(date) => {onChange('personalInfo', field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                    onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
                   />
                 </div>
               </FormControl>
@@ -219,7 +203,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input type="email" {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -232,7 +216,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Contact*</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -244,7 +228,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           render={({ field }) => (
             <FormItem>
               <FormLabel>Religion</FormLabel>
-              <Select onValueChange={value => { onChange('personalInfo', field.name, value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => { onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select religion" />
@@ -271,7 +255,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           render={({ field }) => (
             <FormItem>
               <FormLabel>Status*</FormLabel>
-              <Select onValueChange={value => { onChange('personalInfo', field.name, value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => { onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select status" />
@@ -297,7 +281,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           render={({ field }) => (
             <FormItem>
               <FormLabel>Sector</FormLabel>
-              <Select onValueChange={value => {onChange('personalInfo', field.name, value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => {onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select sector" />
@@ -321,7 +305,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Emergency Contact Name*</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -334,7 +318,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Emergency Relationship*</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -347,7 +331,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Emergency Contact*</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -360,7 +344,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
             <FormItem>
               <FormLabel>Emergency Contact Address*</FormLabel>
               <FormControl>
-                <Input {...field} onChangeCapture={e => onChange('personalInfo', e.currentTarget.name, e.currentTarget.value)} />
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
               <FormMessage />
             </FormItem>
