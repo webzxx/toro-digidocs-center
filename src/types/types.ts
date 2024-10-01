@@ -44,7 +44,7 @@ const personalInfoSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   gender: z.enum(["MALE", "FEMALE", "LGBTQ"]),
   birthDate: dateSchema("Invalid birth date"),
-  email: z.string().email().optional(),
+  email: z.union([z.literal(""), z.string().email()]),
   contact: z
     .string()
     .min(1, "Contact is required")
@@ -194,7 +194,7 @@ const isValidDataUrl = (value: string) => {
   return regex.test(value);
 };
 
-// Updated Proof of Identity schema
+// Step 4: Proof of Identity schema
 const proofOfIdentitySchema = z.object({
   signature: z
     .string()
