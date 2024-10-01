@@ -12,6 +12,7 @@ import {
 import PersonalInfoForm, { PersonalInfoFormProps } from "./PersonalInfoForm";
 import AddressForm from "./AddressForm";
 import { useState } from "react";
+import ImportantInfoForm from "./ImportantInfoForm";
 
 const steps = [
   { label: "Step 1", description: "Personal Info", icon: User },
@@ -40,19 +41,37 @@ export default function CertificateForm() {
       emergencyContact: "",
       emergencyContactAddress: "",
     },
-    address: {},
-    importantInfo: {},
-    proofOfIdentity: {},
+    address: {
+      residency: undefined,
+      yearsInMolinoIV: 0,
+      blockLot: "",
+      phase: "",
+      street: "",
+      subdivision: "",
+      // Uncomment the following lines to set default values if needed
+      // barangay: "Molino IV",
+      // city: "Bacoor",
+      // province: "Cavite",
+    },
+    importantInfo: {
+      certificateType: undefined,
+      purpose: "",
+    },
+    proofOfIdentity: {
+
+    },
   });
 
-  const handleChange = (section: string, field: string, value: string) => {
-    setFormData({
-      ...formData,
-      [section]: {
-        ...formData[section as keyof typeof formData],
-        [field]: value,
-      },
-    });
+  const handleChange = (section: string, field: string, value: string, reset: boolean = false) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [section]: reset
+        ? { [field]: value }
+        : {
+            ...prevData[section as keyof typeof prevData],
+            [field]: value,
+          },
+    }));
   };
 
 
@@ -83,7 +102,10 @@ export default function CertificateForm() {
           else if(index === 2) {
             return (
               <Step key={stepProps.label} {...stepProps}>
-                <ImportantInfoForm />
+                <ImportantInfoForm 
+                  data={formData.importantInfo}
+                  onChange={handleChange}
+                />
               </Step>
             )
           }
@@ -96,13 +118,6 @@ export default function CertificateForm() {
         <Footer />
       </Stepper>
     </div>
-  )
-}
-
-function ImportantInfoForm() {
-  return (
-    <>
-    </>
   )
 }
 

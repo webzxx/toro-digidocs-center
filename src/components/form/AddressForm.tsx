@@ -6,24 +6,28 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StepperFormActions } from './StepperFormActions';
+import { useStepper } from '../ui/stepper'
+import { scrollToForm } from './StepperFormActions'
 
 export interface AddressFormProps {
   data: Partial<AddressInput>;
-  onChange: (section: string, field: string, value: string) => void;
+  onChange: (section: string, field: string, value: string, reset?: boolean) => void;
 }
 
 
 const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
   const formName = 'address';
+  const { nextStep } = useStepper();
+
   const form = useForm<AddressInput>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
-      residency: undefined,
-      yearsInMolinoIV: 0,
-      blockLot: '',
-      phase: '',
-      street: '',
-      subdivision: '',
+      residency: data.residency || undefined,
+      yearsInMolinoIV: data.yearsInMolinoIV || 0,
+      blockLot: data.blockLot || '',
+      phase: data.phase || '',
+      street: data.street || '',
+      subdivision: data.subdivision || '',
       barangay: 'Molino IV',
       city: 'Bacoor',
       province: 'Cavite',
@@ -32,6 +36,8 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
 
   function onSubmit(values: AddressInput) {
     console.log(values);
+    nextStep();
+    scrollToForm();
   }
 
   return (

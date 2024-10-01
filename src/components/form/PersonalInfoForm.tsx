@@ -18,7 +18,7 @@ import { scrollToForm, StepperFormActions } from "./StepperFormActions";
 
 export interface PersonalInfoFormProps {
   data: Partial<PersonalInfoInput>;
-  onChange: (section: string, field: string, value: string) => void;
+  onChange: (section: string, field: string, value: string, reset?: boolean) => void;
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) => {
