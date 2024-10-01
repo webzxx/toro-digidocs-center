@@ -107,7 +107,6 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
   const certificateType = form.watch('certificateType')
 
   const onSubmit = async (values: ImportantInfoInput) => {
-    console.log(values)
     nextStep()
     scrollToForm()
   }

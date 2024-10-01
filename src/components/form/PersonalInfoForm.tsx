@@ -28,26 +28,26 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
   const form = useForm<PersonalInfoInput>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      precinctNumber: data.precinctNumber || '',
-      firstName: data.firstName || '',
-      middleName: data.middleName || '',
-      lastName: data.lastName || '',
-      gender: data.gender || undefined,
-      birthDate: data.birthDate || '',
-      email: data.email || '',
-      contact: data.contact || '',
-      religion: data.religion || undefined,
-      status: data.status || undefined,
-      sector: data.sector || undefined,
-      emergencyContactName: data.emergencyContactName || '',
-      emergencyRelationship: data.emergencyRelationship || '',
-      emergencyContact: data.emergencyContact || '',
-      emergencyContactAddress: data.emergencyContactAddress || '',
+      precinctNumber: "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      gender: undefined,
+      birthDate: "",
+      email: "",
+      contact: "",
+      religion: undefined,
+      status: undefined,
+      sector: undefined,
+      emergencyContactName: "",
+      emergencyRelationship: "",
+      emergencyContact: "",
+      emergencyContactAddress: "",
+      ...data,
     },
   });
 
   const onSubmit = async (values: PersonalInfoInput) => {
-    console.log("Form values on submit:", values); // Add this line to log values
     nextStep()
     scrollToForm()
 

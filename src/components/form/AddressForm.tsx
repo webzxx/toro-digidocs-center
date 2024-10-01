@@ -22,20 +22,20 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
   const form = useForm<AddressInput>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
-      residency: data.residency || undefined,
-      yearsInMolinoIV: data.yearsInMolinoIV || 0,
-      blockLot: data.blockLot || '',
-      phase: data.phase || '',
-      street: data.street || '',
-      subdivision: data.subdivision || '',
+      residency: undefined,
+      yearsInMolinoIV: 0,
+      blockLot: '',
+      phase: '',
+      street: '',
+      subdivision: '',
       barangay: 'Molino IV',
       city: 'Bacoor',
       province: 'Cavite',
+      ...data,
     },
   });
 
   function onSubmit(values: AddressInput) {
-    console.log(values);
     nextStep();
     scrollToForm();
   }

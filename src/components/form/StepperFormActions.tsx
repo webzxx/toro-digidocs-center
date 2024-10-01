@@ -3,7 +3,6 @@ import { useStepper } from "../ui/stepper"
 
 export const StepperFormActions = () => {
   const {
-    nextStep,
     prevStep,
     resetSteps,
     hasCompletedAllSteps,
