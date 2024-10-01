@@ -16,10 +16,11 @@ import {
 interface DatePickerProps {
   value?: Date | null;
   onChange?: (date: Date | null) => void;
+  allowFutureDates?: boolean;
 }
 
 export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
-  ({ value, onChange }, ref) => {
+  ({ value, onChange, allowFutureDates = false }, ref) => {
     const [date, setDate] = React.useState<Date | null>(
       value ? new Date(value) : null
     );
@@ -53,6 +54,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             selected={date || undefined}
             onSelect={handleSelect}
             disabled={(date) =>
+              !allowFutureDates &&
               date > new Date() || date < new Date("1900-01-01")
             }
             fromYear={1900}
