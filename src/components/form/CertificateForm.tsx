@@ -9,10 +9,11 @@ import {
   Stepper,
   useStepper,
 } from "@/components/ui/stepper"
-import PersonalInfoForm, { PersonalInfoFormProps } from "./PersonalInfoForm";
+import PersonalInfoForm from "./PersonalInfoForm";
 import AddressForm from "./AddressForm";
 import { useState } from "react";
 import ImportantInfoForm from "./ImportantInfoForm";
+import ProofOfIdentityForm from "./ProofOfIdentityForm";
 
 const steps = [
   { label: "Step 1", description: "Personal Info", icon: User },
@@ -58,11 +59,17 @@ export default function CertificateForm() {
       purpose: "",
     },
     proofOfIdentity: {
-
+      photoId: undefined,
+      photoHoldingId: undefined,
+      signature: undefined,
     },
   });
 
-  const handleChange = (section: string, field: string, value: string, reset: boolean = false) => {
+  const validateAndSubmit = () => {
+    console.log("Form submitted!");
+  }
+
+  const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
     setFormData((prevData) => ({
       ...prevData,
       [section]: reset
@@ -111,20 +118,17 @@ export default function CertificateForm() {
           }
           return (
             <Step key={stepProps.label} {...stepProps}>
-              <ProofOfIdentityForm />
+              <ProofOfIdentityForm
+                data={formData.proofOfIdentity}
+                onChange={handleChange}
+                validateAndSubmit={validateAndSubmit}
+              />
             </Step>
           )
         })}
         <Footer />
       </Stepper>
     </div>
-  )
-}
-
-function ProofOfIdentityForm() {
-  return (
-    <>  
-    </>
   )
 }
 
@@ -137,12 +141,12 @@ function Footer() {
 
   return (
     <>
-      {/* <div className="h-40 flex items-center justify-center my-2 border bg-secondary text-primary rounded-md">
+      <div className="h-40 flex items-center justify-center my-2 border bg-secondary text-primary rounded-md">
         <h1 className="text-xl">All steps completed! 🎉</h1>
-      </div> */}
-    <div className="flex items-center justify-end gap-2">
-      <Button onClick={resetSteps}>Reset Stepper with Form</Button>
-    </div>
+      </div>
+      <div className="flex items-center justify-end gap-2">
+        <Button onClick={resetSteps}>Reset Stepper with Form</Button>
+      </div>
     </>
   )
 }

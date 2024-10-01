@@ -194,42 +194,26 @@ const isValidDataUrl = (value: string) => {
   return regex.test(value);
 };
 
+const fileSchema = z
+  .instanceof(File)
+  .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
+  .refine(
+    (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
+    "Only .jpg, .png, .gif formats are supported"
+  );
+
 // Step 4: Proof of Identity schema
 const proofOfIdentitySchema = z.object({
   signature: z
-    .string()
-    .min(1, "Signature is required")
-    .refine((value) => isValidDataUrl(value), {
-      message: "Invalid signature format. Must be a valid image data URL.",
+    .string({ invalid_type_error: "Signature is required" })
+    .refine((value) => value === null || isValidDataUrl(value), {
+      message:
+        "Invalid signature format. Must be a valid image data URL or null.",
     }),
-  photoId1: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-      "Only .jpg, .png, .gif formats are supported"
-    ),
-  photoId2: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-      "Only .jpg, .png, .gif formats are supported"
-    ),
-  photoHoldingId1: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-      "Only .jpg, .png, .gif formats are supported"
-    ),
-  photoHoldingId2: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
-    .refine(
-      (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-      "Only .jpg, .png, .gif formats are supported"
-    ),
+  photoId: z.array(fileSchema).length(2, "Exactly two Photo IDs are required"),
+  photoHoldingId: z
+    .array(fileSchema)
+    .length(2, "Exactly two Photo Holding IDs are required"),
 });
 
 export type PersonalInfoInput = z.infer<typeof personalInfoSchema>;
