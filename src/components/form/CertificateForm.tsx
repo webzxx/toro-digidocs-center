@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from "../ui/button";
-import { House, Scroll, User, ScanFace } from "lucide-react"
+import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react"
 
 import {
   Step,
@@ -9,6 +9,8 @@ import {
   Stepper,
   useStepper,
 } from "@/components/ui/stepper"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+
 import PersonalInfoForm from "./PersonalInfoForm";
 import AddressForm from "./AddressForm";
 import { useState } from "react";
@@ -23,48 +25,50 @@ const steps = [
   { label: "Step 4", description: "Proof of Identity", icon: ScanFace },
 ] satisfies StepItem[]
 
+const initialFormData = {
+  personalInfo: {
+    precinctNumber: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    gender: undefined,
+    birthDate: "",
+    email: "",
+    contact: "",
+    religion: undefined,
+    status: undefined,
+    sector: undefined,
+    emergencyContactName: "",
+    emergencyRelationship: "",
+    emergencyContact: "",
+    emergencyContactAddress: "",
+  },
+  address: {
+    residency: undefined,
+    yearsInMolinoIV: 0,
+    blockLot: "",
+    phase: "",
+    street: "",
+    subdivision: "",
+    // Uncomment the following lines to set default values if needed
+    // barangay: "Molino IV",
+    // city: "Bacoor",
+    // province: "Cavite",
+  },
+  importantInfo: {
+    certificateType: undefined,
+    purpose: "",
+  },
+  proofOfIdentity: {
+    photoId: undefined,
+    photoHoldingId: undefined,
+    signature: undefined,
+  },
+}
 
 export default function CertificateForm() {
-  const [formData, setFormData] = useState({
-    personalInfo: {
-      precinctNumber: "",
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      gender: undefined,
-      birthDate: "",
-      email: "",
-      contact: "",
-      religion: undefined,
-      status: undefined,
-      sector: undefined,
-      emergencyContactName: "",
-      emergencyRelationship: "",
-      emergencyContact: "",
-      emergencyContactAddress: "",
-    },
-    address: {
-      residency: undefined,
-      yearsInMolinoIV: 0,
-      blockLot: "",
-      phase: "",
-      street: "",
-      subdivision: "",
-      // Uncomment the following lines to set default values if needed
-      // barangay: "Molino IV",
-      // city: "Bacoor",
-      // province: "Cavite",
-    },
-    importantInfo: {
-      certificateType: undefined,
-      purpose: "",
-    },
-    proofOfIdentity: {
-      photoId: undefined,
-      photoHoldingId: undefined,
-      signature: undefined,
-    },
-  });
+  const { resetSteps } = useStepper()
+  const [formData, setFormData] = useState(initialFormData);
 
   const validateAndSubmit = () => {
     const result = completeFormSchema.safeParse(formData);
@@ -73,6 +77,11 @@ export default function CertificateForm() {
     } else {
       console.error("Invalid form data", result.error.errors);
     }
+  }
+
+  const reset = () => { 
+    setFormData(initialFormData);
+    resetSteps();
   }
 
   const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
@@ -131,13 +140,21 @@ export default function CertificateForm() {
             </Step>
           )
         })}
-        <Footer />
+        <Footer details={{ referenceNumber: "JPC-00227", systemId: "MOLINO-IV-10447" }} resetMultiForm={reset} />
       </Stepper>
     </div>
   )
 }
 
-function Footer() {
+type FooterProps = {
+  details: {
+    referenceNumber: string;
+    systemId: string;
+  };
+  resetMultiForm: () => void;
+};
+
+function Footer({ details, resetMultiForm }: FooterProps) {
   const { activeStep, resetSteps, steps } = useStepper()
 
   if (activeStep !== steps.length) {
@@ -145,13 +162,31 @@ function Footer() {
   }
 
   return (
-    <>
-      <div className="h-40 flex items-center justify-center my-2 border bg-secondary text-primary rounded-md">
-        <h1 className="text-xl">All steps completed! 🎉</h1>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <Button onClick={resetSteps}>Request another certificate</Button>
-      </div>
-    </>
+    <Card className="w-full max-w-md mx-auto">
+      <CardContent className="pt-6 text-center">
+        <CheckCircle2 className="w-16 h-16 mx-auto text-green-500 mb-4" />
+        <h2 className="text-2xl font-semibold text-green-600 mb-6">
+          Congrats, your request was successfully sent!
+        </h2>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <p className="text-sm font-medium text-gray-500">REFERENCE NUMBER</p>
+            <p className="text-lg font-bold">{details.referenceNumber}</p>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-500">MOLINO SYSTEM ID</p>
+            <p className="text-lg font-bold">{details.systemId}</p>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600">
+          We will get in touch with you using the details you have provided. Thank you
+        </p>
+      </CardContent>
+      <CardFooter>
+        <Button className="w-full" variant="outline" onClick={resetMultiForm}>
+          REQUEST ANOTHER CERTIFICATE
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }
