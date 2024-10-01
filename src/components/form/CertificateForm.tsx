@@ -14,6 +14,7 @@ import AddressForm from "./AddressForm";
 import { useState } from "react";
 import ImportantInfoForm from "./ImportantInfoForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
+import { completeFormSchema } from "@/types/types";
 
 const steps = [
   { label: "Step 1", description: "Personal Info", icon: User },
@@ -66,7 +67,12 @@ export default function CertificateForm() {
   });
 
   const validateAndSubmit = () => {
-    console.log("Form submitted!");
+    const result = completeFormSchema.safeParse(formData);
+    if (result.success) {
+      console.log("Valid form data", result.data);
+    } else {
+      console.error("Invalid form data", result.error.errors);
+    }
   }
 
   const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
@@ -80,7 +86,6 @@ export default function CertificateForm() {
           },
     }));
   };
-
 
   return (
     <div className="flex w-full flex-col gap-4">
