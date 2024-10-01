@@ -150,7 +150,7 @@ function Footer() {
         <h1 className="text-xl">All steps completed! 🎉</h1>
       </div>
       <div className="flex items-center justify-end gap-2">
-        <Button onClick={resetSteps}>Reset Stepper with Form</Button>
+        <Button onClick={resetSteps}>Request another certificate</Button>
       </div>
     </>
   )

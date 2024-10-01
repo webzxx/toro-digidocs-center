@@ -12,6 +12,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import SignaturePad from 'react-signature-pad-wrapper'
 import { StepperFormActions } from './StepperFormActions'
 import Image from 'next/image'
@@ -33,6 +43,7 @@ export interface ProofOfIdentityFormProps {
 
 export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit }: ProofOfIdentityFormProps) {
   const { nextStep } = useStepper()
+  const [open, setOpen] = useState(false);
   const signaturePadRef = useRef<SignaturePad>(null)
   const [images, setImages] = useState<Record<ImageCategory, ImageFile[]>>({
     photoId: [],
@@ -40,7 +51,6 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
   })
 
   const form = useForm<ProofOfIdentityInput>();
-
 
   useEffect(() => {
     // Load existing images in data to the state every time the component mounts
@@ -69,7 +79,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
   const handleSignatureClear = () => {
     if (signaturePadRef.current) {
       signaturePadRef.current.clear()
-      form.setValue('signature', null)
+      form.setValue('signature', '')
       onChange('proofOfIdentity', 'signature', null)
     }
   }
@@ -133,8 +143,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
     const result = proofOfIdentitySchema.safeParse(data);
     
     if(result.success) {
-      validateAndSubmit();
-      nextStep();
+      setOpen(true);
     } else {
       // Set errors based on zod validation result
       result.error.errors.forEach((error) => {
@@ -144,7 +153,6 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
         })
       });
     }
-
   }
 
 
@@ -171,75 +179,94 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
   )
 
   return (
-    <Form {...form}>
-      <form className="space-y-6" onSubmit={onSubmit}>
-        <div>
-          <Label className="block mb-2">Please Provide Two(2) Valid ID&apos;s and Two(2) Photo of you holding the ID&apos;s.</Label>
-          <p className="text-sm text-muted-foreground mb-4">Max file size: 5MB, accepted: jpg|gif|png</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {(['photoId', 'photoHoldingId'] as const).map((category) => (
-              <FormField
-                key={category}
-                control={form.control}
-                name={category}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{category === 'photoId' ? 'Photo ID' : 'Photo Holding ID'}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="file"
-                        accept=".jpg,.gif,.png"
-                        onChange={(e) => handleFileUpload(e.target.files, category)}
-                        multiple
-                      />
-                    </FormControl>
-                    {renderImageGallery(category)}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="signature"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Signature</FormLabel>
-                <FormControl>
-                  <div className="border border-gray-300 rounded-md p-2">
-                    <SignaturePad
-                      ref={signaturePadRef}
-                      options={{
-                        minWidth: 1,
-                        maxWidth: 2,
-                        penColor: 'black',
-                        backgroundColor: 'rgb(255, 255, 255)'
-                      }}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {data.signature && (
-            <div className="flex flex-col">
-              <Label className='mt-[5px] mb-[5px]'>Saved Signature</Label>
-              <div className="relative grow">
-                <Image src={data.signature} alt="Saved Signature" fill className="border border-gray-300 rounded-md" />
-              </div>
+    <div>
+      <Form {...form}>
+        <form className="space-y-6" onSubmit={onSubmit}>
+          <div>
+            <Label className="block mb-2">Please Provide Two(2) Valid ID&apos;s and Two(2) Photo of you holding the ID&apos;s.</Label>
+            <p className="text-sm text-muted-foreground mb-4">Max file size: 5MB, accepted: jpg|gif|png</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(['photoId', 'photoHoldingId'] as const).map((category) => (
+                <FormField
+                  key={category}
+                  control={form.control}
+                  name={category}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{category === 'photoId' ? 'Photo ID' : 'Photo Holding ID'}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="file"
+                          accept=".jpg,.gif,.png"
+                          onChange={(e) => handleFileUpload(e.target.files, category)}
+                          multiple
+                        />
+                      </FormControl>
+                      {renderImageGallery(category)}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ))}
             </div>
-          )}
-        </div>
-        <div className="mt-2 space-x-2">
-          <Button type="button" onClick={handleSignatureSave}>Save Signature</Button>
-          <Button type="button" variant="outline" onClick={handleSignatureClear}>Clear</Button>
-        </div>
-        <StepperFormActions />
-      </form>
-    </Form>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="signature"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Signature</FormLabel>
+                  <FormControl>
+                    <div className="border border-gray-300 rounded-md p-2">
+                      <SignaturePad
+                        ref={signaturePadRef}
+                        options={{
+                          minWidth: 1,
+                          maxWidth: 2,
+                          penColor: 'black',
+                          backgroundColor: 'rgb(255, 255, 255)'
+                        }}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {data.signature && (
+              <div className="flex flex-col">
+                <Label className='mt-[5px] mb-[5px]'>Saved Signature</Label>
+                <div className="relative grow">
+                  <Image src={data.signature} alt="Saved Signature" fill className="border border-gray-300 rounded-md" />
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="mt-2 space-x-2">
+            <Button type="button" onClick={handleSignatureSave}>Save Signature</Button>
+            <Button type="button" variant="outline" onClick={handleSignatureClear}>Clear</Button>
+          </div>
+          <StepperFormActions />
+        </form>
+      </Form>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Request Certificate</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. Are you sure you want to proceed?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={()=> {
+              validateAndSubmit()
+              nextStep()
+            }}>Proceed</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   )
 }
