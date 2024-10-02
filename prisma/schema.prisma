@@ -119,10 +119,10 @@ model Address {
   id              Int           @id @default(autoincrement())
   residentId      Int           @unique
   residencyType   ResidencyType
-  yearsInMolinoIV Int
+  yearsInMolinoIV Int?
   blockLot        String?
   phase           String?
-  street          String
+  street          String?
   subdivision     String
   barangay        String        @default("Molino IV")
   city            String        @default("Bacoor")
