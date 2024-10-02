@@ -222,19 +222,21 @@ export type ImportantInfoInput = z.infer<typeof importantInfoSchema>;
 export type ProofOfIdentityInput = z.infer<typeof proofOfIdentitySchema>;
 
 // Complete form schema
-const completeFormSchema = z.object({
+const completeCertificateFormSchema = z.object({
   personalInfo: personalInfoSchema,
   address: addressSchema,
   importantInfo: importantInfoSchema,
   proofOfIdentity: proofOfIdentitySchema,
 });
 
-export type CompleteFormInput = z.infer<typeof completeFormSchema>;
+export type CompleteCertificateFormInput = z.infer<
+  typeof completeCertificateFormSchema
+>;
 
 export {
   personalInfoSchema,
   addressSchema,
   importantInfoSchema,
   proofOfIdentitySchema,
-  completeFormSchema,
+  completeCertificateFormSchema,
 };
