@@ -233,10 +233,27 @@ export type CompleteCertificateFormInput = z.infer<
   typeof completeCertificateFormSchema
 >;
 
+// Complete form schema without files
+const completeCertificateFormSchemaWithoutFiles = z.object({
+  personalInfo: personalInfoSchema,
+  address: addressSchema,
+  importantInfo: importantInfoSchema,
+  proofOfIdentity: proofOfIdentitySchema.omit({
+    photoId: true,
+    photoHoldingId: true
+  })
+});
+
+export type CompleteCertificateFormInputWithoutFiles = z.infer<
+  typeof completeCertificateFormSchemaWithoutFiles
+>;
+
+
 export {
   personalInfoSchema,
   addressSchema,
   importantInfoSchema,
   proofOfIdentitySchema,
   completeCertificateFormSchema,
+  completeCertificateFormSchemaWithoutFiles
 };
