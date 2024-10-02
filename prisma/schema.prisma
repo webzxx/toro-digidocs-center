@@ -85,6 +85,7 @@ model User {
 
 model Resident {
   id             Int         @id @default(autoincrement())
+  molinoSystemId String      @unique @default(dbgenerated("concat('MOLINO-IV-', to_char(nextval('molino_system_id_seq'), 'FM00000'))"))
   precinctNumber String?
   firstName      String
   middleName     String?
@@ -132,6 +133,7 @@ model Address {
 
 model CertificateRequest {
   id              Int             @id @default(autoincrement())
+  referenceNumber String          @unique @default(dbgenerated("concat('JPC-', to_char(nextval('reference_number_seq'), 'FM00000'))"))
   residentId      Int
   certificateType CertificateType
   purpose         String
@@ -163,4 +165,13 @@ model Certificate {
   contact    String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+// These are used to generate sequential numbers for molinoSystemId and referenceNumber
+model MolinoSystemIdSequence {
+  id Int @id @default(autoincrement())
+}
+
+model ReferenceNumberSequence {
+  id Int @id @default(autoincrement())
 }
