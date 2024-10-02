@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from "../ui/button";
-import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react"
+import { House, Scroll, User, ScanFace, CheckCircle2, Signature } from "lucide-react"
 
 import {
   Step,
@@ -16,7 +16,10 @@ import AddressForm from "./AddressForm";
 import { useState } from "react";
 import ImportantInfoForm from "./ImportantInfoForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
-import { completeFormSchema } from "@/types/types";
+import { completeCertificateFormSchema } from "@/types/types";
+import { scrollToForm } from "./StepperFormActions";
+import { createCertificateRequest } from "@/app/api/certificate/actions";
+import { useToast } from "../ui/use-toast";
 
 const steps = [
   { label: "Step 1", description: "Personal Info", icon: User },
@@ -50,10 +53,9 @@ const initialFormData = {
     phase: "",
     street: "",
     subdivision: "",
-    // Uncomment the following lines to set default values if needed
-    // barangay: "Molino IV",
-    // city: "Bacoor",
-    // province: "Cavite",
+    barangay: "Molino IV" as const,
+    city: "Bacoor" as const,
+    province: "Cavite" as const,
   },
   importantInfo: {
     certificateType: undefined,
@@ -68,20 +70,72 @@ const initialFormData = {
 
 export default function CertificateForm() {
   const { resetSteps } = useStepper()
+  const { toast } = useToast()
   const [formData, setFormData] = useState(initialFormData);
+  const [requestDetails, setRequestDetails] = useState({ referenceNumber: "", systemId: "" });
 
   const validateAndSubmit = () => {
-    const result = completeFormSchema.safeParse(formData);
+    const result = completeCertificateFormSchema.safeParse(formData);
     if (result.success) {
-      console.log("Valid form data", result.data);
+      const files = new FormData();
+      const photoIdArray = result.data.proofOfIdentity.photoId as File[];
+      photoIdArray.forEach((file, index) => {
+        files.append(`photoId[${index}]`, file);
+      });
+      const photoHoldingIdArray = result.data.proofOfIdentity.photoHoldingId as File[];
+      photoHoldingIdArray.forEach((file, index) => {
+        files.append(`photoHoldingId[${index}]`, file);
+      });
+      files.append("signature", result.data.proofOfIdentity.signature as string);
+
+      const data = {
+        personalInfo: result.data.personalInfo,
+        address: result.data.address,
+        importantInfo: result.data.importantInfo,
+        proofOfIdentity: {
+          signature: result.data.proofOfIdentity.signature,
+        }
+      }      
+
+      createCertificateRequest(data, files).then((res)=>{
+        if (res?.serverError) {
+          toast({
+              title: "Error",
+              description: res.serverError || "Oops! Something went wrong!",
+              variant: "destructive"
+            });
+        }
+        
+        if (res?.success){
+          toast({
+            title: "Success",
+            description: "Certificate has been created successfully!",
+            variant: "default"
+          });
+
+          setRequestDetails({
+            referenceNumber: res?.data.referenceNumber || "ERROR",
+            systemId: res?.data.molinoSystemId || "ERROR"
+          });
+        }
+      })
+      return true;
     } else {
       console.error("Invalid form data", result.error.errors);
+      toast({
+        title: "Error",
+        description: "Certificate form is invalid.",
+        variant: "destructive"
+      });
+      return false;
     }
   }
 
   const reset = () => { 
+    console.log("Resetting form data");
     setFormData(initialFormData);
     resetSteps();
+    scrollToForm();
   }
 
   const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
@@ -140,7 +194,7 @@ export default function CertificateForm() {
             </Step>
           )
         })}
-        <Footer details={{ referenceNumber: "JPC-00227", systemId: "MOLINO-IV-10447" }} resetMultiForm={reset} />
+        <Footer details={requestDetails} resetMultiForm={reset} />
       </Stepper>
     </div>
   )
@@ -155,7 +209,7 @@ type FooterProps = {
 };
 
 function Footer({ details, resetMultiForm }: FooterProps) {
-  const { activeStep, resetSteps, steps } = useStepper()
+  const { activeStep, steps } = useStepper()
 
   if (activeStep !== steps.length) {
     return null
@@ -179,7 +233,7 @@ function Footer({ details, resetMultiForm }: FooterProps) {
           </div>
         </div>
         <p className="text-sm text-gray-600">
-          We will get in touch with you using the details you have provided. Thank you
+          We will get in touch with you using the details you have provided. Thank you.
         </p>
       </CardContent>
       <CardFooter>

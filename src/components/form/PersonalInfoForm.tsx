@@ -50,36 +50,6 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
   const onSubmit = async (values: PersonalInfoInput) => {
     nextStep()
     scrollToForm()
-
-  //   createCertificate(values).then((res)=>{
-  //     if (res?.fieldError) {
-  //         // fieldError: { email: "Invalid email "}
-  //       Object.entries(res.fieldError).forEach(([field, message]) => {
-  //         form.setError(field as FieldName<CertificateInput>, {
-  //           type: "manual",
-  //           message,
-  //         });
-  //       });
-  //     }
-
-  //     if (res?.serverError) {
-  //       toast({
-  //           title: "Error",
-  //           description: res.serverError || "Oops! Something went wrong!",
-  //           variant: "destructive"
-  //         });
-  //     }
-      
-  //     if (res?.success){
-  //       toast({
-  //         title: "Success",
-  //         description: "Certificate has been created successfully!",
-  //         variant: "default"
-  //       });
-  //     }
-  //   })
-  // };
-
   }
   return (
     <Form {...form}>
