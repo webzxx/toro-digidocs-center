@@ -153,20 +153,6 @@ model ProofOfIdentity {
   resident            Resident @relation(fields: [residentId], references: [id])
 }
 
-// Keeping the existing Certificate model for backwards compatibility
-model Certificate {
-  id         Int      @id @default(autoincrement())
-  precinct   String
-  firstname  String
-  middlename String
-  lastname   String
-  email      String   @unique
-  birthdate  DateTime
-  contact    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
 // These are used to generate sequential numbers for bahayToroSystemId and referenceNumber
 model BahayToroSystemIdSequence {
   id Int @id @default(autoincrement())
