@@ -92,7 +92,7 @@ model Resident {
   lastName          String
   gender            Gender
   birthDate         DateTime
-  email             String?     @unique
+  email             String?
   contact           String
   religion          Religion?
   status            CivilStatus
@@ -104,6 +104,8 @@ model Resident {
   address             Address?
   certificateRequests CertificateRequest[]
   proofOfIdentity     ProofOfIdentity?
+
+  @@unique([id, email])
 }
 
 model EmergencyContact {
