@@ -81,16 +81,20 @@ export async function createCertificateRequest(
   files: FormData
 ) {
   try {
-    console.log("Creating certificate request with data:", values);
-
     const data = {
       personalInfo: values.personalInfo,
       address: values.address,
       importantInfo: values.importantInfo,
       proofOfIdentity: {
         ...values.proofOfIdentity,
-        photoId: files.getAll("photoId") as File[],
-        photoHoldingId: files.getAll("photoHoldingId") as File[],
+        photoId: [
+          files.get("photoId[0]") as File,
+          files.get("photoId[1]") as File,
+        ],
+        photoHoldingId: [
+          files.get("photoHoldingId[0]") as File,
+          files.get("photoHoldingId[1]") as File,
+        ],
       },
     };
     // Validate incoming data against schema

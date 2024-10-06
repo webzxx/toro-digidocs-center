@@ -38,7 +38,7 @@ type ImageCategory = 'photoId' | 'photoHoldingId';
 export interface ProofOfIdentityFormProps {
   data: Partial<ProofOfIdentityInput>;
   onChange: (section: string, field: string, value: File[] | string | null, reset?: boolean) => void;
-  validateAndSubmit: () => boolean;
+  validateAndSubmit: () => Promise<boolean | undefined>;
 }
 
 export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit }: ProofOfIdentityFormProps) {
@@ -260,8 +260,8 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={()=> {
-              if(validateAndSubmit()) nextStep()
+            <AlertDialogAction onClick={async ()=> {
+              if(await validateAndSubmit()) nextStep()
             }}>Proceed</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

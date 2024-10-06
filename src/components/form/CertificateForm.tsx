@@ -74,7 +74,7 @@ export default function CertificateForm() {
   const [formData, setFormData] = useState(initialFormData);
   const [requestDetails, setRequestDetails] = useState({ referenceNumber: "", systemId: "" });
 
-  const validateAndSubmit = () => {
+  const validateAndSubmit : () => Promise<boolean> = async () => {
     const result = completeCertificateFormSchema.safeParse(formData);
     if (result.success) {
       const files = new FormData();
@@ -97,16 +97,27 @@ export default function CertificateForm() {
         }
       }      
 
-      createCertificateRequest(data, files).then((res)=>{
+      let success = true;
+      try {
+        const res = await createCertificateRequest(data, files);
+        if (res?.fieldErrors) {
+          toast({
+            title: "Error",
+            description: "Certificate form is invalid.",
+            variant: "destructive"
+          });
+          success = false;
+        }
         if (res?.serverError) {
           toast({
-              title: "Error",
-              description: res.serverError || "Oops! Something went wrong!",
-              variant: "destructive"
-            });
+            title: "Error",
+            description: res.serverError || "Oops! Something went wrong!",
+            variant: "destructive"
+          });
+          success = false;
         }
         
-        if (res?.success){
+        if (res?.success) {
           toast({
             title: "Success",
             description: "Certificate has been created successfully!",
@@ -118,8 +129,15 @@ export default function CertificateForm() {
             systemId: res?.data.bahayToroSystemId || "ERROR"
           });
         }
-      })
-      return true;
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred.",
+          variant: "destructive"
+        });
+        success = false;
+      }
+      return success;
     } else {
       console.error("Invalid form data", result.error.errors);
       toast({
