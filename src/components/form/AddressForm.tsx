@@ -23,14 +23,14 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
     resolver: zodResolver(addressSchema),
     defaultValues: {
       residency: undefined,
-      yearsInMolinoIV: 0,
+      yearsInBahayToro: 0,
       blockLot: '',
       phase: '',
       street: '',
       subdivision: '',
-      barangay: 'Molino IV',
-      city: 'Bacoor',
-      province: 'Cavite',
+      barangay: 'Bahay Toro',
+      city: 'Quezon City',
+      province: 'Metro Manila',
       ...data,
     },
   });
@@ -68,10 +68,10 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
         />
         <FormField
           control={form.control}
-          name="yearsInMolinoIV"
+          name="yearsInBahayToro"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Years in Molino IV</FormLabel>
+              <FormLabel>Years in BahayToroV</FormLabel>
               <FormControl>
                 <Input type="number" {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>

@@ -84,21 +84,21 @@ model User {
 }
 
 model Resident {
-  id             Int         @id @default(autoincrement())
-  molinoSystemId String      @unique @default(dbgenerated("concat('MOLINO-IV-', to_char(nextval('molino_system_id_seq'), 'FM00000'))"))
-  precinctNumber String?
-  firstName      String
-  middleName     String?
-  lastName       String
-  gender         Gender
-  birthDate      DateTime
-  email          String?     @unique
-  contact        String
-  religion       Religion?
-  status         CivilStatus
-  sector         Sector?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  id                Int         @id @default(autoincrement())
+  bahayToroSystemId String      @unique @default(dbgenerated("concat('BAHAY-TORO-', to_char(nextval('bahay_toro_system_id_seq'), 'FM00000'))"))
+  precinctNumber    String?
+  firstName         String
+  middleName        String?
+  lastName          String
+  gender            Gender
+  birthDate         DateTime
+  email             String?     @unique
+  contact           String
+  religion          Religion?
+  status            CivilStatus
+  sector            Sector?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
   emergencyContact    EmergencyContact?
   address             Address?
@@ -117,23 +117,23 @@ model EmergencyContact {
 }
 
 model Address {
-  id              Int           @id @default(autoincrement())
-  residentId      Int           @unique
-  residencyType   ResidencyType
-  yearsInMolinoIV Int?
-  blockLot        String?
-  phase           String?
-  street          String?
-  subdivision     String
-  barangay        String        @default("Molino IV")
-  city            String        @default("Bacoor")
-  province        String        @default("Cavite")
-  resident        Resident      @relation(fields: [residentId], references: [id])
+  id               Int           @id @default(autoincrement())
+  residentId       Int           @unique
+  residencyType    ResidencyType
+  yearsInBahayToro Int?
+  blockLot         String?
+  phase            String?
+  street           String?
+  subdivision      String
+  barangay         String        @default("Bahay Toro")
+  city             String        @default("Quezon City")
+  province         String        @default("Metro Manila")
+  resident         Resident      @relation(fields: [residentId], references: [id])
 }
 
 model CertificateRequest {
   id              Int             @id @default(autoincrement())
-  referenceNumber String          @unique @default(dbgenerated("concat('JPC-', to_char(nextval('reference_number_seq'), 'FM00000'))"))
+  referenceNumber String          @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'), 'FM00000'))"))
   residentId      Int
   certificateType CertificateType
   purpose         String
@@ -167,8 +167,8 @@ model Certificate {
   updatedAt  DateTime @updatedAt
 }
 
-// These are used to generate sequential numbers for molinoSystemId and referenceNumber
-model MolinoSystemIdSequence {
+// These are used to generate sequential numbers for bahayToroSystemId and referenceNumber
+model BahayToroSystemIdSequence {
   id Int @id @default(autoincrement())
 }
 

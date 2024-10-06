@@ -72,7 +72,7 @@ async function saveFile(
   const buffer = Buffer.from(await file.arrayBuffer());
   const fileName = `${Date.now()}-${prefix}-${file.name.replaceAll(" ", "_")}`;
   const filePath = path.join(residentFolder, fileName);
-  await fs.writeFile(filePath, buffer);
+  await fs.writeFile(filePath, new Uint8Array(buffer));
   return fileName;
 }
 
@@ -132,7 +132,7 @@ export async function createCertificateRequest(
           address: {
             create: {
               residencyType: address.residency,
-              yearsInMolinoIV: address.yearsInMolinoIV,
+              yearsInBahayToro: address.yearsInBahayToro,
               blockLot: address.blockLot,
               phase: address.phase,
               street: address.street,
@@ -208,7 +208,7 @@ export async function createCertificateRequest(
       // Fetch the created resident and certificate request with their generated IDs
       const createdResident = await prisma.resident.findUnique({
         where: { id: resident.id },
-        select: { molinoSystemId: true },
+        select: { bahayToroSystemId: true },
       });
 
       const createdCertificateRequest =
@@ -220,7 +220,7 @@ export async function createCertificateRequest(
       return {
         resident: {
           ...resident,
-          molinoSystemId: createdResident?.molinoSystemId,
+          bahayToroSystemId: createdResident?.bahayToroSystemId,
         },
         certificateRequest: {
           ...certificateRequest,
@@ -234,7 +234,7 @@ export async function createCertificateRequest(
       success: true,
       data: {
         ...result,
-        molinoSystemId: result.resident.molinoSystemId,
+        bahayToroSystemId: result.resident.bahayToroSystemId,
         referenceNumber: result.certificateRequest.referenceNumber,
       },
     };

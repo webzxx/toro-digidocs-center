@@ -96,14 +96,14 @@ const addressSchema = z.object({
   residency: z.enum(["HOME_OWNER", "TENANT", "HELPER", "CONSTRUCTION_WORKER"], {
     required_error: "Residency is required",
   }),
-  yearsInMolinoIV: z.number().int().nonnegative().optional(),
+  yearsInBahayToro: z.number().int().nonnegative().optional(),
   blockLot: z.string().optional(),
   phase: z.string().optional(),
   street: z.string().optional(),
   subdivision: z.string().min(1, "Subdivision is required"),
-  barangay: z.literal("Molino IV"),
-  city: z.literal("Bacoor"),
-  province: z.literal("Cavite"),
+  barangay: z.literal("Bahay Toro"),
+  city: z.literal("Quezon City"),
+  province: z.literal("Metro Manila"),
 });
 
 // Step 3: Important Information
@@ -240,14 +240,13 @@ const completeCertificateFormSchemaWithoutFiles = z.object({
   importantInfo: importantInfoSchema,
   proofOfIdentity: proofOfIdentitySchema.omit({
     photoId: true,
-    photoHoldingId: true
-  })
+    photoHoldingId: true,
+  }),
 });
 
 export type CompleteCertificateFormInputWithoutFiles = z.infer<
   typeof completeCertificateFormSchemaWithoutFiles
 >;
-
 
 export {
   personalInfoSchema,
@@ -255,5 +254,5 @@ export {
   importantInfoSchema,
   proofOfIdentitySchema,
   completeCertificateFormSchema,
-  completeCertificateFormSchemaWithoutFiles
+  completeCertificateFormSchemaWithoutFiles,
 };

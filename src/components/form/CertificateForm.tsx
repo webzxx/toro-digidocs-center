@@ -48,14 +48,14 @@ const initialFormData = {
   },
   address: {
     residency: undefined,
-    yearsInMolinoIV: 0,
+    yearsInBahayToro: 0,
     blockLot: "",
     phase: "",
     street: "",
     subdivision: "",
-    barangay: "Molino IV" as const,
-    city: "Bacoor" as const,
-    province: "Cavite" as const,
+    barangay: "Bahay Toro" as const,
+    city: "Quezon City" as const,
+    province: "Metro Manila" as const,
   },
   importantInfo: {
     certificateType: undefined,
@@ -115,7 +115,7 @@ export default function CertificateForm() {
 
           setRequestDetails({
             referenceNumber: res?.data.referenceNumber || "ERROR",
-            systemId: res?.data.molinoSystemId || "ERROR"
+            systemId: res?.data.bahayToroSystemId || "ERROR"
           });
         }
       })
@@ -228,7 +228,7 @@ function Footer({ details, resetMultiForm }: FooterProps) {
             <p className="text-lg font-bold">{details.referenceNumber}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">MOLINO SYSTEM ID</p>
+            <p className="text-sm font-medium text-gray-500">BAHAY TORO SYSTEM ID</p>
             <p className="text-lg font-bold">{details.systemId}</p>
           </div>
         </div>
