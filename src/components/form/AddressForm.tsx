@@ -71,7 +71,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
           name="yearsInBahayToro"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Years in BahayToroV</FormLabel>
+              <FormLabel>Years in Bahay Toro</FormLabel>
               <FormControl>
                 <Input type="number" {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
