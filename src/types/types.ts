@@ -96,7 +96,10 @@ const addressSchema = z.object({
   residency: z.enum(["HOME_OWNER", "TENANT", "HELPER", "CONSTRUCTION_WORKER"], {
     required_error: "Residency is required",
   }),
-  yearsInBahayToro: z.number().int().nonnegative().optional(),
+  yearsInBahayToro: z.preprocess(
+    (val) => (typeof val === "string" ? +val : val),
+    z.number().int().nonnegative().optional()
+  ),
   blockLot: z.string().optional(),
   phase: z.string().optional(),
   street: z.string().optional(),
