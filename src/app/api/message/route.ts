@@ -28,6 +28,6 @@ export async function POST(req: Request) {
     return Response.json({
       message: `Please go to <a href='${baseUrl}/sign-up'><u>this link</u></a> to create an account.`,
     });
-  }
+  } 
   return Response.json({ message: "I'm sorry, I don't understand that." });
 }

@@ -16,10 +16,10 @@ export default function About() {
                 <h1 className="text-lg">Barangay Captain</h1>
               </div>
               <div>
-                <p className="text-5xl pt-4">Jun Ferrer</p>
+                <p className="text-5xl pt-4">Victor &quot;Jun&quot; V. Ferrer Jr.</p>
               </div>
               <div>
-                <p className="text-xl pt-6">Barangay Captain Jun Ferrer, an accomplished advocate for working people and a proud product of the District. He has tirelessly worked to improve the living conditions of his constituents, implementing various community programs and services. Under his leadership, the barangay has seen significant improvements in infrastructure, healthcare, and education. Captain Ferrer is committed to ensuring that every resident has access to the resources they need for a better quality of life.</p>
+                <p className="text-xl pt-6">Barangay Captain Victor &quot;Jun&quot; V. Ferrer Jr., an accomplished advocate for working people and a proud product of the District. He has tirelessly worked to improve the living conditions of his constituents, implementing various community programs and services. Under his leadership, the barangay has seen significant improvements in infrastructure, healthcare, and education. Captain Ferrer is committed to ensuring that every resident has access to the resources they need for a better quality of life.</p>
               </div>
             </div>
           </div>
