@@ -1,68 +1,12 @@
 "use server";
 
 import {
-  CertificateSchema,
-  CertificateInput,
-  CompleteCertificateFormInput,
   completeCertificateFormSchema,
   CompleteCertificateFormInputWithoutFiles,
 } from "@/types/types";
 import { db } from "@/lib/db";
 import path from "path";
 import fs from "fs/promises";
-
-export async function createCertificate(formData: CertificateInput) {
-  try {
-    // Validate incoming data against schema
-    const validatedData = await CertificateSchema.safeParseAsync(formData);
-
-    if (!validatedData.success) {
-      const err = validatedData.error.flatten();
-      return {
-        fieldError: {
-          precinct: err.fieldErrors.precinct?.[0],
-          firstname: err.fieldErrors.firstname?.[0],
-          middlename: err.fieldErrors.middlename?.[0],
-          lastname: err.fieldErrors.lastname?.[0],
-          email: err.fieldErrors.email?.[0],
-          birthdate: err.fieldErrors.birthdate?.[0],
-          contact: err.fieldErrors.contact?.[0],
-        },
-      };
-    }
-
-    const {
-      precinct,
-      firstname,
-      middlename,
-      lastname,
-      email,
-      birthdate,
-      contact,
-    } = validatedData.data;
-
-    // Create a new certificate entry using the createCertificate function
-    const newCertificate = await db.certificate.create({
-      data: {
-        precinct: precinct,
-        firstname: firstname,
-        middlename: middlename,
-        lastname: lastname,
-        email: email,
-        birthdate: new Date(birthdate), // Ensure birthdate is properly formatted
-        contact: contact,
-      },
-    });
-    // Return success response
-    return { success: true };
-  } catch (error) {
-    console.error("Error creating certificate:", error);
-    // return Error
-    return {
-      serverError: "Unable to process request",
-    };
-  }
-}
 
 async function saveFile(
   file: File,
@@ -148,6 +92,7 @@ export async function createCertificateRequest(
           },
         },
       });
+      console.log(`Resident created with ID: ${resident.id}`);
 
       // Create folder for resident files
       const residentFolder = path.join(
@@ -156,6 +101,7 @@ export async function createCertificateRequest(
         `resident_${resident.id}`
       );
       await fs.mkdir(residentFolder, { recursive: true });
+      console.log(`Folder created for resident ID: ${resident.id}`);
 
       // Save files and get file paths
       const idPhoto1Path = await saveFile(
@@ -178,6 +124,7 @@ export async function createCertificateRequest(
         residentFolder,
         "holding2"
       );
+      console.log(`Files saved for resident ID: ${resident.id}`);
 
       // Save signature as file
       const signatureFileName = `${Date.now()}-signature.png`;
@@ -187,6 +134,7 @@ export async function createCertificateRequest(
         proofOfIdentity.signature.split(",")[1],
         "base64"
       );
+      console.log(`Signature saved for resident ID: ${resident.id}`);
 
       // Create ProofOfIdentity
       await prisma.proofOfIdentity.create({
@@ -199,6 +147,7 @@ export async function createCertificateRequest(
           holdingIdPhoto2Path,
         },
       });
+      console.log(`ProofOfIdentity created for resident ID: ${resident.id}`);
 
       // Create CertificateRequest
       const certificateRequest = await prisma.certificateRequest.create({
@@ -208,6 +157,9 @@ export async function createCertificateRequest(
           purpose: importantInfo.purpose,
         },
       });
+      console.log(
+        `CertificateRequest created with ID: ${certificateRequest.id} for resident ID: ${resident.id}`
+      );
 
       // Fetch the created resident and certificate request with their generated IDs
       const createdResident = await prisma.resident.findUnique({

@@ -9,7 +9,6 @@ import { DatePicker } from "../DatePicker";
 import { z } from 'zod'; 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { personalInfoSchema, PersonalInfoInput } from "@/types/types";
-import { createCertificate } from "@/app/api/certificate/actions";
 
 import {
   useStepper,
