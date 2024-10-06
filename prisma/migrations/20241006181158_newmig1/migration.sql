@@ -1,16 +1,15 @@
-/*
-  Warnings:
+-- CreateSequence
+CREATE SEQUENCE bahay_toro_system_id_seq START WITH 10001 INCREMENT BY 1;
+CREATE SEQUENCE reference_number_seq START WITH 1 INCREMENT BY 1;
 
-  - You are about to drop the column `updateUt` on the `User` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[email]` on the table `Certificate` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `updatedAt` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
 -- CreateEnum
 CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'LGBTQ');
+
+-- CreateEnum
+CREATE TYPE "CivilStatus" AS ENUM ('SINGLE', 'MARRIED', 'WIDOW', 'LEGALLY_SEPARATED', 'LIVING_IN', 'SEPARATED', 'DIVORCED');
 
 -- CreateEnum
 CREATE TYPE "Religion" AS ENUM ('CATHOLIC', 'IGLESIA_NI_CRISTO', 'AGLIPAY', 'BAPTIST', 'DATING_DAAN', 'ISLAM', 'JEHOVAHS_WITNESSES', 'OTHERS');
@@ -24,14 +23,23 @@ CREATE TYPE "ResidencyType" AS ENUM ('HOME_OWNER', 'TENANT', 'HELPER', 'CONSTRUC
 -- CreateEnum
 CREATE TYPE "CertificateType" AS ENUM ('BARANGAY_CLEARANCE', 'BARANGAY_ID', 'SOLO_PARENT', 'COHABITATION', 'GOOD_MORAL', 'NO_INCOME', 'FIRST_TIME_JOB_SEEKER', 'RESIDENCY', 'TRANSFER_OF_RESIDENCY', 'LIVING_STILL', 'BIRTH_FACT');
 
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "updateUt",
-ADD COLUMN     "role" "UserRole" NOT NULL DEFAULT 'USER',
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "email" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'USER',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Resident" (
     "id" SERIAL NOT NULL,
+    "bahayToroSystemId" TEXT NOT NULL DEFAULT concat('BAHAY-TORO-', to_char(nextval('bahay_toro_system_id_seq'), 'FM00000')),
     "precinctNumber" TEXT,
     "firstName" TEXT NOT NULL,
     "middleName" TEXT,
@@ -41,7 +49,7 @@ CREATE TABLE "Resident" (
     "email" TEXT,
     "contact" TEXT NOT NULL,
     "religion" "Religion",
-    "status" TEXT NOT NULL,
+    "status" "CivilStatus" NOT NULL,
     "sector" "Sector",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -66,14 +74,14 @@ CREATE TABLE "Address" (
     "id" SERIAL NOT NULL,
     "residentId" INTEGER NOT NULL,
     "residencyType" "ResidencyType" NOT NULL,
-    "yearsInMolinoIV" INTEGER NOT NULL,
+    "yearsInBahayToro" INTEGER,
     "blockLot" TEXT,
     "phase" TEXT,
-    "street" TEXT NOT NULL,
+    "street" TEXT,
     "subdivision" TEXT NOT NULL,
-    "barangay" TEXT NOT NULL DEFAULT 'Molino IV',
-    "city" TEXT NOT NULL DEFAULT 'Bacoor',
-    "province" TEXT NOT NULL DEFAULT 'Cavite',
+    "barangay" TEXT NOT NULL DEFAULT 'Bahay Toro',
+    "city" TEXT NOT NULL DEFAULT 'Quezon City',
+    "province" TEXT NOT NULL DEFAULT 'Metro Manila',
 
     CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
 );
@@ -81,6 +89,7 @@ CREATE TABLE "Address" (
 -- CreateTable
 CREATE TABLE "CertificateRequest" (
     "id" SERIAL NOT NULL,
+    "referenceNumber" TEXT NOT NULL DEFAULT concat('VVFJ-', to_char(nextval('reference_number_seq'), 'FM00000')),
     "residentId" INTEGER NOT NULL,
     "certificateType" "CertificateType" NOT NULL,
     "purpose" TEXT NOT NULL,
@@ -103,6 +112,45 @@ CREATE TABLE "ProofOfIdentity" (
     CONSTRAINT "ProofOfIdentity_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Certificate" (
+    "id" SERIAL NOT NULL,
+    "precinct" TEXT NOT NULL,
+    "firstname" TEXT NOT NULL,
+    "middlename" TEXT NOT NULL,
+    "lastname" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "birthdate" TIMESTAMP(3) NOT NULL,
+    "contact" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Certificate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BahayToroSystemIdSequence" (
+    "id" SERIAL NOT NULL,
+
+    CONSTRAINT "BahayToroSystemIdSequence_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ReferenceNumberSequence" (
+    "id" SERIAL NOT NULL,
+
+    CONSTRAINT "ReferenceNumberSequence_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Resident_bahayToroSystemId_key" ON "Resident"("bahayToroSystemId");
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Resident_email_key" ON "Resident"("email");
 
@@ -111,6 +159,9 @@ CREATE UNIQUE INDEX "EmergencyContact_residentId_key" ON "EmergencyContact"("res
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Address_residentId_key" ON "Address"("residentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CertificateRequest_referenceNumber_key" ON "CertificateRequest"("referenceNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProofOfIdentity_residentId_key" ON "ProofOfIdentity"("residentId");

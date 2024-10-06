@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Address" ALTER COLUMN "yearsInMolinoIV" DROP NOT NULL,
-ALTER COLUMN "street" DROP NOT NULL;
