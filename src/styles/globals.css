@@ -118,6 +118,10 @@ a {
   text-decoration: none;
 }
 
+.rdp-vhidden {
+  @apply hidden;
+}
+
 @layer base {
   * {
     @apply border-border;
