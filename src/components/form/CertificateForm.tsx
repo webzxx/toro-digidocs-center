@@ -149,11 +149,10 @@ export default function CertificateForm() {
     }
   }
 
-  const reset = () => { 
+  const resetFormData = () => { 
     console.log("Resetting form data");
     setFormData(initialFormData);
-    resetSteps();
-    scrollToForm();
+    
   }
 
   const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
@@ -212,7 +211,7 @@ export default function CertificateForm() {
             </Step>
           )
         })}
-        <Footer details={requestDetails} resetMultiForm={reset} />
+        <Footer details={requestDetails} resetFormData={resetFormData} />
       </Stepper>
     </div>
   )
@@ -223,14 +222,20 @@ type FooterProps = {
     referenceNumber: string;
     systemId: string;
   };
-  resetMultiForm: () => void;
+  resetFormData: () => void;
 };
 
-function Footer({ details, resetMultiForm }: FooterProps) {
-  const { activeStep, steps } = useStepper()
+function Footer({ details, resetFormData }: FooterProps) {
+  const { activeStep, steps, resetSteps } = useStepper()
 
   if (activeStep !== steps.length) {
     return null
+  }
+
+  const resetMultiForm = () => {
+    resetFormData();
+    resetSteps();
+    scrollToForm();
   }
 
   return (
