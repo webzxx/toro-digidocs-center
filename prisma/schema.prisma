@@ -154,12 +154,3 @@ model ProofOfIdentity {
   holdingIdPhoto2Path String
   resident            Resident @relation(fields: [residentId], references: [id])
 }
-
-// These are used to generate sequential numbers for bahayToroSystemId and referenceNumber
-model BahayToroSystemIdSequence {
-  id Int @id @default(autoincrement())
-}
-
-model ReferenceNumberSequence {
-  id Int @id @default(autoincrement())
-}
