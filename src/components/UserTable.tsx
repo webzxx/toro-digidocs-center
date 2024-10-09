@@ -110,7 +110,7 @@ import {
                       {formatDate(user.createdAt)}
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {formatDate(user.updateUt)}
+                      {formatDate(user.updatedAt)}
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
                       <UserActions userId={user.id.toString()} username={user.username} email={user.email} role={user.role} onReload={onReload} />
