@@ -22,6 +22,7 @@ import {
     TooltipTrigger,
   } from "@radix-ui/react-tooltip";
   import UserActions from "./UserActions";
+import { formatDate } from "@/lib/utils";
   
   interface UserTableProps {
     users?: User[];
@@ -29,16 +30,6 @@ import {
   }
   
   export default function UserTable({ users, onReload }: UserTableProps) {
-    const formatDate = (date: Date) => {
-      return new Date(date).toLocaleString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-      });
-    };
-
     return (
       <Card>
         <CardHeader className="px-7">
