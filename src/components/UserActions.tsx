@@ -21,7 +21,7 @@ import {
 import { Delete, Edit } from "lucide-react";
 import React, { useState } from "react";
 
-import { updateUser, deleteUser } from "@/app/dashboard/users/action";
+import { updateUser, deleteUser } from "@/app/dashboard/users/actions";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 interface UserActionsProps {

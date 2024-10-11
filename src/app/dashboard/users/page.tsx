@@ -2,7 +2,7 @@
 
 import { User } from '@prisma/client'
 import React, { useState, useEffect, useCallback } from 'react'
-import { fetchUsers } from './action'
+import { fetchUsers } from './actions'
 import UserTable from '@/components/UserTable';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
