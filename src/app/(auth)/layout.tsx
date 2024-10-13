@@ -1,10 +1,19 @@
 import { FC, ReactNode } from "react";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 interface AuthLayoutProps {
     children: ReactNode;
 }
 
-const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
+const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {
+  const session = await getServerSession(authOptions);
+
+  if (session) {
+    redirect("/"); // Redirect to the home page if the user is already signed in
+  }
+
   return (
     <main className="flex min-h-screen justify-center items-center">
         <section id="first-section" className="relative w-full">
