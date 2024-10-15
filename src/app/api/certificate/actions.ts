@@ -150,11 +150,17 @@ export async function createCertificateRequest(
       console.log(`ProofOfIdentity created for resident ID: ${resident.id}`);
 
       // Create CertificateRequest
+      const { certificateType, purpose, ...restOfImportantInfo } =
+        importantInfo;
+
       const certificateRequest = await prisma.certificateRequest.create({
         data: {
           residentId: resident.id,
-          certificateType: importantInfo.certificateType,
-          purpose: importantInfo.purpose,
+          certificateType: certificateType,
+          purpose: purpose,
+          additionalInfo: {
+            ...restOfImportantInfo,
+          },
         },
       });
       console.log(
