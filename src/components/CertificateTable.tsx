@@ -31,6 +31,7 @@ interface CertificateTableProps {
 }
 
 export default function CertificateTable({ certificates, onReload }: CertificateTableProps) {
+  // You can change the current implementation to use this instead if you want to use the Badge component
   const getCertificateTypeBadge = (type: CertificateType) => {
     const variants: { [key in CertificateType]: "default" | "secondary" | "destructive" | "outline" } = {
       BARANGAY_CLEARANCE: "default",
@@ -103,6 +104,52 @@ export default function CertificateTable({ certificates, onReload }: Certificate
       </span>
     );
   };
+  const isValidDate = (dateString: string): boolean => {
+    return !isNaN(Date.parse(dateString));
+  };
+
+  const formatValue = (value: any): string => {
+    if (typeof value === 'string' && isValidDate(value)) {
+      return formatDate(new Date(value));
+    }
+    return String(value);
+  };
+
+  const formatTitleCase = (str: string): string => str.replace(/([A-Z])/g, ' $1').trim().replace(/^./, str => str.toUpperCase())
+
+  const renderAdditionalInfo = (additionalInfo: Record<string, any>) => {
+    if (!additionalInfo || Object.keys(additionalInfo).length === 0) return "N/A";
+  
+    const previewFields = Object.keys(additionalInfo).slice(0, 2);
+    const previewString = previewFields
+      .map(field => `${formatTitleCase(field)}: ${formatValue(additionalInfo[field])}`)
+      .join(', ');
+  
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger className="text-left">
+            {previewString.length > 30 ? `${previewString.slice(0, 30)}...` : previewString}
+          </TooltipTrigger>
+          <TooltipContent className="w-80 p-0">
+            <div className="bg-white rounded-md shadow-lg p-4">
+              <h4 className="font-semibold text-lg mb-2">Additional Information</h4>
+              <dl className="space-y-1">
+                {Object.entries(additionalInfo).map(([key, value]) => (
+                  <div key={key} className="grid grid-cols-3 gap-2">
+                    <dt className="text-sm font-medium text-gray-500 capitalize col-span-1">
+                      {key.replace(/([A-Z])/g, ' $1').trim()}:
+                    </dt>
+                    <dd className="text-sm text-gray-900 col-span-2">{formatValue(value)}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
 
 
   return (
@@ -120,6 +167,9 @@ export default function CertificateTable({ certificates, onReload }: Certificate
               <TableHead>Certificate Type</TableHead>
               <TableHead className="hidden md:table-cell">Purpose</TableHead>
               <TableHead className="hidden sm:table-cell">Request Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Additional Info</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -147,6 +197,7 @@ export default function CertificateTable({ certificates, onReload }: Certificate
                     {formatDate(certificate.requestDate)}
                   </TableCell>
                   <TableCell>{getStatusBadge(certificate.status)}</TableCell>
+                  <TableCell>{renderAdditionalInfo(certificate.additionalInfo)}</TableCell>
                   <TableCell>
                     <CertificateActions
                       certificateId={certificate.id}

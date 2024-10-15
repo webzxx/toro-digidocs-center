@@ -1,21 +1,16 @@
 "use client"
 
-// import { Separator } from '@/components/ui/separator'
 import clsx from 'clsx'
 import {
-  Banknote,
   Folder,
   HomeIcon,
-  Settings
 } from "lucide-react"
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { FaCertificate, FaTasks } from 'react-icons/fa'
 
 export default function DashboardSideBar() {
   const pathname = usePathname();
-  const { data:session } = useSession();
 
   return (
     <div className="lg:block hidden border-r h-full">

@@ -66,7 +66,7 @@ export default function CertificateActions({
   };
 
   const handleDeleteCertificate = () => {
-    const id = parseInt(certificateId);
+    const id = certificateId
     deleteCertificateRequest(id);
     onReload();
   };
