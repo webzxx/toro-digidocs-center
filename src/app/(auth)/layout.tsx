@@ -11,7 +11,10 @@ const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {
   const session = await getServerSession(authOptions);
 
   if (session) {
-    redirect("/"); // Redirect to the home page if the user is already signed in
+    if (session.user.role === "ADMIN")
+      redirect("/dashboard"); // Redirect to the dashboard if the user is an admin
+    else
+      redirect("/"); // Redirect to the home page if the user is already signed in
   }
 
   return (
