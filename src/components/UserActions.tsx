@@ -39,15 +39,10 @@ export default function UserActions({
   role,
   onReload,
 }: UserActionsProps) {
-  const [editUserId, setEditUserId] = useState<string>("");
   const [deleteUserId, setDeleteUserId] = useState<string>("");
   const [editedUsername, setEditedUsername] = useState<string>(username);
   const [editedEmail, setEditedEmail] = useState<string>(email);
   const [editedRole, setEditedRole] = useState<string>(role);
-
-  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditUserId(e.target.value);
-  };
 
   const handleEditedEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedEmail(e.target.value);
