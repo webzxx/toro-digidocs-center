@@ -21,7 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CertificateRequest, CertificateType } from "@prisma/client";
+import { CertificateRequest, CertificateStatus, CertificateType } from "@prisma/client";
 import { formatDate } from '@/lib/utils';
 
 interface CertificateTableProps {
@@ -52,6 +52,58 @@ export default function CertificateTable({ certificates, onReload }: Certificate
     );
   };
 
+  const getCertificateTypeCustomBadge = (type: CertificateType) => {
+    const getColor = () => {
+      switch (type) {
+        case 'BARANGAY_CLEARANCE':
+        case 'GOOD_MORAL':
+        case 'TRANSFER_OF_RESIDENCY':
+          return 'bg-blue-100 text-blue-800';
+        case 'BARANGAY_ID':
+        case 'NO_INCOME':
+        case 'LIVING_STILL':
+          return 'bg-green-100 text-green-800';
+        case 'SOLO_PARENT':
+        case 'FIRST_TIME_JOB_SEEKER':
+        case 'BIRTH_FACT':
+          return 'bg-red-100 text-red-800';
+        case 'COHABITATION':
+        case 'RESIDENCY':
+          return 'bg-yellow-100 text-yellow-800';
+        default:
+          return 'bg-gray-100 text-gray-800';
+      }
+    };
+
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
+        {type.replace(/_/g, " ")}
+      </span>
+    );
+  };
+
+  const getStatusBadge = (status: CertificateStatus) => {
+    const getColor = () => {
+      switch (status) {
+        case 'PENDING':
+          return 'bg-yellow-100 text-yellow-800';
+        case 'PROCESSING':
+          return 'bg-blue-100 text-blue-800';
+        case 'COMPLETED':
+          return 'bg-green-100 text-green-800';
+        default:
+          return 'bg-gray-100 text-gray-800';
+      }
+    };
+
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
+        {status}
+      </span>
+    );
+  };
+
+
   return (
     <Card>
       <CardHeader className="px-7">
@@ -70,7 +122,7 @@ export default function CertificateTable({ certificates, onReload }: Certificate
             </TableRow>
           </TableHeader>
           <TableBody>
-            {certificates && certificates.length > 0 && (
+            {certificates && certificates.length > 0 ? (
               certificates.map((certificate) => (
                 <TableRow key={certificate.id}>
                   <TableCell>{certificate.referenceNumber}</TableCell>
@@ -93,8 +145,16 @@ export default function CertificateTable({ certificates, onReload }: Certificate
                   <TableCell className="hidden sm:table-cell">
                     {formatDate(certificate.requestDate)}
                   </TableCell>
+                  <TableCell>{getStatusBadge(certificate.status)}</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               ))
+            ): (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center">
+                  No certificate requests found.
+                </TableCell>
+              </TableRow>
             )}
           </TableBody>
         </Table>
