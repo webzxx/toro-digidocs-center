@@ -4,16 +4,10 @@ import { CertificateRequest } from '@prisma/client'
 import React, { useState, useEffect, useCallback } from 'react'
 import { fetchCertificates } from './actions'
 import CertificateTable from '@/components/CertificateTable';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+
 export default function CertificatesPage() {
-  const { data: session } = useSession();
   const [certificates, setCertificates] = useState<CertificateRequest[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  if (session?.user?.role !== "ADMIN") {
-    redirect("/dashboard");
-  }
 
   const loadCertificates = useCallback(() => {
     setLoading(true);

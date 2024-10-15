@@ -56,7 +56,7 @@ export default function CertificateActions({
 
   const handleEditCertificate = () => {
     if (purpose === editedPurpose && status === editedStatus) return;
-    const id = parseInt(certificateId);
+    const id = certificateId
     const updatedData = {
       purpose: editedPurpose,
       status: editedStatus,
