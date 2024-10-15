@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import { CertificateRequest, CertificateStatus, CertificateType } from "@prisma/client";
 import { formatDate } from '@/lib/utils';
+import CertificateActions from './CertificateActions';
 
 interface CertificateTableProps {
   certificates?: CertificateRequest[];
@@ -127,7 +128,7 @@ export default function CertificateTable({ certificates, onReload }: Certificate
                 <TableRow key={certificate.id}>
                   <TableCell>{certificate.referenceNumber}</TableCell>
                   <TableCell>{certificate.residentId}</TableCell>
-                  <TableCell>{getCertificateTypeBadge(certificate.certificateType)}</TableCell>
+                  <TableCell>{getCertificateTypeCustomBadge(certificate.certificateType)}</TableCell>
                   <TableCell className="hidden md:table-cell">
                     <TooltipProvider>
                       <Tooltip>
@@ -146,7 +147,16 @@ export default function CertificateTable({ certificates, onReload }: Certificate
                     {formatDate(certificate.requestDate)}
                   </TableCell>
                   <TableCell>{getStatusBadge(certificate.status)}</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell>
+                    <CertificateActions
+                      certificateId={certificate.id}
+                      referenceNumber={certificate.referenceNumber}
+                      certificateType={certificate.certificateType}
+                      purpose={certificate.purpose}
+                      status={certificate.status}
+                      onReload={onReload}
+                    />
+                  </TableCell>
                 </TableRow>
               ))
             ): (

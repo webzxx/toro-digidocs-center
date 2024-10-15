@@ -22,7 +22,7 @@ import { Edit, Trash } from 'lucide-react';
 import { deleteCertificateRequest, updateCertificateRequest } from '@/app/dashboard/certificates/actions';
 
 interface CertificateActionsProps {
-  certificateId: string;
+  certificateId: number;
   referenceNumber: string;
   certificateType: string;
   purpose: string;
