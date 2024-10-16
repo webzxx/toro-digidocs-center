@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,6 +5,88 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resident {
+  id                  Int                  @id @default(autoincrement())
+  bahayToroSystemId   String               @unique @default(dbgenerated("concat('BAHAY-TORO-', to_char(nextval('bahay_toro_system_id_seq'::regclass), 'FM00000'::text))"))
+  precinctNumber      String?
+  firstName           String
+  middleName          String?
+  lastName            String
+  gender              Gender
+  birthDate           DateTime
+  email               String?
+  contact             String
+  religion            Religion?
+  status              CivilStatus
+  sector              Sector?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  address             Address?
+  certificateRequests CertificateRequest[]
+  emergencyContact    EmergencyContact?
+  proofOfIdentity     ProofOfIdentity?
+
+  @@unique([id, email])
+}
+
+model EmergencyContact {
+  id           Int      @id @default(autoincrement())
+  residentId   Int      @unique
+  name         String
+  relationship String
+  contact      String
+  address      String
+  resident     Resident @relation(fields: [residentId], references: [id])
+}
+
+model Address {
+  id               Int           @id @default(autoincrement())
+  residentId       Int           @unique
+  residencyType    ResidencyType
+  yearsInBahayToro Int?
+  blockLot         String?
+  phase            String?
+  street           String?
+  subdivision      String
+  barangay         String        @default("Bahay Toro")
+  city             String        @default("Quezon City")
+  province         String        @default("Metro Manila")
+  resident         Resident      @relation(fields: [residentId], references: [id])
+}
+
+model CertificateRequest {
+  id              Int               @id @default(autoincrement())
+  referenceNumber String            @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'::regclass), 'FM00000'::text))"))
+  residentId      Int
+  certificateType CertificateType
+  purpose         String
+  additionalInfo  Json?
+  requestDate     DateTime          @default(now())
+  status          CertificateStatus @default(PENDING)
+  resident        Resident          @relation(fields: [residentId], references: [id])
+}
+
+model ProofOfIdentity {
+  id                  Int      @id @default(autoincrement())
+  residentId          Int      @unique
+  signaturePath       String
+  idPhoto1Path        String
+  idPhoto2Path        String
+  holdingIdPhoto1Path String
+  holdingIdPhoto2Path String
+  resident            Resident @relation(fields: [residentId], references: [id])
 }
 
 enum UserRole {
@@ -73,93 +149,8 @@ enum CertificateType {
   BIRTH_FACT
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
-  password  String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Resident {
-  id                Int         @id @default(autoincrement())
-  bahayToroSystemId String      @unique @default(dbgenerated("concat('BAHAY-TORO-', to_char(nextval('bahay_toro_system_id_seq'), 'FM00000'))"))
-  precinctNumber    String?
-  firstName         String
-  middleName        String?
-  lastName          String
-  gender            Gender
-  birthDate         DateTime
-  email             String?
-  contact           String
-  religion          Religion?
-  status            CivilStatus
-  sector            Sector?
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-
-  emergencyContact    EmergencyContact?
-  address             Address?
-  certificateRequests CertificateRequest[]
-  proofOfIdentity     ProofOfIdentity?
-
-  @@unique([id, email])
-}
-
-model EmergencyContact {
-  id           Int      @id @default(autoincrement())
-  residentId   Int      @unique
-  name         String
-  relationship String
-  contact      String
-  address      String
-  resident     Resident @relation(fields: [residentId], references: [id])
-}
-
-model Address {
-  id               Int           @id @default(autoincrement())
-  residentId       Int           @unique
-  residencyType    ResidencyType
-  yearsInBahayToro Int?
-  blockLot         String?
-  phase            String?
-  street           String?
-  subdivision      String
-  barangay         String        @default("Bahay Toro")
-  city             String        @default("Quezon City")
-  province         String        @default("Metro Manila")
-  resident         Resident      @relation(fields: [residentId], references: [id])
-}
-
-model CertificateRequest {
-  id              Int             @id @default(autoincrement())
-  referenceNumber String          @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'), 'FM00000'))"))
-  residentId      Int
-  certificateType CertificateType
-  purpose         String
-  additionalInfo  Json?
-  requestDate     DateTime        @default(now())
-  resident        Resident        @relation(fields: [residentId], references: [id])
-}
-
-model ProofOfIdentity {
-  id                  Int      @id @default(autoincrement())
-  residentId          Int      @unique
-  signaturePath       String
-  idPhoto1Path        String
-  idPhoto2Path        String
-  holdingIdPhoto1Path String
-  holdingIdPhoto2Path String
-  resident            Resident @relation(fields: [residentId], references: [id])
-}
-
-// These are used to generate sequential numbers for bahayToroSystemId and referenceNumber
-model BahayToroSystemIdSequence {
-  id Int @id @default(autoincrement())
-}
-
-model ReferenceNumberSequence {
-  id Int @id @default(autoincrement())
+enum CertificateStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
 }

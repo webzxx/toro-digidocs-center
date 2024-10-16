@@ -7,9 +7,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast"
-import { goToDashboard } from "@/app/(auth)/sign-in/actions";
+import { useRouter } from "next/navigation";
 
 
 const FormSchema = z.object({
@@ -21,6 +21,7 @@ const FormSchema = z.object({
 });
 
 const SignInForm = () => {
+  const router = useRouter()
   const { toast } = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -44,7 +45,12 @@ const SignInForm = () => {
         variant: "destructive"
       })
     } else {
-      goToDashboard();
+      const session = await getSession();
+      if(session?.user.role === "ADMIN") {
+        router.push('/dashboard')
+      } else {
+        router.push('/')
+      }
     }
   };
 

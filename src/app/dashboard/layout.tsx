@@ -11,6 +11,9 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   if (!session) {
     redirect("/sign-in");
   }
+  else if (session.user.role !== "ADMIN") {
+    redirect("/");
+  }
 
   return (
     <div className="container grid min-h-screen w-full lg:grid-cols-[280px_1fr]">

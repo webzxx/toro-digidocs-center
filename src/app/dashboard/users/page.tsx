@@ -2,19 +2,14 @@
 
 import { User } from '@prisma/client'
 import React, { useState, useEffect, useCallback } from 'react'
-import { fetchUsers } from './action'
+import { fetchUsers } from './actions'
 import UserTable from '@/components/UserTable';
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 
 export default function UsersPage() {
   const { data: session, update } = useSession();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  if (session?.user?.role !== "ADMIN") {
-    redirect("/dashboard");
-  }
 
   const loadUsers = useCallback(() => {
     setLoading(true);
