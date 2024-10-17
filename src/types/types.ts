@@ -1,4 +1,5 @@
 // types.ts
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 export interface CertificateFormData {
@@ -259,3 +260,13 @@ export {
   completeCertificateFormSchema,
   completeCertificateFormSchemaWithoutFiles,
 };
+
+const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
+  include: {
+      address: true,
+      emergencyContact: true,
+      proofOfIdentity: true,
+  }
+})
+
+export type ResidentWithTypes = Prisma.ResidentGetPayload<typeof residentWithTypes>;
