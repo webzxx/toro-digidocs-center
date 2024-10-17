@@ -117,7 +117,7 @@ export default function CertificateTable({ certificates, onReload }: Certificate
 
   const formatTitleCase = (str: string): string => str.replace(/([A-Z])/g, ' $1').trim().replace(/^./, str => str.toUpperCase())
 
-  const renderAdditionalInfo = (additionalInfo: Record<string, any>) => {
+  const renderAdditionalInfo = (additionalInfo: any) => {
     if (!additionalInfo || Object.keys(additionalInfo).length === 0) return "N/A";
   
     const previewFields = Object.keys(additionalInfo).slice(0, 2);
