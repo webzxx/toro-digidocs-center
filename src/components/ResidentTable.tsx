@@ -24,6 +24,8 @@ import {
 import { Gender, CivilStatus, Sector } from "@prisma/client";
 import { formatDate } from '@/lib/utils';
 import { ResidentWithTypes } from '@/types/types';
+import Image from 'next/image';
+import ResidentActions from './ResidentActions';
 
 
 interface ResidentTableProps {
@@ -31,7 +33,7 @@ interface ResidentTableProps {
   onReload: () => void
 }
 
-export default function ResidentTable({ residents }: ResidentTableProps) {
+export default function ResidentTable({ residents, onReload }: ResidentTableProps) {
   const getGenderBadge = (gender: Gender) => {
     const variants: { [key in Gender]: "default" | "secondary" | "destructive" } = {
       MALE: "default",
@@ -187,24 +189,24 @@ export default function ResidentTable({ residents }: ResidentTableProps) {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 1</p>
-                  <img src={getImagePath(id, proof.idPhoto1Path)} alt="ID Photo 1" className="w-full h-auto rounded" />
+                  <Image fill src={getImagePath(id, proof.idPhoto1Path)} alt="ID Photo 1" className="w-full h-auto rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 2</p>
-                  <img src={getImagePath(id, proof.idPhoto2Path)} alt="ID Photo 2" className="w-full h-auto rounded" />
+                  <Image fill src={getImagePath(id, proof.idPhoto2Path)} alt="ID Photo 2" className="w-full h-auto rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 1</p>
-                  <img src={getImagePath(id, proof.holdingIdPhoto1Path)} alt="Holding ID Photo 1" className="w-full h-auto rounded" />
+                  <Image fill src={getImagePath(id, proof.holdingIdPhoto1Path)} alt="Holding ID Photo 1" className="w-full h-auto rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 2</p>
-                  <img src={getImagePath(id, proof.holdingIdPhoto2Path)} alt="Holding ID Photo 2" className="w-full h-auto rounded" />
+                  <Image fill src={getImagePath(id, proof.holdingIdPhoto2Path)} alt="Holding ID Photo 2" className="w-full h-auto rounded" />
                 </div>
               </div>
               <div className="mt-2">
                 <p className="text-sm font-medium text-gray-500 mb-1">Signature</p>
-                <img src={getImagePath(id, proof.signaturePath)} alt="Signature" className="w-full h-auto rounded" />
+                <Image fill src={getImagePath(id, proof.signaturePath)} alt="Signature" className="w-full h-auto rounded" />
               </div>
             </div>
           </TooltipContent>
@@ -247,9 +249,9 @@ export default function ResidentTable({ residents }: ResidentTableProps) {
                   <TableCell>{renderAddress(resident.address)}</TableCell>
                   <TableCell>{renderEmergencyContact(resident.emergencyContact)}</TableCell>
                   <TableCell>{renderProofOfIdentity(resident.id, resident.proofOfIdentity)}</TableCell>
-                  {/* <TableCell>
-                    <ResidentActions />
-                  </TableCell> */}
+                  <TableCell>
+                    <ResidentActions resident={resident} onReload={onReload} />
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
