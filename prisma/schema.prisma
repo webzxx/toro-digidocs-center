@@ -48,7 +48,7 @@ model EmergencyContact {
   relationship String
   contact      String
   address      String
-  resident     Resident @relation(fields: [residentId], references: [id])
+  resident     Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
 }
 
 model Address {
@@ -63,7 +63,7 @@ model Address {
   barangay         String        @default("Bahay Toro")
   city             String        @default("Quezon City")
   province         String        @default("Metro Manila")
-  resident         Resident      @relation(fields: [residentId], references: [id])
+  resident         Resident      @relation(fields: [residentId], references: [id], onDelete: Cascade)
 }
 
 model CertificateRequest {
@@ -75,7 +75,7 @@ model CertificateRequest {
   additionalInfo  Json?
   requestDate     DateTime          @default(now())
   status          CertificateStatus @default(PENDING)
-  resident        Resident          @relation(fields: [residentId], references: [id])
+  resident        Resident          @relation(fields: [residentId], references: [id], onDelete: Cascade)
 }
 
 model ProofOfIdentity {
@@ -86,7 +86,7 @@ model ProofOfIdentity {
   idPhoto2Path        String
   holdingIdPhoto1Path String
   holdingIdPhoto2Path String
-  resident            Resident @relation(fields: [residentId], references: [id])
+  resident            Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {
