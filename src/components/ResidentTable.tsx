@@ -100,6 +100,29 @@ export default function ResidentTable({ residents, onReload }: ResidentTableProp
     );
   };
 
+  const formatReligion = (religion: string | null) => {
+    switch (religion) {
+      case 'CATHOLIC':
+        return 'Catholic';
+      case 'IGLESIA_NI_CRISTO':
+        return 'Iglesia ni Cristo';
+      case 'AGLIPAY':
+        return 'Aglipay';
+      case 'BAPTIST':
+        return 'Baptist';
+      case 'DATING_DAAN':
+        return 'Dating Daan';
+      case 'ISLAM':
+        return 'Islam';
+      case 'JEHOVAHS_WITNESSES':
+        return 'Jehovah\'s Witnesses';
+      case 'OTHERS':
+        return 'Others';
+      default:
+        return 'N/A';
+    }
+  }
+
   const renderAddress = (address: any) => {
     if (!address) return "N/A";
     
@@ -245,7 +268,7 @@ export default function ResidentTable({ residents, onReload }: ResidentTableProp
                   <TableCell>{`${resident.lastName}, ${resident.firstName} ${resident.middleName || ''}`}</TableCell>
                   <TableCell>{getGenderBadge(resident.gender)}</TableCell>
                   <TableCell>{formatDate(resident.birthDate)}</TableCell>
-                  <TableCell>{resident.religion || 'N/A'}</TableCell>
+                  <TableCell>{formatReligion(resident.religion)}</TableCell>
                   <TableCell>{getCivilStatusBadge(resident.status)}</TableCell>
                   <TableCell>{resident.sector ? getSectorBadge(resident.sector) : 'N/A'}</TableCell>
                   <TableCell>{renderAddress(resident.address)}</TableCell>

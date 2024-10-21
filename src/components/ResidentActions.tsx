@@ -99,12 +99,12 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
             <Edit className="size-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[625px]">
           <DialogHeader>
             <h2>{resident.bahayToroSystemId}</h2>
             <DialogDescription>Update resident information</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto">
+          <div className="grid gap-4 py-4 pr-4 max-h-[60vh] overflow-y-auto">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="firstName" className="text-right">
                 First Name
@@ -149,7 +149,7 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
                 onValueChange={handleSelectChange('gender')}
                 defaultValue={editedResident.gender}
               >
-                <SelectTrigger className="w-[180px]" id="gender">
+                <SelectTrigger className="w-[280px]" id="gender">
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
                 <SelectContent>
@@ -200,7 +200,7 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
                 onValueChange={handleSelectChange('religion')}
                 defaultValue={editedResident.religion ?? ''}
               >
-                <SelectTrigger className="w-[180px]" id="religion">
+                <SelectTrigger className="w-[280px]" id="religion">
                   <SelectValue placeholder="Select religion" />
                 </SelectTrigger>
                 <SelectContent>
@@ -223,7 +223,7 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
                 onValueChange={handleSelectChange('status')}
                 defaultValue={editedResident.status}
               >
-                <SelectTrigger className="w-[180px]" id="status">
+                <SelectTrigger className="w-[280px]" id="status">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -245,7 +245,7 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
                 onValueChange={handleSelectChange('sector')}
                 defaultValue={editedResident.sector ?? ''}
               >
-                <SelectTrigger className="w-[180px]" id="sector">
+                <SelectTrigger className="w-[280px]" id="sector">
                   <SelectValue placeholder="Select sector" />
                 </SelectTrigger>
                 <SelectContent>
@@ -265,7 +265,7 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
                 onValueChange={handleSelectChange('address.residencyType')}
                 defaultValue={editedResident.address?.residencyType}
               >
-                <SelectTrigger className="w-[180px]" id="residencyType">
+                <SelectTrigger className="w-[280px]" id="residencyType">
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -406,7 +406,7 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
           <DialogHeader>
             <h2>{resident.bahayToroSystemId}</h2>
             <DialogDescription>
-              Delete resident <b>{resident.firstName} {resident.lastName}</b>
+              This will <span className="text-red-600 font-bold">delete all records</span> related to the resident, <b>{resident.firstName} {resident.lastName}</b>!
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
