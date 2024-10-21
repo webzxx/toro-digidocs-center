@@ -189,24 +189,24 @@ export default function ResidentTable({ residents, onReload }: ResidentTableProp
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 1</p>
-                  <Image fill src={getImagePath(id, proof.idPhoto1Path)} alt="ID Photo 1" className="w-full h-auto rounded" />
+                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.idPhoto1Path)} alt="ID Photo 1" className="rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 2</p>
-                  <Image fill src={getImagePath(id, proof.idPhoto2Path)} alt="ID Photo 2" className="w-full h-auto rounded" />
+                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.idPhoto2Path)} alt="ID Photo 2" className="rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 1</p>
-                  <Image fill src={getImagePath(id, proof.holdingIdPhoto1Path)} alt="Holding ID Photo 1" className="w-full h-auto rounded" />
+                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.holdingIdPhoto1Path)} alt="Holding ID Photo 1" className="rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 2</p>
-                  <Image fill src={getImagePath(id, proof.holdingIdPhoto2Path)} alt="Holding ID Photo 2" className="w-full h-auto rounded" />
+                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.holdingIdPhoto2Path)} alt="Holding ID Photo 2" className="rounded" />
                 </div>
               </div>
               <div className="mt-2">
                 <p className="text-sm font-medium text-gray-500 mb-1">Signature</p>
-                <Image fill src={getImagePath(id, proof.signaturePath)} alt="Signature" className="w-full h-auto rounded" />
+                <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.signaturePath)} alt="Signature" className="rounded" />
               </div>
             </div>
           </TooltipContent>
@@ -229,6 +229,7 @@ export default function ResidentTable({ residents, onReload }: ResidentTableProp
               <TableHead>Name</TableHead>
               <TableHead>Gender</TableHead>
               <TableHead>Birth Date</TableHead>
+              <TableHead>Religion</TableHead>
               <TableHead>Civil Status</TableHead>
               <TableHead>Sector</TableHead>
               <TableHead>Address</TableHead>
@@ -244,6 +245,7 @@ export default function ResidentTable({ residents, onReload }: ResidentTableProp
                   <TableCell>{`${resident.lastName}, ${resident.firstName} ${resident.middleName || ''}`}</TableCell>
                   <TableCell>{getGenderBadge(resident.gender)}</TableCell>
                   <TableCell>{formatDate(resident.birthDate)}</TableCell>
+                  <TableCell>{resident.religion || 'N/A'}</TableCell>
                   <TableCell>{getCivilStatusBadge(resident.status)}</TableCell>
                   <TableCell>{resident.sector ? getSectorBadge(resident.sector) : 'N/A'}</TableCell>
                   <TableCell>{renderAddress(resident.address)}</TableCell>

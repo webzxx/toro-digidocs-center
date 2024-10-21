@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { ResidentWithTypes } from "@/types/types";
 
 export async function fetchResidents() {
   return await db.resident.findMany({
@@ -12,10 +13,32 @@ export async function fetchResidents() {
   });
 }
 
-export async function updateResident(id: number, data: any) {
-  return await db.resident.update({
-    where: { id },
-    data,
+export async function updateResident(id: number, data: ResidentWithTypes) {
+  const { address, emergencyContact, proofOfIdentity, ...residentData } = data;
+
+  return await db.$transaction(async (prisma) => {
+    // Update resident data
+    const updatedResident = await prisma.resident.update({
+      where: { id },
+      data: residentData,
+    });
+
+    // Update address if provided
+    if (address) {
+      await prisma.address.update({
+        where: { id: address.id },
+        data: address,
+      });
+    }
+
+    // Update emergency contact if provided
+    if (emergencyContact) {
+      await prisma.emergencyContact.update({
+        where: { id: emergencyContact.id },
+        data: emergencyContact,
+      });
+    }
+    return updatedResident;
   });
 }
 
