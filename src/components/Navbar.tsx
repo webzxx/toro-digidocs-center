@@ -7,7 +7,7 @@ import {AiOutlineMenu} from "react-icons/ai";
 import { useState } from "react";
 import "@/styles/globals.css";
 
-const Navbar = async () => {
+const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false) 
 
   const handleNav = () => {
