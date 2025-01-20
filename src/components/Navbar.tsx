@@ -6,10 +6,6 @@ import Logo from "../app/toro-logo.png";
 import {AiOutlineMenu} from "react-icons/ai";
 import { useState } from "react";
 import "@/styles/globals.css";
-import { buttonVariants } from "./ui/button";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import UserAccountnav from "./UserAccountnav";
 
 const Navbar = async () => {
   const [menuOpen, setMenuOpen] = useState(false) 
@@ -18,7 +14,6 @@ const Navbar = async () => {
     setMenuOpen(!menuOpen);
   }
 
-  const session = await getServerSession(authOptions);
   return (
     <nav className="w-full h-24 shadow-xl bg-white">
       <div className="flex justify-between items-center h-full w-full px-4 2xl:px-16">
