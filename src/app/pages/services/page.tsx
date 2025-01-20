@@ -12,7 +12,7 @@ export default function Services() {
         </div>
         <div className="bg-white rounded-lg shadow-lg border border-stone-300 m-4 p-8">
           <div className="flex flex-col justify-center items-center">
-            <Link href="/" className={buttonVariants()}>Click for existing profile</Link>
+            {/* <Link href="/" className={buttonVariants()}>Click for existing profile</Link> */}
             <h1 className="p-6">Please make sure to provide your correct Contact Number and Email Address</h1>
           </div>
           <div className="container">
