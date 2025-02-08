@@ -1,80 +1,54 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import '@/styles/globals.css'
+import Link from "next/link";
+import Image from "next/image";
+import "@/styles/globals.css";
 
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 const Footer = () => {
   return (
-    <footer className="bg-beige-light  p-20">
-      <div className="container text-black">
-        <div className="mb-10 flex justify-between gap-16">
-          <div className="flex flex-col gap-4">
-            <Image src="" alt="dunno" width={156} height={63} />
-            <p className="max-w-[30vw]">
+    <footer className="bg-beige-light p-6 sm:p-8 lg:p-12">
+      <div className="container mx-auto text-black">
+        <div className="mb-10 flex flex-col lg:flex-row justify-between gap-6 lg:gap-16">
+          {/* Left Section */}
+          <div className="flex flex-col items-center lg:items-start gap-4">
+            <p className="max-w-full sm:max-w-[40vw] text-center lg:text-left text-xl font-extrabold">
               Barangay Bahay Toro
             </p>
             <div className="flex gap-4">
-              <div className="flex h-10 w-10 justify-center rounded-full bg-red pt-2 text-center text-neutrals-lightest">
-              </div>
-              <div className="flex h-10 w-10 justify-center rounded-full bg-red pt-2 text-center text-neutrals-lightest">
-              </div>
-              <div className="flex h-10 w-10 justify-center rounded-full bg-red pt-2 text-center text-neutrals-lightest">
-              </div>
+              <div className="flex h-10 w-10 justify-center rounded-full bg-red text-neutrals-lightest" />
+              <div className="flex h-10 w-10 justify-center rounded-full bg-red text-neutrals-lightest" />
+              <div className="flex h-10 w-10 justify-center rounded-full bg-red text-neutrals-lightest" />
             </div>
           </div>
 
-          <div className="flex gap-4">
-            <div className="min-w-[125px] p-4">
-              <p className="mb-3 text-xl font-extrabold">Services</p>
-              <div className="flex flex-col text-neutrals-gray">
-                <Link href="/">Dashboard</Link>
-                <Link href="/">Calendar</Link>
-              </div>
-            </div>
-
-            <div className="min-w-[125px] p-4">
-              <p className="mb-3 text-xl font-extrabold">News</p>
-              <div className="flex flex-col text-neutrals-gray">
-                <Link href="/">Calendar</Link>
-                <Link href="/">Dashboard</Link>
-              </div>
-            </div>
-
-            <div className="min-w-[125px] p-4">
-              <p className="mb-3 text-xl font-extrabold">Company</p>
-              <div className="flex flex-col text-neutrals-gray">
+          {/* Right Section - Links */}
+          <div className="flex flex-wrap justify-center lg:justify-end gap-6 lg:gap-12">
+            <div className="min-w-[125px] text-center lg:text-left">
+              <p className="mb-3 text-xl font-bold">More Pages</p>
+              <div className="flex flex-col text-neutrals-gray space-y-1">
+                <Link href="/">Home</Link>
                 <Link href="/">About Us</Link>
-                <Link href="/">Career</Link>
-                <Link href="/">Contact Us</Link>
+                <Link href="/">Services</Link>
               </div>
             </div>
 
-            <div className="min-w-[125px] p-4">
-              <p className="mb-3 text-xl font-extrabold">Information</p>
-              <div className="flex flex-col text-neutrals-gray">
+            <div className="min-w-[125px] text-center lg:text-left">
+              <p className="mb-3 text-xl font-bold">Govt. Info</p>
+              <div className="flex flex-col text-neutrals-gray space-y-1">
+                <Link href="/">Privacy Policy</Link>
+                <Link href="/">Terms & Conditions</Link>
+                <Link href="/">Disclaimer</Link>
                 <Link href="/">FAQ</Link>
-                <Link href="/">Support</Link>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-between border-t border-t-neutrals-black pt-6 text-neutrals-gray">
-          <div className="flex flex-row space-x-4">Copyright © {currentYear} Barangay Bahay Toro</div>
-          <ul className="flex list-inside list-disc gap-4">
-            <li className="list-none">
-              <Link href="/">Site Notice</Link>
-            </li>
-            <li>
-              <Link href="/">Privacy Policy</Link>
-            </li>
-            <li>
-              <Link href="/">Terms of Service</Link>
-            </li>
-          </ul>
+        {/* Footer Bottom */}
+        <div className="border-t border-neutrals-black pt-6 text-center lg:text-left text-neutrals-gray">
+          <p>Copyright © {currentYear} Barangay Bahay Toro</p>
         </div>
       </div>
     </footer>
-  )
-}
-export default Footer
+  );
+};
+export default Footer;
