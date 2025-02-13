@@ -1,64 +1,70 @@
 import Image from "next/image";
+import { Button } from "./ui/button";
+import { ArrowRight, Briefcase, Car, Building2, Trees, LandPlot, FlagIcon as Government } from "lucide-react";
 
 const Hero = () => {
   return (
-    <div id="first-section" className="relative justify-center w-full py-8">
-      <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 h-auto md:h-[45rem] px-4 md:px-8">
-        {/* Image Section */}
-        <div className="flex justify-center pt-8 md:pt-24">
-          <Image
-            src="/bht.png"
-            alt="bht"
-            width={900}
-            height={900}
-            className="w-full max-w-[400px] md:max-w-[600px]"
-          />
+    <div
+      id="hero-section"
+      className="relative w-full h-[50vh] md:h-[45rem] flex items-center justify-center bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/hero.png')`,
+      }}
+    >
+      <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 h-auto md:h-[45rem] px-4 md:px-8 text-white">
+        <div className="max-w-4xl p-4 text-center md:text-left">
+          <div className="pt-4 md:pt-40">
+            <p className="mb-4 flex items-center gap-2">
+              Discover The District
+              {/* <span className="w-12 h-0.5 bg-cyan-400 inline-block" /> */}
+            </p>
+
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              Barangay Bahay Toro
+            </h1>
+
+            <p className="text-xl md:text-2xl mb-8 max-w-2xl">
+              The most exciting district of Bacoor, Cavite, get your opportunity
+              to move forward together.
+            </p>
+
+            <Button
+              variant="default"
+              size="lg"
+              className="bg-green-primary hover:bg-green-500"
+            >
+              Learn More
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
         </div>
+      </div>
 
-        {/* Content Section */}
-        <div className="p-4 text-center md:text-left">
-          <div className="pt-8 md:pt-28">
-            <h1 className="text-lg">About us</h1>
-            <p className="text-3xl md:text-5xl pt-4">
-              If you change your city, you&apos;re changing the world.
-            </p>
-            <p className="text-md md:text-xl pt-6">
-              Barangay Bahay Toro is determined to address everything that
-              hinders its way to being the best.
-            </p>
-
-            {/* Checkboxes */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-              <div className="bg-gray-300 p-4 rounded-lg flex items-center justify-center md:justify-start">
-                <input type="checkbox" id="checkbox1" name="checkbox1" />
-                <label htmlFor="checkbox1" className="pl-3">
-                  Our Mission
-                </label>
-              </div>
-              <div className="bg-gray-300 p-4 rounded-lg flex items-center justify-center md:justify-start">
-                <input type="checkbox" id="checkbox2" name="checkbox2" />
-                <label htmlFor="checkbox2" className="pl-3">
-                  Our Vision
-                </label>
-              </div>
-              <div className="bg-gray-300 p-4 rounded-lg flex items-center justify-center md:justify-start">
-                <input type="checkbox" id="checkbox3" name="checkbox3" />
-                <label htmlFor="checkbox3" className="pl-3">
-                  Our Goal
-                </label>
-              </div>
-            </div>
-
-            {/* Vision Statement */}
-            <div className="pt-6">
-              <p>
-                Our vision is to empower individuals and organizations globally
-                through innovative solutions, fostering growth, and creating a
-                positive impact in every community we serve. We aspire to be a
-                catalyst for transformative change, inspiring excellence and
-                sustainability in all our endeavors.
-              </p>
-            </div>
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-4 w-full lg:w-[82rem] lg:h-[10rem] -mb-20">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="p-2 rounded-lg text-center flex-row">
+            <Briefcase className="text-green-primary w-20 h-20 mx-auto" />
+            <span className="text-xl">Offices</span>
+          </div>
+          <div className="p-2 rounded-lg text-center flex-row">
+            <Car className="text-green-primary w-20 h-20 mx-auto" />
+            <span className="text-xl">Parking</span>
+          </div>
+          <div className="p-2 rounded-lg text-center flex-row">
+            <Building2 className="text-green-primary w-20 h-20 mx-auto" />
+            <span className="text-xl">Hospital</span>
+          </div>
+          <div className="p-2 rounded-lg text-center flex-row">
+            <Trees className="text-green-primary w-20 h-20 mx-auto" />
+            <span className="text-xl">Recreation</span>
+          </div>
+          <div className="p-2 rounded-lg text-center flex-row">
+            <Government className="text-green-primary w-20 h-20 mx-auto" />
+            <span className="text-xl">Government</span>
+          </div>
+          <div className="p-2 rounded-lg text-center flex-row">
+            <LandPlot className="text-green-primary w-20 h-20 mx-auto" />
+            <span className="text-xl">Housing</span>
           </div>
         </div>
       </div>
