@@ -7,7 +7,7 @@ import { FaRegUserCircle } from "react-icons/fa";
 
 const Council = () => {
   return (
-    <div id="second-section" className="relative w-full py-8">
+    <div id="council-section" className="relative w-full py-8">
       <div className="container mx-auto px-4 lg:px-8 min-h-screen flex flex-col">
         {/* Section Title */}
         <div className="text-center pt-16 uppercase">

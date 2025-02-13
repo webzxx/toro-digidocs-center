@@ -1,7 +1,8 @@
 // Sections
-import Hero from "../components/Hero"
-import Council from "../components/Council"
-import Contact from "../components/Contact"
+import Hero from "../components/Hero";
+import About from "../components/About";
+import Council from "../components/Council";
+import Number from "../components/Number";
 
 export default function Home() {
   return (
@@ -9,11 +10,14 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Councils Section */}
+      {/* About Section */}
+      <About />
+
+      {/* Council Section */}
       <Council />
 
-      {/* Contact Section */}
-      <Contact />
+      {/* Number Section */}
+      <Number />
     </main>
   );
 }

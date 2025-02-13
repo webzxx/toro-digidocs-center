@@ -10,9 +10,9 @@ import { FaClinicMedical } from "react-icons/fa";
 import { RiMapPinAddFill } from "react-icons/ri";
 import { FaPersonWalkingWithCane } from "react-icons/fa6";
 
-const Contact = () => {
+const Number = () => {
   return (
-    <div id="third-section" className="relative justify-center w-full py-8">
+    <div id="number-section" className="relative justify-center w-full py-8">
   <div className="container mx-auto px-4 lg:px-8">
     <div className="text-center w-full max-w-7xl pt-16 uppercase">
       
@@ -75,4 +75,4 @@ const Contact = () => {
   )
 }
 
-export default Contact
+export default Number;
