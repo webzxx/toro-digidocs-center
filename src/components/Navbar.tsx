@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../app/toro-logo.png";
+import Logo from "../app/logo.png";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
 import "@/styles/globals.css";
@@ -16,7 +16,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-full relative h-24 shadow-xl bg-white z-50">
-      <div className="flex justify-between items-center h-full w-full px-4 2xl:px-16">
+      <div className="flex justify-between items-center h-full w-full px-4 2xl:px-16 container">
         <Link href="/">
           <Image
             src={Logo}
@@ -30,14 +30,24 @@ const Navbar = () => {
 
         <div className="hidden sm:flex">
           <ul className="hidden sm:flex">
+          <Link href="/">
+              <li className="ml-10 hover:border-b hover:border-b-green-500 text-xl">
+                Home
+              </li>
+            </Link>
             <Link href="/pages/about">
-              <li className="ml-10 uppercase hover:border-b text-xl">
-                About Us
+              <li className="ml-10 hover:border-b hover:border-b-green-500 text-xl">
+                About
               </li>
             </Link>
             <Link href="/pages/services">
-              <li className="ml-10 uppercase hover:border-b text-xl">
+              <li className="ml-10 hover:border-b hover:border-b-green-500 text-xl">
                 Services
+              </li>
+            </Link>
+            <Link href="/pages/faq">
+              <li className="ml-10 hover:border-b hover:border-b-green-500 text-xl">
+                FAQ
               </li>
             </Link>
           </ul>
@@ -58,12 +68,20 @@ const Navbar = () => {
         </div>
         <div className="flex-col py-4">
           <ul>
+          <Link href="/">
+              <li
+                onClick={() => setMenuOpen(false)}
+                className="py-4 cursor-pointer"
+              >
+                Home
+              </li>
+            </Link>
             <Link href="/pages/about">
               <li
                 onClick={() => setMenuOpen(false)}
                 className="py-4 cursor-pointer"
               >
-                About Us
+                About
               </li>
             </Link>
             <Link href="/pages/services">
@@ -72,6 +90,14 @@ const Navbar = () => {
                 className="py-4 cursor-pointer"
               >
                 Services
+              </li>
+            </Link>
+            <Link href="/pages/faq">
+              <li
+                onClick={() => setMenuOpen(false)}
+                className="py-4 cursor-pointer"
+              >
+                FAQ
               </li>
             </Link>
           </ul>
