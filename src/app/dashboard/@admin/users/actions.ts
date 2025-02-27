@@ -1,20 +1,19 @@
 "use server";
 
 import { db } from "@/lib/db";
-
-export async function fetchUsers() {
-  return await db.user.findMany();
-}
+import { revalidatePath } from "next/cache";
 
 export async function updateUser(id: number, data: any) {
-  return await db.user.update({
+  await db.user.update({
     where: { id },
     data,
   });
+  revalidatePath("/dashboard/users");
 }
 
 export async function deleteUser(id: number) {
-  return await db.user.delete({
+  await db.user.delete({
     where: { id },
   });
+  revalidatePath("/dashboard/users");
 }

@@ -2,16 +2,7 @@
 
 import { db } from "@/lib/db";
 import { ResidentWithTypes } from "@/types/types";
-
-export async function fetchResidents() {
-  return await db.resident.findMany({
-    include: {
-      address: true,
-      emergencyContact: true,
-      proofOfIdentity: true,
-    },
-  });
-}
+import { revalidatePath } from "next/cache";
 
 export async function updateResident(id: number, data: ResidentWithTypes) {
   const { address, emergencyContact, proofOfIdentity, ...residentData } = data;
@@ -40,10 +31,12 @@ export async function updateResident(id: number, data: ResidentWithTypes) {
     }
     return updatedResident;
   });
+  revalidatePath("/dashboard/residents");
 }
 
 export async function deleteResident(id: number) {
-  return await db.resident.delete({
+  await db.resident.delete({
     where: { id },
   });
+  revalidatePath("/dashboard/residents");
 }

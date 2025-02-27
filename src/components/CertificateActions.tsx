@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Trash } from 'lucide-react';
-import { deleteCertificateRequest, updateCertificateRequest } from '@/app/dashboard/certificates/actions';
+import { deleteCertificateRequest, updateCertificateRequest } from '@/app/dashboard/@admin/certificates/actions';
 
 interface CertificateActionsProps {
   certificateId: number;
@@ -27,7 +29,6 @@ interface CertificateActionsProps {
   certificateType: string;
   purpose: string;
   status: string;
-  onReload: () => void;
 }
 
 export default function CertificateActions({
@@ -36,7 +37,6 @@ export default function CertificateActions({
   certificateType,
   purpose,
   status,
-  onReload,
 }: CertificateActionsProps) {
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
   const [editedPurpose, setEditedPurpose] = useState<string>(purpose);
@@ -62,15 +62,12 @@ export default function CertificateActions({
       status: editedStatus,
     };
     updateCertificateRequest(id, updatedData);
-    onReload();
   };
 
   const handleDeleteCertificate = () => {
     const id = certificateId
     deleteCertificateRequest(id);
-    onReload();
   };
-
   return (
     <div className="flex gap-2">
       <Dialog>

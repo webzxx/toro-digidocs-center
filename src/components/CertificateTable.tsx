@@ -27,10 +27,9 @@ import CertificateActions from './CertificateActions';
 
 interface CertificateTableProps {
   certificates?: CertificateRequest[];
-  onReload: () => void;
 }
 
-export default function CertificateTable({ certificates, onReload }: CertificateTableProps) {
+export default function CertificateTable({ certificates }: CertificateTableProps) {
   // You can change the current implementation to use this instead if you want to use the Badge component
   const getCertificateTypeBadge = (type: CertificateType) => {
     const variants: { [key in CertificateType]: "default" | "secondary" | "destructive" | "outline" } = {
@@ -138,7 +137,7 @@ export default function CertificateTable({ certificates, onReload }: Certificate
                 {Object.entries(additionalInfo).map(([key, value]) => (
                   <div key={key} className="grid grid-cols-3 gap-2">
                     <dt className="text-sm font-medium text-gray-500 capitalize col-span-1">
-                      {key.replace(/([A-Z])/g, ' $1').trim()}:
+                      {key.replace(/([A-Z])/g, ' $1').trim()}
                     </dt>
                     <dd className="text-sm text-gray-900 col-span-2">{formatValue(value)}</dd>
                   </div>
@@ -150,7 +149,6 @@ export default function CertificateTable({ certificates, onReload }: Certificate
       </TooltipProvider>
     );
   };
-
 
   return (
     <Card>
@@ -205,7 +203,6 @@ export default function CertificateTable({ certificates, onReload }: Certificate
                       certificateType={certificate.certificateType}
                       purpose={certificate.purpose}
                       status={certificate.status}
-                      onReload={onReload}
                     />
                   </TableCell>
                 </TableRow>

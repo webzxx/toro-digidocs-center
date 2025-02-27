@@ -21,7 +21,7 @@ import {
 import { Delete, Edit } from "lucide-react";
 import React, { useState } from "react";
 
-import { updateUser, deleteUser } from "@/app/dashboard/users/actions";
+import { updateUser, deleteUser } from "@/app/dashboard/@admin/users/actions";
 import { DialogClose } from "@radix-ui/react-dialog";
 
 interface UserActionsProps {
@@ -29,7 +29,6 @@ interface UserActionsProps {
   username: string;
   email: string;
   role: string;
-  onReload: () => void;
 }
 
 export default function UserActions({
@@ -37,7 +36,6 @@ export default function UserActions({
   username,
   email,
   role,
-  onReload,
 }: UserActionsProps) {
   const [deleteUserId, setDeleteUserId] = useState<string>("");
   const [editedUsername, setEditedUsername] = useState<string>(username);
@@ -76,13 +74,11 @@ export default function UserActions({
       role: editedRole,
     };
     updateUser(id, updatedData);
-    onReload();
   };
 
   const handleDeleteUser = () => {
     const id = parseInt(userId);
     deleteUser(id);
-    onReload();
   };
 
   return (

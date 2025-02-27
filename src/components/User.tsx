@@ -1,11 +1,10 @@
-import { useSession } from 'next-auth/react'
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
-const User = () => {
-    const { data: session } = useSession();
+export default async function User() {
+    const session = await getServerSession(authOptions);
 
   return (
     <pre>{JSON.stringify(session)}</pre>
   )
 }
-
-export default User

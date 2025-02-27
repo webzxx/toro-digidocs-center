@@ -1,20 +1,19 @@
 "use server";
 
 import { db } from "@/lib/db";
-
-export async function fetchCertificates() {
-  return await db.certificateRequest.findMany();
-}
+import { revalidatePath } from "next/cache";
 
 export async function updateCertificateRequest(id: number, data: any) {
-  return await db.certificateRequest.update({
+  await db.certificateRequest.update({
     where: { id },
     data,
   });
+  revalidatePath("/dashboard/certificates");
 }
 
 export async function deleteCertificateRequest(id: number) {
-  return await db.certificateRequest.delete({
+  await db.certificateRequest.delete({
     where: { id },
   });
+  revalidatePath("/dashboard/certificates");
 }

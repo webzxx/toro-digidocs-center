@@ -1,27 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-// import { BarChartComponent } from './_components/bar-chart'
-import Link from 'next/link'
-import { ArrowUpRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-// import { BarChartBetter } from './_components/bar-chart-better'
-import { db } from "@/lib/db";
+import { withAuth } from "@/lib/withAuth";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusCounts } from "../dashboard-utils";
 
-const StatusCounts = async () => {
-  const status = await db.certificateRequest.findMany({
-    select: {
-      status: true
-    }
-  })
-  const pendingCount = status.filter((s) => s.status === 'PENDING').length
-  const processingCount = status.filter((s) => s.status === 'PROCESSING').length
-  const completedCount = status.filter((s) => s.status === 'COMPLETED').length
-
-  return { pendingCount, processingCount, completedCount }
-}
-
-export default async function Dashboard() {
-  const { pendingCount, processingCount, completedCount } = await StatusCounts()
-
+async function AdminDashboard() {
+  const { pendingCount, processingCount, completedCount } = await StatusCounts();
   return (
     <div className='flex flex-row justify-center items-start flex-wrap px-4 pt-4 gap-4'>
       <Card className='w-[20rem]'>
@@ -55,9 +37,10 @@ export default async function Dashboard() {
         </CardContent>
       </Card>
       <div className='flex flex-wrap gap-2'>
-        {/* <BarChartComponent />
-        <BarChartBetter /> */}
+        {/* Add any additional charts or components here */}
       </div>
     </div>
-  )
+  );
 }
+
+export default withAuth(AdminDashboard, { allowedRoles: ["ADMIN"] });

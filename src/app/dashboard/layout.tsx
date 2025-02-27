@@ -1,28 +1,24 @@
 import { ReactNode } from "react"
 import DashboardSideBar from "./(components)/DashboardSideBar"
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-// import DashboardTopNav from "./_components/dashbord-top-nav"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
+interface DashboardLayoutProps {
+  children: ReactNode;
+  admin: ReactNode;
+  user: ReactNode;
+}
+
+export default async function DashboardLayout({ children, admin, user }: DashboardLayoutProps) {
   const session = await getServerSession(authOptions);
-
-  if (!session) {
-    redirect("/sign-in");
-  }
-  else if (session.user.role !== "ADMIN") {
-    redirect("/");
-  }
+  const role = session?.user?.role;
 
   return (
     <div className="container grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <DashboardSideBar />
-      {/* <DashboardTopNav > */}
-        <main className="flex flex-col gap-4 p-4 lg:gap-6">
-          {children}
-        </main>
-      {/* </DashboardTopNav> */}
+      <main className="flex flex-col gap-4 p-4 lg:gap-6">
+        {role === "ADMIN" ? admin : user}
+      </main>
     </div>
   )
 }

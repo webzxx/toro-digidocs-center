@@ -27,13 +27,11 @@ import { ResidentWithTypes } from '@/types/types';
 import Image from 'next/image';
 import ResidentActions from './ResidentActions';
 
-
 interface ResidentTableProps {
-  residents?: ResidentWithTypes[],
-  onReload: () => void
+  residents?: ResidentWithTypes[];
 }
 
-export default function ResidentTable({ residents, onReload }: ResidentTableProps) {
+export default function ResidentTable({ residents }: ResidentTableProps) {
   const getGenderBadge = (gender: Gender) => {
     const variants: { [key in Gender]: "default" | "secondary" | "destructive" } = {
       MALE: "default",
@@ -275,7 +273,7 @@ export default function ResidentTable({ residents, onReload }: ResidentTableProp
                   <TableCell>{renderEmergencyContact(resident.emergencyContact)}</TableCell>
                   <TableCell>{renderProofOfIdentity(resident.id, resident.proofOfIdentity)}</TableCell>
                   <TableCell>
-                    <ResidentActions resident={resident} onReload={onReload} />
+                    <ResidentActions resident={resident} />
                   </TableCell>
                 </TableRow>
               ))

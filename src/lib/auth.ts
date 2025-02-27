@@ -61,7 +61,6 @@ export const authOptions: NextAuthOptions = {
         };
       }
       if (trigger === "update" && session?.role) {
-        console.log("session.role", session.role);
         token.role = session.role;
       }
       return token;

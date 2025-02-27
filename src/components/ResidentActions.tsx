@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -19,16 +21,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Trash } from 'lucide-react';
-import { deleteResident, updateResident } from '@/app/dashboard/residents/actions';
+import { deleteResident, updateResident } from '@/app/dashboard/@admin/residents/actions';
 import { ResidentWithTypes } from '@/types/types';
 import { DatePicker } from './DatePicker';
 
 interface ResidentActionsProps {
   resident: ResidentWithTypes;
-  onReload: () => void;
 }
 
-export default function ResidentActions({ resident, onReload }: ResidentActionsProps) {
+export default function ResidentActions({ resident }: ResidentActionsProps) {
   const [editedResident, setEditedResident] = useState(resident);
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
 
@@ -83,12 +84,10 @@ export default function ResidentActions({ resident, onReload }: ResidentActionsP
   const handleEditResident = () => {
     if (JSON.stringify(resident) === JSON.stringify(editedResident)) return;
     updateResident(resident.id, editedResident);
-    onReload();
   };
 
   const handleDeleteResident = () => {
     deleteResident(resident.id);
-    onReload();
   };
 
   return (
