@@ -24,7 +24,7 @@ const Hero = () => {
             </h1>
 
             <p className="text-xl md:text-2xl mb-8 max-w-2xl">
-              The most exciting district of Bacoor, Cavite, get your opportunity
+              The most exciting district of Quezon City, Metro Manila. Get your opportunity
               to move forward together.
             </p>
 
