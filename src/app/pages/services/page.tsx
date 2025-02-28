@@ -1,6 +1,4 @@
-import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import CertificateForm from "@/components/form/CertificateForm"
+import CertificateForm from "@/components/form/certificate/CertificateForm"
 import { withAuth, WithAuthProps } from "@/lib/withAuth";
 
 function Services({ user }: WithAuthProps) {
