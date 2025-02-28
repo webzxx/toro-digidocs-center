@@ -1,8 +1,7 @@
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { ComponentType } from "react";
 import { UserRole } from "@prisma/client";
+import getSession from "./getSession";
 
 export type WithAuthProps = {
   user: {
@@ -24,7 +23,7 @@ export function withAuth<P extends WithAuthProps>(
   return async function AuthenticatedComponent(
     props: Omit<P, keyof WithAuthProps>
   ) {
-    const session = await getServerSession(authOptions);
+    const session = await getSession();
     
     if (!session?.user) {
       redirect("/sign-in");

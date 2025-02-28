@@ -1,7 +1,6 @@
 import { ReactNode } from "react"
 import DashboardSideBar from "./(components)/DashboardSideBar"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import getSession from "@/lib/getSession";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -10,7 +9,7 @@ interface DashboardLayoutProps {
 }
 
 export default async function DashboardLayout({ children, admin, user }: DashboardLayoutProps) {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   const role = session?.user?.role;
 
   return (

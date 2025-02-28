@@ -1,14 +1,13 @@
 import { FC, ReactNode } from "react";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import getSession from "@/lib/getSession";
 
 interface AuthLayoutProps {
     children: ReactNode;
 }
 
 const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
 
   if (session) {
     if (session.user.role === "ADMIN")
