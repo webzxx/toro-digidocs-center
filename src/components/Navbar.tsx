@@ -55,7 +55,7 @@ const Navbar = () => {
             {session?.user && (
               <Link href="/dashboard">
                 <li className="ml-10 hover:border-b hover:border-b-green-500 text-xl">
-                  Dashboard
+                  {session.user.role === "admin" ? "Dashboard" : "My Account"}
                 </li>
               </Link>
             )}
