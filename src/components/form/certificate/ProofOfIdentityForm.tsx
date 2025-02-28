@@ -26,7 +26,7 @@ import SignaturePad from 'react-signature-pad-wrapper'
 import { StepperFormActions } from './StepperFormActions'
 import Image from 'next/image'
 import { ProofOfIdentityInput, proofOfIdentitySchema } from '@/types/types'
-import { useStepper } from '../ui/stepper'
+import { useStepper } from '../../ui/stepper'
 
 type ImageFile = {
   file: File;

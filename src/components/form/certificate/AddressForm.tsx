@@ -6,7 +6,7 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StepperFormActions } from './StepperFormActions';
-import { useStepper } from '../ui/stepper'
+import { useStepper } from '../../ui/stepper'
 import { scrollToForm } from './StepperFormActions'
 
 export interface AddressFormProps {

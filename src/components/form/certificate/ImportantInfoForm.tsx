@@ -3,11 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
 import { ImportantInfoInput, importantInfoSchema } from '@/types/types'
-import { useStepper } from '../ui/stepper'
+import { useStepper } from '../../ui/stepper'
 import { scrollToForm, StepperFormActions } from './StepperFormActions'
-import { DatePicker } from '../DatePicker'
+import { DatePicker } from '../../DatePicker'
 
 export interface ImportantInfoFormProps {
   data: Partial<ImportantInfoInput>

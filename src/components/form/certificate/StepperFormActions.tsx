@@ -1,5 +1,5 @@
-import { Button } from "../ui/button"
-import { useStepper } from "../ui/stepper"
+import { Button } from "../../ui/button"
+import { useStepper } from "../../ui/stepper"
 
 export const StepperFormActions = () => {
   const {
