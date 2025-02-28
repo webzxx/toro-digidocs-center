@@ -40,24 +40,38 @@ const SignUpForm = () => {
     });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    const response = await fetch('/api/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: values.username,
-        email: values.email,
-        password: values.password
+    try {
+      const response = await fetch('/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: values.username,
+          email: values.email,
+          password: values.password
+        })
       })
-    })
 
-    if(response.ok) {
-      router.push('/sign-in')
-    } else {
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Account created successfully!",
+          variant: "default"
+        })
+        router.push('/sign-in')
+      } else {
+        const data = await response.json()
+        toast({
+          title: "Error",
+          description: data.message || "Something went wrong during registration",
+          variant: "destructive"
+        })
+      }
+    } catch (error) {
       toast({
         title: "Error",
-        description: "Oops! Something went wrong!",
+        description: "An unexpected error occurred",
         variant: "destructive"
       })
     }

@@ -30,7 +30,6 @@ const SignInForm = () => {
       password: ''
     },
   });
-
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     const signInData = await signIn('credentials', {
       email: values.email,
@@ -45,15 +44,21 @@ const SignInForm = () => {
         variant: "destructive"
       })
     } else {
-      const session = await getSession();
-      if(session?.user.role === "ADMIN") {
-        router.push('/dashboard')
-      } else {
-        router.push('/')
+      router.refresh(); // Refresh the router to update server components
+      if(signInData?.ok) {
+        // Add a small delay to ensure session is updated
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Get the updated session to check user role
+        const session = await getSession();
+        const userRole = session?.user?.role;
+
+        // Determine destination based on user role
+        const destination = userRole === 'ADMIN' ? '/dashboard' : '/';
+        router.push(destination);
       }
     }
   };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
