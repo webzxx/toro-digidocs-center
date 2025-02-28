@@ -6,10 +6,9 @@ import { revalidatePath } from "next/cache";
 
 export async function updateResident(id: number, data: ResidentWithTypes) {
   const { address, emergencyContact, proofOfIdentity, ...residentData } = data;
-
-  return await db.$transaction(async (prisma) => {
+  await db.$transaction(async (prisma) => {
     // Update resident data
-    const updatedResident = await prisma.resident.update({
+    await prisma.resident.update({
       where: { id },
       data: residentData,
     });
@@ -29,8 +28,8 @@ export async function updateResident(id: number, data: ResidentWithTypes) {
         data: emergencyContact,
       });
     }
-    return updatedResident;
   });
+  
   revalidatePath("/dashboard/residents");
 }
 
