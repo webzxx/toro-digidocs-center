@@ -52,10 +52,17 @@ const Navbar = () => {
                 FAQ
               </li>
             </Link>
-            {session?.user && (
+            {session?.user ? (
               <Link href="/dashboard">
                 <li className="ml-10 hover:border-b hover:border-b-green-500 text-xl">
-                  {session.user.role === "admin" ? "Dashboard" : "My Account"}
+                  {session.user.role === "ADMIN" ? "Dashboard" : "My Account"}
+                </li>
+              </Link>
+            ) :
+            (
+              <Link href="/sign-in">
+                <li className="ml-10 hover:border-b hover:border-b-green-500 text-xl">
+                  Sign In
                 </li>
               </Link>
             )}
