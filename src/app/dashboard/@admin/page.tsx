@@ -5,7 +5,7 @@ import { StatusCounts } from "../dashboard-utils";
 async function AdminDashboard() {
   const { pendingCount, processingCount, completedCount } = await StatusCounts();
   return (
-    <div className='flex flex-row justify-center items-start flex-wrap px-4 pt-4 gap-4'>
+    <div className='flex flex-row justify-center items-start flex-wrap lg:px-4 lg:pt-4 gap-4'>
       <Card className='w-[20rem]'>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-md font-medium">

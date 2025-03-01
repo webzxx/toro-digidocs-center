@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function UserDashboard({ user }: WithAuthProps) {
   return (
-    <div className='flex flex-row justify-center items-start flex-wrap px-4 pt-4 gap-4'>
+    <div className='flex flex-row justify-center items-start flex-wrap lg:px-4 lg:pt-4 gap-4'>
       <Card className='w-full'>
         <CardHeader>
           <CardTitle>My Certificates</CardTitle>
