@@ -1,14 +1,10 @@
 import { redirect } from "next/navigation";
 import { ComponentType } from "react";
-import { UserRole } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 import getSession from "./getSession";
 
 export type WithAuthProps = {
-  user: {
-    id: string;
-    username: string;
-    role: UserRole;
-  };
+  user: User;
 };
 
 interface AuthOptions {
