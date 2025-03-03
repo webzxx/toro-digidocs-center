@@ -23,4 +23,4 @@ function Services({ user }: WithAuthProps) {
   )
 }
 
-export default withAuth(Services);
+export default withAuth(Services, { allowedRoles: ["USER"], adminOverride: false });
