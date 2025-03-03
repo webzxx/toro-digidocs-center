@@ -44,6 +44,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
         ]);
       }
       loadWelcomeMessage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
   return (
