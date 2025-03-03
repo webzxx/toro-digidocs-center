@@ -54,7 +54,8 @@ const SignInForm = () => {
         const userRole = session?.user?.role;
 
         // Determine destination based on user role
-        const destination = userRole === 'ADMIN' ? '/dashboard' : '/';
+        // const destination = userRole === 'ADMIN' ? '/dashboard' : '/';
+        const destination = '/dashboard';
         router.push(destination);
       }
     }
