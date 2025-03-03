@@ -156,7 +156,7 @@ export default function UserActions({
             <DialogHeader>
               <h2>{username}</h2>
               <DialogDescription>
-                Delete user <b>{userId}</b> information
+                Delete user information by typing user ID: <b>{userId}</b>
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">

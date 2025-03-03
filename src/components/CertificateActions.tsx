@@ -131,8 +131,7 @@ export default function CertificateActions({
           <DialogHeader>
             <h2>{referenceNumber}</h2>
             <DialogDescription>
-              Delete certificate request <b>{certificateId}</b> 
-              by typing <b>{referenceNumber}</b>
+              Delete certificate request <b>{certificateId}</b> by typing <b>{referenceNumber}</b>
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
