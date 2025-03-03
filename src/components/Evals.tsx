@@ -142,7 +142,7 @@ export function Evals() {
   )
 }
 
-function BarChartIcon(props) {
+function BarChartIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -164,7 +164,7 @@ function BarChartIcon(props) {
 }
 
 
-function BellIcon(props) {
+function BellIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -185,7 +185,7 @@ function BellIcon(props) {
 }
 
 
-function BoxIcon(props) {
+function BoxIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -207,7 +207,7 @@ function BoxIcon(props) {
 }
 
 
-function BuildingIcon(props) {
+function BuildingIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -237,7 +237,7 @@ function BuildingIcon(props) {
 }
 
 
-function HomeIcon(props) {
+function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -258,7 +258,7 @@ function HomeIcon(props) {
 }
 
 
-function LineChartIcon(props) {
+function LineChartIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -279,7 +279,7 @@ function LineChartIcon(props) {
 }
 
 
-function MicroscopeIcon(props) {
+function MicroscopeIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -304,7 +304,7 @@ function MicroscopeIcon(props) {
 }
 
 
-function UsersIcon(props) {
+function UsersIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
