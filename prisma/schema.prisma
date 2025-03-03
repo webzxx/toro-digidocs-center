@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
-  password  String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  Int                  @id @default(autoincrement())
+  email               String               @unique
+  username            String               @unique
+  password            String
+  role                UserRole             @default(USER)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  certificateRequests CertificateRequest[]
 }
 
 model Resident {
@@ -70,12 +71,14 @@ model CertificateRequest {
   id              Int               @id @default(autoincrement())
   referenceNumber String            @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'::regclass), 'FM00000'::text))"))
   residentId      Int
+  userId          Int
   certificateType CertificateType
   purpose         String
   additionalInfo  Json?
   requestDate     DateTime          @default(now())
   status          CertificateStatus @default(PENDING)
   resident        Resident          @relation(fields: [residentId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id])
 }
 
 model ProofOfIdentity {
@@ -153,4 +156,5 @@ enum CertificateStatus {
   PENDING
   PROCESSING
   COMPLETED
+  REJECTED
 }
