@@ -113,6 +113,7 @@ export async function createCertificateRequest(
       // Create Resident
       const resident = await prisma.resident.create({
         data: {
+          userId: parseInt(session.user.id),
           precinctNumber: personalInfo.precinctNumber,
           firstName: personalInfo.firstName,
           middleName: personalInfo.middleName,
@@ -169,7 +170,6 @@ export async function createCertificateRequest(
       const certificateRequest = await prisma.certificateRequest.create({
         data: {
           residentId: resident.id,
-          userId: parseInt(session.user.id),
           certificateType: certificateType,
           purpose: purpose,
           additionalInfo: {
