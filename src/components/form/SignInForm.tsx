@@ -50,11 +50,11 @@ const SignInForm = () => {
         await new Promise(resolve => setTimeout(resolve, 500));
         
         // Get the updated session to check user role
-        const session = await getSession();
-        const userRole = session?.user?.role;
-
+        // const session = await getSession();
+        // const userRole = session?.user?.role;
         // Determine destination based on user role
         // const destination = userRole === 'ADMIN' ? '/dashboard' : '/';
+        
         const destination = '/dashboard';
         router.push(destination);
       }
