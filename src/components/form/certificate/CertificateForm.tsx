@@ -69,7 +69,6 @@ const initialFormData = {
 }
 
 export default function CertificateForm() {
-  const { resetSteps } = useStepper()
   const { toast } = useToast()
   const [formData, setFormData] = useState(initialFormData);
   const [requestDetails, setRequestDetails] = useState({ referenceNumber: "", systemId: "" });
@@ -86,7 +85,6 @@ export default function CertificateForm() {
       photoHoldingIdArray.forEach((file, index) => {
         files.append(`photoHoldingId[${index}]`, file);
       });
-      files.append("signature", result.data.proofOfIdentity.signature as string);
 
       const data = {
         personalInfo: result.data.personalInfo,
