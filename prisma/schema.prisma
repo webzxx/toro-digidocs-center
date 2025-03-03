@@ -15,7 +15,7 @@ model User {
   role                UserRole             @default(USER)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
-  certificateRequests CertificateRequest[]
+  certificateRequests CertificateRequest[] @relation("ResidentRequests")
 }
 
 model Resident {
@@ -35,7 +35,7 @@ model Resident {
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   address             Address?
-  certificateRequests CertificateRequest[]
+  certificateRequests CertificateRequest[] @relation("UserRequests")
   emergencyContact    EmergencyContact?
   proofOfIdentity     ProofOfIdentity?
 
@@ -77,8 +77,8 @@ model CertificateRequest {
   additionalInfo  Json?
   requestDate     DateTime          @default(now())
   status          CertificateStatus @default(PENDING)
-  resident        Resident          @relation(fields: [residentId], references: [id], onDelete: Cascade)
-  user            User              @relation(fields: [userId], references: [id])
+  resident        Resident          @relation("UserRequests", fields: [residentId], references: [id], onDelete: Cascade)
+  user            User              @relation("ResidentRequests", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ProofOfIdentity {
