@@ -5,26 +5,49 @@ import {
   CompleteCertificateFormInputWithoutFiles,
 } from "@/types/types";
 import { db } from "@/lib/db";
-import path from "path";
-import fs from "fs/promises";
+import { UTApi } from "uploadthing/server";
+import getSession from "@/lib/getSession";
+import { UploadFileResult } from "uploadthing/types";
 
-async function saveFile(
-  file: File,
-  residentFolder: string,
-  prefix: string
-): Promise<string> {
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const fileName = `${Date.now()}-${prefix}-${file.name.replaceAll(" ", "_")}`;
-  const filePath = path.join(residentFolder, fileName);
-  await fs.writeFile(filePath, new Uint8Array(buffer));
-  return fileName;
+function generateFile(file: File, prefix: string, email?: string): File {
+  const emailPrefix = email ? `${email.split('@')[0]}-` : '';
+  const now = new Date();
+  const dateStr = now.getFullYear().toString() +
+    (now.getMonth() + 1).toString().padStart(2, '0') +
+    now.getDate().toString().padStart(2, '0') +
+    now.getHours().toString().padStart(2, '0') +
+    now.getMinutes().toString().padStart(2, '0') +
+    now.getSeconds().toString().padStart(2, '0');
+  const fileName = `${dateStr}-${emailPrefix}${prefix}-${file.name.replaceAll(" ", "_")}`;
+  return new File([file], fileName, { type: file.type });
 }
 
 export async function createCertificateRequest(
   values: CompleteCertificateFormInputWithoutFiles,
   files: FormData
 ) {
+  let uploadedFiles : UploadFileResult[] = [];
+  const utApi = new UTApi();
+  const cleanupFiles = async () => {
+    for (const file of uploadedFiles) {
+      if (file.data?.key) {
+        try {
+          await utApi.deleteFiles(file.data.key);
+        } catch (error) {
+          console.error(`Failed to delete file ${file.data.key}:`, error);
+        }
+      }
+    }
+  };
+
   try {
+    const session = await getSession();
+    if (!session?.user) {
+      return {
+        serverError: "Unauthorized",
+      };
+    }
+
     const data = {
       personalInfo: values.personalInfo,
       address: values.address,
@@ -53,7 +76,39 @@ export async function createCertificateRequest(
     const { personalInfo, address, importantInfo, proofOfIdentity } =
       validatedData.data;
 
-    // Start a transaction
+    // Handle file uploads before starting the transaction
+    const signatureBuffer = Buffer.from(
+      proofOfIdentity.signature.split(",")[1],
+      "base64"
+    );
+    const signatureFile = generateFile(
+      new File([signatureBuffer], "signpadimg.png", { type: "image/png" }),
+      "signature",
+      personalInfo.email
+    );
+    const [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature] = 
+      await utApi.uploadFiles([
+        generateFile(proofOfIdentity.photoId[0], "id1", personalInfo.email),
+        generateFile(proofOfIdentity.photoId[1], "id2", personalInfo.email),
+        generateFile(proofOfIdentity.photoHoldingId[0], "holding1", personalInfo.email),
+        generateFile(proofOfIdentity.photoHoldingId[1], "holding2", personalInfo.email),
+        generateFile(signatureFile, "signature", personalInfo.email),
+      ]);
+    uploadedFiles = [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature];
+
+    if (
+      !idPhoto1.data ||
+      !idPhoto2.data ||
+      !holdingIdPhoto1.data ||
+      !holdingIdPhoto2.data ||
+      !signature.data
+    ) {
+      await cleanupFiles();
+      console.error("Error uploading files");
+      throw new Error("Unable to process file uploads");
+    }
+
+    // Start a transaction for database operations
     const result = await db.$transaction(async (prisma) => {
       // Create Resident
       const resident = await prisma.resident.create({
@@ -94,57 +149,15 @@ export async function createCertificateRequest(
       });
       console.log(`Resident created with ID: ${resident.id}`);
 
-      // Create folder for resident files
-      const residentFolder = path.join(
-        process.cwd(),
-        "public/certificate",
-        `resident_${resident.id}`
-      );
-      await fs.mkdir(residentFolder, { recursive: true });
-      console.log(`Folder created for resident ID: ${resident.id}`);
-
-      // Save files and get file paths
-      const idPhoto1Path = await saveFile(
-        proofOfIdentity.photoId[0],
-        residentFolder,
-        "id1"
-      );
-      const idPhoto2Path = await saveFile(
-        proofOfIdentity.photoId[1],
-        residentFolder,
-        "id2"
-      );
-      const holdingIdPhoto1Path = await saveFile(
-        proofOfIdentity.photoHoldingId[0],
-        residentFolder,
-        "holding1"
-      );
-      const holdingIdPhoto2Path = await saveFile(
-        proofOfIdentity.photoHoldingId[1],
-        residentFolder,
-        "holding2"
-      );
-      console.log(`Files saved for resident ID: ${resident.id}`);
-
-      // Save signature as file
-      const signatureFileName = `${Date.now()}-signature.png`;
-      const signaturePath = path.join(residentFolder, signatureFileName);
-      await fs.writeFile(
-        signaturePath,
-        proofOfIdentity.signature.split(",")[1],
-        "base64"
-      );
-      console.log(`Signature saved for resident ID: ${resident.id}`);
-
-      // Create ProofOfIdentity
+      // Create ProofOfIdentity with uploaded file URLs
       await prisma.proofOfIdentity.create({
         data: {
           residentId: resident.id,
-          signaturePath: signatureFileName,
-          idPhoto1Path,
-          idPhoto2Path,
-          holdingIdPhoto1Path,
-          holdingIdPhoto2Path,
+          signaturePath: signature.data.ufsUrl,
+          idPhoto1Path: idPhoto1.data.ufsUrl,
+          idPhoto2Path: idPhoto2.data.ufsUrl,
+          holdingIdPhoto1Path: holdingIdPhoto1.data.ufsUrl,
+          holdingIdPhoto2Path: holdingIdPhoto2.data.ufsUrl,
         },
       });
       console.log(`ProofOfIdentity created for resident ID: ${resident.id}`);
@@ -156,6 +169,7 @@ export async function createCertificateRequest(
       const certificateRequest = await prisma.certificateRequest.create({
         data: {
           residentId: resident.id,
+          userId: parseInt(session.user.id),
           certificateType: certificateType,
           purpose: purpose,
           additionalInfo: {
@@ -196,13 +210,13 @@ export async function createCertificateRequest(
       success: true,
       data: {
         ...result,
-        bahayToroSystemId: result.resident.bahayToroSystemId,
-        referenceNumber: result.certificateRequest.referenceNumber,
+        bahayToroSystemId: result.resident!.bahayToroSystemId,
+        referenceNumber: result.certificateRequest!.referenceNumber,
       },
     };
   } catch (error) {
     console.error("Error creating certificate:", error);
-    // Return Error
+    await cleanupFiles();
     return {
       serverError: "Unable to process request",
     };
