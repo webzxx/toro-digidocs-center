@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../app/logo.png";
+import Icon from "../app/icon.png";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
 
@@ -23,8 +23,8 @@ const NavigationMenu = ({ isAuthenticated, userRole }: NavigationMenuProps) => {
       <div className="flex justify-between items-center h-full w-full px-4 2xl:px-16 container">
         <Link href="/">
           <Image
-            src={Logo}
-            alt="Logo"
+            src={Icon}
+            alt="Icon"
             width="80"
             height="50"
             className="cursor-pointer rounded-full"
