@@ -15,7 +15,7 @@ model User {
   role                UserRole             @default(USER)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
-  certificateRequests CertificateRequest[] @relation("ResidentRequests")
+  residents           Resident[]
 }
 
 model Resident {
@@ -34,10 +34,12 @@ model Resident {
   sector              Sector?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
+  userId              Int
   address             Address?
   certificateRequests CertificateRequest[] @relation("UserRequests")
   emergencyContact    EmergencyContact?
   proofOfIdentity     ProofOfIdentity?
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([id, email])
 }
@@ -71,14 +73,12 @@ model CertificateRequest {
   id              Int               @id @default(autoincrement())
   referenceNumber String            @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'::regclass), 'FM00000'::text))"))
   residentId      Int
-  userId          Int
   certificateType CertificateType
   purpose         String
   additionalInfo  Json?
   requestDate     DateTime          @default(now())
   status          CertificateStatus @default(PENDING)
   resident        Resident          @relation("UserRequests", fields: [residentId], references: [id], onDelete: Cascade)
-  user            User              @relation("ResidentRequests", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ProofOfIdentity {

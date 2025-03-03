@@ -1,3 +1,7 @@
+-- Create required sequences first
+CREATE SEQUENCE bahay_toro_system_id_seq;
+CREATE SEQUENCE reference_number_seq;
+
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
