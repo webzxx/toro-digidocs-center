@@ -3,8 +3,14 @@
 import { db } from "@/lib/db";
 import { ResidentWithTypes } from "@/types/types";
 import { revalidatePath } from "next/cache";
+import getSession from "@/lib/getSession";
 
 export async function updateResident(id: number, data: ResidentWithTypes) {
+  const session = await getSession();
+  
+  if (!session || session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized: Only admins can update residents");
+  }
   const { address, emergencyContact, proofOfIdentity, ...residentData } = data;
   await db.$transaction(async (prisma) => {
     // Update resident data
@@ -34,6 +40,11 @@ export async function updateResident(id: number, data: ResidentWithTypes) {
 }
 
 export async function deleteResident(id: number) {
+  const session = await getSession();
+  
+  if (!session || session.user.role !== "ADMIN") {
+    throw new Error("Unauthorized: Only admins can delete residents");
+  }
   await db.resident.delete({
     where: { id },
   });
