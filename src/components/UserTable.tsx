@@ -23,6 +23,7 @@ import {
   } from "@radix-ui/react-tooltip";
   import UserActions from "./UserActions";
 import { formatDate } from "@/lib/utils";
+import CreateUserButton from "./CreateUserButton";
   
   interface UserTableProps {
     users?: User[];
@@ -31,9 +32,12 @@ import { formatDate } from "@/lib/utils";
   export default function UserTable({ users }: UserTableProps) {
     return (
       <Card>
-        <CardHeader className="px-7">
-          <CardTitle>Users</CardTitle>
-          <CardDescription>List of Barangay Bahay Taro users.</CardDescription>
+        <CardHeader className="px-7 flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Users</CardTitle>
+            <CardDescription>List of Barangay Bahay Taro users.</CardDescription>
+          </div>
+          <CreateUserButton />
         </CardHeader>
         <CardContent>
           <Table>
