@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { hash } from 'bcrypt';
 import getSession from "@/lib/getSession";
+import { deletePOIImages } from "../residents/actions";
 
 export async function updateUser(id: number, data: any) {
   const session = await getSession();
@@ -26,6 +27,17 @@ export async function deleteUser(id: number) {
     throw new Error("Unauthorized: Only admins can delete users");
   }
   
+  // check if user has created a resident
+  const resident = await db.resident.findMany({
+    where: { userId: id },
+  });
+
+  if (resident.length > 0) {
+    resident.forEach(async (resident) => {
+      await deletePOIImages(resident.id);
+    });
+  }
+
   await db.user.delete({
     where: { id },
   });

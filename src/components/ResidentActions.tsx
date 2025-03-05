@@ -405,7 +405,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
           <DialogHeader>
             <h2>{resident.bahayToroSystemId}</h2>
             <DialogDescription>
-              This will <span className="text-red-600 font-bold">delete all records</span> related to the resident, <b>{resident.firstName} {resident.lastName}</b>!
+              This will <span className="text-red-600 font-bold">delete all records</span> related to the resident, {resident.firstName} {resident.lastName}!
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
