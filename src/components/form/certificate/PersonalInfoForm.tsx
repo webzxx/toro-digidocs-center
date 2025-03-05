@@ -69,7 +69,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>First Name*</FormLabel>
+              <FormLabel>First Name <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -95,7 +95,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Last Name*</FormLabel>
+              <FormLabel>Last Name <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -108,7 +108,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="gender"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Gender*</FormLabel>
+              <FormLabel>Gender <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={value => {onChange(formName, field.name, value); field.onChange(value)}}
@@ -150,7 +150,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="birthDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Birth Date*</FormLabel>
+              <FormLabel>Birth Date <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <div>
                   <DatePicker
@@ -181,7 +181,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="contact"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contact*</FormLabel>
+              <FormLabel>Contact <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -221,7 +221,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Status*</FormLabel>
+              <FormLabel>Status <span className="text-red-600 font-bold">*</span></FormLabel>
               <Select onValueChange={value => { onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -270,7 +270,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="emergencyContactName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Emergency Contact Name*</FormLabel>
+              <FormLabel>Emergency Contact Name <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -283,7 +283,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="emergencyRelationship"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Emergency Relationship*</FormLabel>
+              <FormLabel>Emergency Relationship <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -296,7 +296,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="emergencyContact"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Emergency Contact*</FormLabel>
+              <FormLabel>Emergency Contact <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -309,7 +309,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           name="emergencyContactAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Emergency Contact Address*</FormLabel>
+              <FormLabel>Emergency Contact Address <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>

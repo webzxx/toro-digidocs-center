@@ -120,7 +120,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="childName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Child Name*</FormLabel>
+                  <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -133,7 +133,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="soloParentSince"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Solo Parent Since*</FormLabel>
+                  <FormLabel>Solo Parent Since <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <div>
                       <DatePicker
@@ -151,7 +151,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="presentedBy"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Presented by*</FormLabel>
+                  <FormLabel>Presented by <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -164,7 +164,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="registryNo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Registry No*</FormLabel>
+                  <FormLabel>Registry No <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -182,7 +182,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="birthAddress"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Birth Address*</FormLabel>
+                  <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -195,7 +195,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="spouseName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Spouse Name*</FormLabel>
+                  <FormLabel>Spouse Name <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -208,7 +208,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="spouseBirthAddress"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Spouse Birth Address*</FormLabel>
+                  <FormLabel>Spouse Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -221,7 +221,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="dateOfMarriage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date of Marriage*</FormLabel>
+                  <FormLabel>Date of Marriage <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <div>
                       <DatePicker
@@ -244,7 +244,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
             name="noIncomeSince"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>No Income Since*</FormLabel>
+                <FormLabel>No Income Since <span className="text-red-600 font-bold">*</span></FormLabel>
                 <FormControl>
                   <div>
                     <DatePicker
@@ -265,7 +265,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
             name="dateOfResidency"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date of Residency*</FormLabel>
+                <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
                 <FormControl>
                   <div>
                     <DatePicker
@@ -287,7 +287,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="birthAddress"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Birth Address*</FormLabel>
+                  <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -300,7 +300,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="dateOfResidency"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date of Residency*</FormLabel>
+                  <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <div>
                       <DatePicker
@@ -322,7 +322,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
             name="newAddress"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>New Address*</FormLabel>
+                <FormLabel>New Address <span className="text-red-600 font-bold">*</span></FormLabel>
                 <FormControl>
                   <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                 </FormControl>
@@ -338,7 +338,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
             name="dateOfTabloid"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date of Tabloid*</FormLabel>
+                <FormLabel>Date of Tabloid <span className="text-red-600 font-bold">*</span></FormLabel>
                 <FormControl>
                   <div>
                     <DatePicker
@@ -360,7 +360,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="dateBorn"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date Born*</FormLabel>
+                  <FormLabel>Date Born <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <div>
                       <DatePicker
@@ -378,7 +378,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="childName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Child Name*</FormLabel>
+                  <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -391,7 +391,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="birthAddress"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Birth Address*</FormLabel>
+                  <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -404,7 +404,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="witnessName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Witness Name*</FormLabel>
+                  <FormLabel>Witness Name <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -417,7 +417,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
               name="witnessType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Witness Type*</FormLabel>
+                  <FormLabel>Witness Type <span className="text-red-600 font-bold">*</span></FormLabel>
                   <FormControl>
                     <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                   </FormControl>
@@ -450,7 +450,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
           name="certificateType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Certificate Type*</FormLabel>
+              <FormLabel>Certificate Type <span className="text-red-600 font-bold">*</span></FormLabel>
               <Select onValueChange={value => { handleCertificateChange(value); field.onChange(value)}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -480,7 +480,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
           name="purpose"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Purpose*</FormLabel>
+              <FormLabel>Purpose <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -495,7 +495,7 @@ const ImportantInfoForm: React.FC<ImportantInfoFormProps> = ({ data, onChange })
             name="requestOf"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Request of*</FormLabel>
+                <FormLabel>Request of <span className="text-red-600 font-bold">*</span></FormLabel>
                 <FormControl>
                   <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                 </FormControl>
