@@ -195,7 +195,7 @@ export default function ResidentTable({ residents }: ResidentTableProps) {
     );
   };
 
-  const getImagePath = (id: number, image: string) => `/certificate/resident_${id}/${image}`;
+  // const getImagePath = (id: number, image: string) => `/certificate/resident_${id}/${image}`; for local only
 
   const renderProofOfIdentity = (id: number, proof: any) => {
     if (!proof) return "N/A";
@@ -210,24 +210,24 @@ export default function ResidentTable({ residents }: ResidentTableProps) {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 1</p>
-                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.idPhoto1Path)} alt="ID Photo 1" className="rounded" />
+                  <Image layout='responsive' width={200} height={150} src={proof.idPhoto1Path} alt="ID Photo 1" className="rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 2</p>
-                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.idPhoto2Path)} alt="ID Photo 2" className="rounded" />
+                  <Image layout='responsive' width={200} height={150} src={proof.idPhoto2Path} alt="ID Photo 2" className="rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 1</p>
-                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.holdingIdPhoto1Path)} alt="Holding ID Photo 1" className="rounded" />
+                  <Image layout='responsive' width={200} height={150} src={proof.holdingIdPhoto1Path} alt="Holding ID Photo 1" className="rounded" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 2</p>
-                  <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.holdingIdPhoto2Path)} alt="Holding ID Photo 2" className="rounded" />
+                  <Image layout='responsive' width={200} height={150} src={proof.holdingIdPhoto2Path} alt="Holding ID Photo 2" className="rounded" />
                 </div>
               </div>
               <div className="mt-2">
                 <p className="text-sm font-medium text-gray-500 mb-1">Signature</p>
-                <Image layout='responsive' width={200} height={150} src={getImagePath(id, proof.signaturePath)} alt="Signature" className="rounded" />
+                <Image layout='responsive' width={200} height={150} src={proof.signaturePath} alt="Signature" className="rounded" />
               </div>
             </div>
           </TooltipContent>
