@@ -131,8 +131,8 @@ export default function CertificateActions({
           <DialogHeader>
             <h2>{referenceNumber}</h2>
             <DialogDescription>
-              Delete certificate request <b>{certificateId}</b> by typing <b>{referenceNumber}</b>
-            </DialogDescription>
+              <span className="text-red-600 font-bold">This action cannot be undone!</span> This will <span className="text-red-600 font-bold">permanently delete</span> the certificate request with reference number <b>{referenceNumber}</b>. Please review carefully before proceeding.
+              </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">

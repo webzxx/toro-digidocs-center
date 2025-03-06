@@ -156,7 +156,7 @@ export default function UserActions({
             <DialogHeader>
               <h2>{username}</h2>
               <DialogDescription>
-                Delete user and residents created by the user by typing user ID: <b>{userId}</b>
+                <span className="text-red-600 font-bold">This action cannot be undone!</span> This will <span className="text-red-600 font-bold">permanently delete</span> the user account and all residents created by {username} (User ID: {userId}). Please review carefully before proceeding.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">

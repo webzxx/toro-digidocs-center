@@ -24,6 +24,7 @@ import { Edit, Trash } from 'lucide-react';
 import { deleteResident, updateResident } from '@/app/dashboard/@admin/residents/actions';
 import { ResidentWithTypes } from '@/types/types';
 import { DatePicker } from './DatePicker';
+import { titleCase } from '@/lib/utils';
 
 interface ResidentActionsProps {
   resident: ResidentWithTypes;
@@ -405,7 +406,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
           <DialogHeader>
             <h2>{resident.bahayToroSystemId}</h2>
             <DialogDescription>
-              This will <span className="text-red-600 font-bold">delete all records</span> related to the resident, {resident.firstName} {resident.lastName}!
+              <span className="text-red-600 font-bold">This action cannot be undone!</span> This will <span className="text-red-600 font-bold">delete all records</span> related to the resident, {titleCase(`${resident.firstName} ${resident.lastName}`)}. Please review carefully before proceeding.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
