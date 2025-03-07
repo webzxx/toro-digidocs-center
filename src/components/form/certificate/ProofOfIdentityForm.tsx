@@ -216,7 +216,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
               name="signature"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Signature</FormLabel>
+                  <FormLabel>Signature <span className="text-sm text-muted-foreground">(Please save after completing)</span></FormLabel>
                   <FormControl>
                     <div className="border border-gray-300 rounded-md p-2">
                       <SignaturePad
