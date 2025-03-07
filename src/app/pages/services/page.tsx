@@ -1,4 +1,4 @@
-import CertificateForm from "@/components/form/certificate/CertificateForm"
+import CertificateRequestWizard from "@/components/form/certificate/CertificateRequestWizard"
 import { withAuth, WithAuthProps } from "@/lib/withAuth";
 
 function Services({ user }: WithAuthProps) {
@@ -14,7 +14,7 @@ function Services({ user }: WithAuthProps) {
               <h1 className="p-6">Please make sure to provide your correct Contact Number and Email Address</h1>
             </div>
             <div className="container">
-              <CertificateForm />
+              <CertificateRequestWizard />
             </div>
           </div>
         </div>
