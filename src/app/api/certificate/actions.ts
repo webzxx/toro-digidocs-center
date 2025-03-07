@@ -51,7 +51,7 @@ export async function createCertificateRequest(
     const data = {
       personalInfo: values.personalInfo,
       address: values.address,
-      importantInfo: values.importantInfo,
+      certificate: values.certificate,
       proofOfIdentity: {
         ...values.proofOfIdentity,
         photoId: [
@@ -73,7 +73,7 @@ export async function createCertificateRequest(
       return { fieldErrors: err.fieldErrors };
     }
 
-    const { personalInfo, address, importantInfo, proofOfIdentity } =
+    const { personalInfo, address, certificate, proofOfIdentity } =
       validatedData.data;
 
     // Handle file uploads before starting the transaction
@@ -164,8 +164,7 @@ export async function createCertificateRequest(
       console.log(`ProofOfIdentity created for resident ID: ${resident.id}`);
 
       // Create CertificateRequest
-      const { certificateType, purpose, ...restOfImportantInfo } =
-        importantInfo;
+      const { certificateType, purpose, ...restOfCertificateInfo } = certificate;
 
       const certificateRequest = await prisma.certificateRequest.create({
         data: {
@@ -173,7 +172,7 @@ export async function createCertificateRequest(
           certificateType: certificateType,
           purpose: purpose,
           additionalInfo: {
-            ...restOfImportantInfo,
+            ...restOfCertificateInfo,
           },
         },
       });

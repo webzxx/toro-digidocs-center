@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 
 function SettingsPage({ user }: WithAuthProps) {
   return (
-    <div className='flex flex-col gap-4 lg:p-4'>
+    <main className='flex flex-col gap-4 min-h-[80vh] p-4'>
       <Card className='w-full'>
         <CardHeader>
           <CardTitle>Account Settings</CardTitle>
@@ -26,7 +26,7 @@ function SettingsPage({ user }: WithAuthProps) {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }
 

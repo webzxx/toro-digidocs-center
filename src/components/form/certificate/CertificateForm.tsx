@@ -1,267 +1,426 @@
-'use client';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useStepper } from '@/components/ui/stepper'
+import { DatePicker } from '@/components/DatePicker'
+import { scrollToForm, StepperFormActions } from './StepperFormActions'
+import { getCertificateTypeLabel, getDefaultValues } from '@/lib/certificate-utils'
+import { CertificateInput, certificateSchema } from '@/types/types'
+import { CertificateType } from '@prisma/client'
 
-import { Button } from "../../ui/button";
-import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react"
-
-import {
-  Step,
-  StepItem,
-  Stepper,
-  useStepper,
-} from "@/components/ui/stepper"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-
-import PersonalInfoForm from "./PersonalInfoForm";
-import AddressForm from "./AddressForm";
-import { useState } from "react";
-import ImportantInfoForm from "./ImportantInfoForm";
-import ProofOfIdentityForm from "./ProofOfIdentityForm";
-import { completeCertificateFormSchema } from "@/types/types";
-import { scrollToForm } from "./StepperFormActions";
-import { createCertificateRequest } from "@/app/api/certificate/actions";
-import { useToast } from "../../ui/use-toast";
-
-const steps = [
-  { label: "Step 1", description: "Personal Info", icon: User },
-  { label: "Step 2", description: "Address", icon: House },
-  { label: "Step 3", description: "Important Information", icon: Scroll },
-  { label: "Step 4", description: "Proof of Identity", icon: ScanFace },
-] satisfies StepItem[]
-
-const initialFormData = {
-  personalInfo: {
-    precinctNumber: "",
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    gender: undefined,
-    birthDate: "",
-    email: "",
-    contact: "",
-    religion: undefined,
-    status: undefined,
-    sector: undefined,
-    emergencyContactName: "",
-    emergencyRelationship: "",
-    emergencyContact: "",
-    emergencyContactAddress: "",
-  },
-  address: {
-    residency: undefined,
-    yearsInBahayToro: 0,
-    blockLot: "",
-    phase: "",
-    street: "",
-    subdivision: "",
-    barangay: "Bahay Toro" as const,
-    city: "Quezon City" as const,
-    province: "Metro Manila" as const,
-  },
-  importantInfo: {
-    certificateType: undefined,
-    purpose: "",
-  },
-  proofOfIdentity: {
-    photoId: undefined,
-    photoHoldingId: undefined,
-    signature: undefined,
-  },
+export interface CertificateFormProps {
+  data: Partial<CertificateInput>
+  onChange: (section: string, field: string, value: string, reset?: boolean) => void
 }
 
-export default function CertificateForm() {
-  const { toast } = useToast()
-  const [formData, setFormData] = useState(initialFormData);
-  const [requestDetails, setRequestDetails] = useState({ referenceNumber: "", systemId: "" });
+const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => {
+  const formName = 'certificate'
+  const { nextStep } = useStepper()
+    
+  const form = useForm<CertificateInput>({
+    resolver: zodResolver(certificateSchema),
+    defaultValues: getDefaultValues(data),
+  })
 
-  const validateAndSubmit : () => Promise<boolean> = async () => {
-    const result = completeCertificateFormSchema.safeParse(formData);
-    if (result.success) {
-      const files = new FormData();
-      const photoIdArray = result.data.proofOfIdentity.photoId as File[];
-      photoIdArray.forEach((file, index) => {
-        files.append(`photoId[${index}]`, file);
-      });
-      const photoHoldingIdArray = result.data.proofOfIdentity.photoHoldingId as File[];
-      photoHoldingIdArray.forEach((file, index) => {
-        files.append(`photoHoldingId[${index}]`, file);
-      });
+  const certificateType = form.watch('certificateType')
 
-      const data = {
-        personalInfo: result.data.personalInfo,
-        address: result.data.address,
-        importantInfo: result.data.importantInfo,
-        proofOfIdentity: {
-          signature: result.data.proofOfIdentity.signature,
-        }
-      }      
+  const onSubmit = async (values: CertificateInput) => {
+    nextStep()
+    scrollToForm()
+  }
 
-      let success = true;
-      try {
-        const res = await createCertificateRequest(data, files);
-        if (res?.fieldErrors) {
-          toast({
-            title: "Error",
-            description: "Certificate form is invalid.",
-            variant: "destructive"
-          });
-          success = false;
-        }
-        if (res?.serverError) {
-          toast({
-            title: "Error",
-            description: res.serverError || "Oops! Something went wrong!",
-            variant: "destructive"
-          });
-          success = false;
-        }
-        
-        if (res?.success) {
-          toast({
-            title: "Success",
-            description: "Certificate has been created successfully!",
-            variant: "default"
-          });
-
-          setRequestDetails({
-            referenceNumber: res?.data.referenceNumber || "ERROR",
-            systemId: res?.data.bahayToroSystemId || "ERROR"
-          });
-        }
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "An unexpected error occurred.",
-          variant: "destructive"
-        });
-        success = false;
-      }
-      return success;
-    } else {
-      console.error("Invalid form data", result.error.errors);
-      toast({
-        title: "Error",
-        description: "Certificate form is invalid.",
-        variant: "destructive"
-      });
-      return false;
+  const renderAdditionalFields = () => {
+    switch (certificateType) {
+      case 'SOLO_PARENT':
+        return (
+          <>
+            <FormField
+              control={form.control}
+              name="childName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="soloParentSince"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Solo Parent Since <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <div>
+                      <DatePicker
+                        value={field.value ? new Date(field.value) : null}
+                        onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="presentedBy"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Presented by <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="registryNo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Registry No <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )
+      case 'COHABITATION':
+        return (
+          <>
+            <FormField
+              control={form.control}
+              name="birthAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="spouseName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Spouse Name <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="spouseBirthAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Spouse Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateOfMarriage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date of Marriage <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <div>
+                      <DatePicker
+                        allowFutureDates
+                        value={field.value ? new Date(field.value) : null}
+                        onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )
+      case 'NO_INCOME':
+        return (
+          <FormField
+            control={form.control}
+            name="noIncomeSince"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>No Income Since <span className="text-red-600 font-bold">*</span></FormLabel>
+                <FormControl>
+                  <div>
+                    <DatePicker
+                      value={field.value ? new Date(field.value) : null}
+                      onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )
+      case 'FIRST_TIME_JOB_SEEKER':
+        return (
+          <FormField
+            control={form.control}
+            name="dateOfResidency"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
+                <FormControl>
+                  <div>
+                    <DatePicker
+                      value={field.value ? new Date(field.value) : null}
+                      onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )
+      case 'RESIDENCY':
+        return (
+          <>
+            <FormField
+              control={form.control}
+              name="birthAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dateOfResidency"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <div>
+                      <DatePicker
+                        value={field.value ? new Date(field.value) : null}
+                        onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )
+      case 'TRANSFER_OF_RESIDENCY':
+        return (
+          <FormField
+            control={form.control}
+            name="newAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Address <span className="text-red-600 font-bold">*</span></FormLabel>
+                <FormControl>
+                  <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )
+      case 'LIVING_STILL':
+        return (
+          <FormField
+            control={form.control}
+            name="dateOfTabloid"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date of Tabloid <span className="text-red-600 font-bold">*</span></FormLabel>
+                <FormControl>
+                  <div>
+                    <DatePicker
+                      value={field.value ? new Date(field.value) : null}
+                      onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )
+      case 'BIRTH_FACT':
+        return (
+          <>
+            <FormField
+              control={form.control}
+              name="dateBorn"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date Born <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <div>
+                      <DatePicker
+                        value={field.value ? new Date(field.value) : null}
+                        onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="childName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="birthAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="witnessName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Witness Name <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="witnessType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Witness Type <span className="text-red-600 font-bold">*</span></FormLabel>
+                  <FormControl>
+                    <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )
+      default:
+        return null
     }
   }
 
-  const resetFormData = () => { 
-    console.log("Resetting form data");
-    setFormData(initialFormData);
-    
-  }
-
-  const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [section]: reset
-        ? { [field]: value }
-        : {
-            ...prevData[section as keyof typeof prevData],
-            [field]: value,
-          },
-    }));
-  };
-
-  return (
-    <div className="flex w-full flex-col gap-4">
-      <Stepper initialStep={0} steps={steps} variant="circle-alt">
-        {steps.map((stepProps, index) => {
-          if(index === 0) {
-            return (
-              <Step key={stepProps.label} {...stepProps}>
-                <PersonalInfoForm
-                  data={formData.personalInfo}
-                  onChange={handleChange}
-                />
-              </Step>
-            )
-          }
-          else if(index === 1) {
-            return (
-              <Step key={stepProps.label} {...stepProps}>
-                <AddressForm 
-                  data={formData.address}
-                  onChange={handleChange}
-                />
-              </Step>
-            )
-          }
-          else if(index === 2) {
-            return (
-              <Step key={stepProps.label} {...stepProps}>
-                <ImportantInfoForm 
-                  data={formData.importantInfo}
-                  onChange={handleChange}
-                />
-              </Step>
-            )
-          }
-          return (
-            <Step key={stepProps.label} {...stepProps}>
-              <ProofOfIdentityForm
-                data={formData.proofOfIdentity}
-                onChange={handleChange}
-                validateAndSubmit={validateAndSubmit}
-              />
-            </Step>
-          )
-        })}
-        <Footer details={requestDetails} resetFormData={resetFormData} />
-      </Stepper>
-    </div>
-  )
-}
-
-type FooterProps = {
-  details: {
-    referenceNumber: string;
-    systemId: string;
-  };
-  resetFormData: () => void;
-};
-
-function Footer({ details, resetFormData }: FooterProps) {
-  const { activeStep, steps, resetSteps } = useStepper()
-
-  if (activeStep !== steps.length) {
-    return null
-  }
-
-  const resetMultiForm = () => {
-    resetFormData();
-    resetSteps();
-    scrollToForm();
+  const handleCertificateChange = (value: string) => {
+    const fields = form.getValues()
+    Object.keys(fields).forEach((key) => {
+      if (key !== 'certificateType') {
+        form.setValue(key as keyof CertificateInput, '');
+      }
+    });
+    onChange(formName, 'certificateType', value, true);
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardContent className="pt-6 text-center">
-        <CheckCircle2 className="w-16 h-16 mx-auto text-green-500 mb-4" />
-        <h2 className="text-2xl font-semibold text-green-600 mb-6">
-          Congrats, your request was successfully sent!
-        </h2>
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div>
-            <p className="text-sm font-medium text-gray-500">REFERENCE NUMBER</p>
-            <p className="text-lg font-bold">{details.referenceNumber}</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">BAHAY TORO SYSTEM ID</p>
-            <p className="text-lg font-bold">{details.systemId}</p>
-          </div>
-        </div>
-        <p className="text-sm text-gray-600">
-          We will get in touch with you using the details you have provided. Thank you.
-        </p>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full" variant="outline" onClick={resetMultiForm}>
-          REQUEST ANOTHER CERTIFICATE
-        </Button>
-      </CardFooter>
-    </Card>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="certificateType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Certificate Type <span className="text-red-600 font-bold">*</span></FormLabel>
+              <Select onValueChange={value => { handleCertificateChange(value); field.onChange(value)}} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select certificate type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {Object.entries(CertificateType).map(([key, value]) => (
+                    <SelectItem key={key} value={value}>{getCertificateTypeLabel(key as keyof typeof CertificateType)}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="purpose"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Purpose <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormControl>
+                <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {renderAdditionalFields()}
+        {['SOLO_PARENT', 'COHABITATION', 'GOOD_MORAL', 'NO_INCOME', 'RESIDENCY', 'TRANSFER_OF_RESIDENCY', 'LIVING_STILL', 'BIRTH_FACT'].includes(certificateType) && (
+          <FormField
+            control={form.control}
+            name="requestOf"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Request of <span className="text-red-600 font-bold">*</span></FormLabel>
+                <FormControl>
+                  <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        <StepperFormActions />
+      </form>
+    </Form>
   )
 }
+
+export default CertificateForm
