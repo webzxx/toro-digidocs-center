@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from "../../ui/button";
+import { Button } from "@/components/ui/button";
 import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react"
 
 import {
@@ -18,8 +18,8 @@ import CertificateForm from "./CertificateForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
 import { CompleteCertificateFormInputWithoutFiles, completeCertificateFormSchema } from "@/types/types";
 import { scrollToForm } from "./StepperFormActions";
-import { createCertificateRequest } from "@/app/api/certificate/actions";
-import { useToast } from "../../ui/use-toast";
+import { createCertificateRequest } from "@/app/api/certificates/actions";
+import { useToast } from "@/components/ui/use-toast";
 
 const steps = [
   { label: "Step 1", description: "Personal Info", icon: User },

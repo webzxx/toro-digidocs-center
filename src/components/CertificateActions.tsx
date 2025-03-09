@@ -22,6 +22,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Trash } from 'lucide-react';
 import { deleteCertificateRequest, updateCertificateRequest } from '@/app/dashboard/@admin/certificates/actions';
+import { Certificate } from 'crypto';
+import { CertificateStatus } from '@prisma/client';
 
 interface CertificateActionsProps {
   certificateId: number;
@@ -105,9 +107,11 @@ export default function CertificateActions({
                   <SelectValue placeholder="Select a status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="PENDING">PENDING</SelectItem>
-                  <SelectItem value="PROCESSING">PROCESSING</SelectItem>
-                  <SelectItem value="COMPLETED">COMPLETED</SelectItem>
+                  {Object.entries(CertificateStatus).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
