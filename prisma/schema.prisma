@@ -153,8 +153,12 @@ enum CertificateType {
 }
 
 enum CertificateStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  REJECTED
+  PENDING              // Initial submission
+  UNDER_REVIEW         // Staff reviewing the request
+  AWAITING_PAYMENT     // Request valid, waiting for payment
+  PROCESSING           // Certificate is being prepared
+  READY_FOR_PICKUP     // Certificate ready for collection
+  COMPLETED            // Certificate delivered/collected
+  REJECTED             // Request denied
+  CANCELLED            // User cancelled the request
 }
