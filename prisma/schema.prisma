@@ -69,18 +69,6 @@ model Address {
   resident         Resident      @relation(fields: [residentId], references: [id], onDelete: Cascade)
 }
 
-model CertificateRequest {
-  id              Int               @id @default(autoincrement())
-  referenceNumber String            @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'::regclass), 'FM00000'::text))"))
-  residentId      Int
-  certificateType CertificateType
-  purpose         String
-  additionalInfo  Json?
-  requestDate     DateTime          @default(now())
-  status          CertificateStatus @default(PENDING)
-  resident        Resident          @relation("UserRequests", fields: [residentId], references: [id], onDelete: Cascade)
-}
-
 model ProofOfIdentity {
   id                  Int      @id @default(autoincrement())
   residentId          Int      @unique
@@ -90,6 +78,56 @@ model ProofOfIdentity {
   holdingIdPhoto1Path String
   holdingIdPhoto2Path String
   resident            Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+}
+model CertificateRequest {
+  id              Int               @id @default(autoincrement())
+  referenceNumber String            @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'::regclass), 'FM00000'::text))"))
+  residentId      Int
+  certificateType CertificateType
+  purpose         String
+  additionalInfo  Json?
+  remarks         String?           // For rejection reasons or special notes
+  requestDate     DateTime          @default(now())
+  status          CertificateStatus @default(PENDING)
+  resident        Resident          @relation("UserRequests", fields: [residentId], references: [id], onDelete: Cascade)
+  payment         Payment?
+}
+
+model Payment {
+  id                Int                 @id @default(autoincrement())
+  transactionReference String           @unique
+  certificateRequestId Int              @unique
+  amount            Decimal            @db.Decimal(10, 2)
+  paymentMethod     PaymentMethod
+  paymentStatus     PaymentStatus      @default(PENDING)
+  paymentDate       DateTime?          // Null until payment is confirmed
+  receiptNumber     String?            // For official receipts
+  notes             String?
+  proofOfPaymentPath String?           // Path to uploaded payment proof
+  metadata          Json?              // Additional payment details, transaction IDs, etc.
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  certificateRequest CertificateRequest @relation(fields: [certificateRequestId], references: [id], onDelete: Cascade)
+}
+
+enum PaymentMethod {
+  CASH
+  GCASH_DIRECT
+  MAYA
+  BANK_TRANSFER
+  CREDIT_CARD
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING       // Payment initiated but not confirmed
+  SUCCEEDED     // Payment automatically confirmed by payment gateway
+  VERIFIED      // Payment manually verified by admin (for cash, checks, etc.)
+  REJECTED      // Payment was rejected or failed
+  REFUNDED      // Payment was returned to the payer
+  WAIVED        // Fee was waived (for seniors, PWDs, etc.)
+  CANCELLED     // User cancelled a payment attempt
+  EXPIRED       // Payment session/link expired without completion
 }
 
 enum UserRole {
@@ -158,6 +196,7 @@ enum CertificateStatus {
   AWAITING_PAYMENT     // Request valid, waiting for payment
   PROCESSING           // Certificate is being prepared
   READY_FOR_PICKUP     // Certificate ready for collection
+  IN_TRANSIT           // Certificate is being delivered to resident
   COMPLETED            // Certificate delivered/collected
   REJECTED             // Request denied
   CANCELLED            // User cancelled the request
