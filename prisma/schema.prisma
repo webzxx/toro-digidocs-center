@@ -129,6 +129,7 @@ enum PaymentStatus {
   WAIVED        // Fee was waived (for seniors, PWDs, etc.)
   CANCELLED     // User cancelled a payment attempt
   EXPIRED       // Payment session/link expired without completion
+  VOIDED        // Payment was administratively invalidated after authorization but before settlement
 }
 
 enum UserRole {
