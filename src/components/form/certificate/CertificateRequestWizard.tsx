@@ -18,7 +18,7 @@ import CertificateForm from "./CertificateForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
 import { CompleteCertificateFormInputWithoutFiles, completeCertificateFormSchema } from "@/types/types";
 import { scrollToForm } from "./StepperFormActions";
-import { createCertificateRequest } from "@/app/api/certificates/actions";
+import { createCertificateRequest } from "@/app/actions/certificate-request";
 import { useToast } from "@/components/ui/use-toast";
 
 const steps = [

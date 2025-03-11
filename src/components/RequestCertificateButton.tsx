@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { createCertificate } from "../app/dashboard/@user/certificates/actions";
+import { createCertificate } from "@/app/dashboard/@user/certificates/actions";
 import { CertificateType, Resident } from "@prisma/client";
 import { DatePicker } from "./DatePicker";
 import { getCertificateTypeLabel } from "@/lib/certificate-utils";
