@@ -20,7 +20,7 @@ const sampleAppointments = [
 
 function AppointmentsPage({ user }: WithAuthProps) {
   return (
-    <div className='flex flex-col gap-4 lg:p-4'>
+    <main className='flex flex-col gap-4 min-h-[80vh] p-4'>
       <Card className='w-full'>
         <CardHeader>
           <CardTitle>My Appointments</CardTitle>
@@ -45,7 +45,7 @@ function AppointmentsPage({ user }: WithAuthProps) {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }
 

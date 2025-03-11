@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CertificateRequest, Resident } from "@prisma/client";
 import RequestCertificateButton from "./RequestCertificateButton";
+import PaymentButton from "./PaymentButton";
 
 type CertificatesClientProps = {
   residents: (Resident & {
@@ -36,15 +37,29 @@ export default function CertificatesClient({ residents, userId }: CertificatesCl
                       <p className="text-sm text-gray-500">Purpose: {certificate.purpose}</p>
                       <p className="text-sm text-gray-500">Requested: {new Date(certificate.requestDate).toLocaleDateString()}</p>
                     </div>
-                    <span className={`px-3 py-1 text-sm rounded-full ${
-                      certificate.status === 'COMPLETED'
-                        ? 'bg-green-100 text-green-800'
-                        : certificate.status === 'PENDING'
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-blue-100 text-blue-800'
-                    }`}>
-                      {certificate.status.replace('_', ' ')}
-                    </span>
+                    <div className="flex flex-col items-end gap-2">
+                      <span className={`px-3 py-1 text-sm rounded-full ${
+                        certificate.status === 'COMPLETED'
+                          ? 'bg-green-100 text-green-800'
+                          : certificate.status === 'PENDING'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : certificate.status === 'AWAITING_PAYMENT'
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {certificate.status.replace('_', ' ')}
+                      </span>
+                      {certificate.status === 'AWAITING_PAYMENT' && (
+                        <PaymentButton 
+                          certificateId={certificate.id} 
+                          referenceNumber={certificate.referenceNumber} 
+                          onPaymentComplete={() => {
+                            // Force a refresh of the page to show updated status
+                            window.location.reload();
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
