@@ -90,24 +90,25 @@ model CertificateRequest {
   requestDate     DateTime          @default(now())
   status          CertificateStatus @default(PENDING)
   resident        Resident          @relation("UserRequests", fields: [residentId], references: [id], onDelete: Cascade)
-  payment         Payment?
+  payments        Payment[]         // Changed from Payment? to Payment[]
 }
 
 model Payment {
-  id                Int                 @id @default(autoincrement())
-  transactionReference String           @unique
-  certificateRequestId Int              @unique
-  amount            Decimal            @db.Decimal(10, 2)
-  paymentMethod     PaymentMethod
-  paymentStatus     PaymentStatus      @default(PENDING)
-  paymentDate       DateTime?          // Null until payment is confirmed
-  receiptNumber     String?            // For official receipts
-  notes             String?
-  proofOfPaymentPath String?           // Path to uploaded payment proof
-  metadata          Json?              // Additional payment details, transaction IDs, etc.
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  certificateRequest CertificateRequest @relation(fields: [certificateRequestId], references: [id], onDelete: Cascade)
+  id                    Int                 @id @default(autoincrement())
+  transactionReference  String              @unique
+  certificateRequestId  Int
+  amount                Decimal             @db.Decimal(10, 2)
+  paymentMethod         PaymentMethod
+  paymentStatus         PaymentStatus       @default(PENDING)
+  isActive              Boolean             @default(true)    // Added to track current active payment
+  paymentDate           DateTime?           // Null until payment is confirmed
+  receiptNumber         String?             // For official receipts
+  notes                 String?
+  proofOfPaymentPath    String?             // Path to uploaded payment proof
+  metadata              Json?               // Additional payment details, transaction IDs, etc.
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  certificateRequest    CertificateRequest  @relation(fields: [certificateRequestId], references: [id], onDelete: Cascade)
 }
 
 enum PaymentMethod {
