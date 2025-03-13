@@ -47,7 +47,7 @@ export default function CertificatesClient({ residents, userId }: CertificatesCl
                           ? 'bg-orange-100 text-orange-800'
                           : 'bg-blue-100 text-blue-800'
                       }`}>
-                        {certificate.status.replace('_', ' ')}
+                        {certificate.status.replaceAll('_', ' ')}
                       </span>
                       {certificate.status === 'AWAITING_PAYMENT' && (
                         <PaymentButton 

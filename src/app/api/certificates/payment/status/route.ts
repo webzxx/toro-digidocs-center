@@ -52,6 +52,7 @@ export async function GET(request: Request) {
     // Check if payment status needs to be updated
     const paymayaStatus = mapPayMayaStatusToInternal(data.status);
     if (payment.paymentStatus !== paymayaStatus) {
+      console.log(`Updating payment status from ${payment.paymentStatus} to ${paymayaStatus}`);
       // Update payment status in database
       await db.payment.update({
         where: { id: payment.id },
@@ -72,7 +73,7 @@ export async function GET(request: Request) {
         });
       }
     }
-      
+    console.log('Payment status:', paymayaStatus);
     return NextResponse.json({
       status: paymayaStatus
     });
