@@ -1,6 +1,4 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2, Truck, Store } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
@@ -25,28 +23,27 @@ interface PaymentButtonProps {
 
 export default function PaymentButton({ certificateId, referenceNumber, onPaymentComplete }: PaymentButtonProps) {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState<'pickup' | 'delivery'>('pickup');
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const { toast } = useToast();
-  let pollInterval: NodeJS.Timeout | null = null;
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
   let checkoutWindow: Window | null = null;
 
-  // Check for existing transaction on mount
+  // Check for existing transaction and window state on mount
   useEffect(() => {
     const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
     if (storedTransaction) {
       try {
-        const { transactionId, timestamp, checkoutUrl } = JSON.parse(storedTransaction);
+        const { transactionId, timestamp, checkoutUrl, windowOpen } = JSON.parse(storedTransaction);
         const timeSinceInitiated = Date.now() - timestamp;
         
-        // Only resume polling if transaction was initiated in the last 30 minutes
         if (timeSinceInitiated < 30 * 60 * 1000) {
           setCheckoutUrl(checkoutUrl);
-          checkTransactionStatus(transactionId);
+          checkTransactionStatus(transactionId, windowOpen);
         } else {
-          // Clear stale transaction data
           localStorage.removeItem(`payment_${certificateId}`);
         }
       } catch (error) {
@@ -55,11 +52,11 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       }
     }
     
-    // Cleanup on unmount
+    // Mark initialization as complete
+    setIsInitializing(false);
+    
     return () => {
-      if (pollInterval) {
-        clearInterval(pollInterval);
-      }
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     };
   }, [certificateId]);
 
@@ -80,7 +77,8 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
         transactionId: result.transactionId,
         timestamp: Date.now(),
-        checkoutUrl: result.checkoutUrl
+        checkoutUrl: result.checkoutUrl,
+        windowOpen: true
       }));
       
       setCheckoutUrl(result.checkoutUrl);
@@ -108,12 +106,30 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
   const openCheckoutWindow = (url: string) => {
     checkoutWindow = window.open(url, '_blank');
     
-    // Start checking if window was closed
     if (checkoutWindow) {
+      // Update localStorage with window state
+      const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
+      if (storedTransaction) {
+        const transaction = JSON.parse(storedTransaction);
+        localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
+          ...transaction,
+          windowOpen: true
+        }));
+      }
+
       const checkWindowClosed = setInterval(() => {
         if (checkoutWindow && checkoutWindow.closed) {
           clearInterval(checkWindowClosed);
           setIsProcessing(false);
+          // Update localStorage when window is closed
+          const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
+          if (storedTransaction) {
+            const transaction = JSON.parse(storedTransaction);
+            localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
+              ...transaction,
+              windowOpen: false
+            }));
+          }
           toast({
             title: "Checkout Window Closed",
             description: "You can reopen the payment page by clicking 'Reopen Checkout'",
@@ -125,13 +141,16 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
 
   const reopenCheckout = () => {
     if (checkoutUrl) {
+      setIsProcessing(true);
+      setIsDialogOpen(false);
       openCheckoutWindow(checkoutUrl);
     }
   };
 
-  const checkTransactionStatus = async (transactionId: string) => {
+  const checkTransactionStatus = async (transactionId: string, isCheckoutWindowOpen: boolean) => {
     try {
-      setIsProcessing(true);
+      if (isCheckoutWindowOpen) setIsProcessing(true);
+
       const response = await fetch(`/api/certificates/payment/status?certificateId=${certificateId}&transactionId=${transactionId}`);
       const data = await response.json();
       
@@ -153,9 +172,9 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
   };
 
   const pollPaymentStatus = (transactionId: string) => {
-    if (pollInterval) return; // prevent multiple intervals
+    if (pollIntervalRef.current) return; // prevent multiple intervals
 
-    pollInterval = setInterval(async () => {
+    pollIntervalRef.current = setInterval(async () => {
       try {
         if (document.hidden) return; // don't poll if tab is not active
 
@@ -166,6 +185,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
           handlePaymentSuccess();
         } else if (data.status === 'FAILED' || data.status === 'EXPIRED') {
           clearPolling();
+          setIsDialogOpen(false);
           setIsProcessing(false);
           localStorage.removeItem(`payment_${certificateId}`);
           toast({
@@ -174,7 +194,10 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
             variant: "destructive",
           });
         } else if (data.status === 'CANCELLED'){
-          // already handled by handleCancelPayment()
+          clearPolling();
+          setIsDialogOpen(false);
+          setIsProcessing(false);
+          localStorage.removeItem(`payment_${certificateId}`);
         }
       } catch (error) {
         console.error('Payment status polling error:', error);
@@ -198,9 +221,9 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
   };
 
   const clearPolling = () => {
-    if (pollInterval) {
-      clearInterval(pollInterval);
-      pollInterval = null;
+    if (pollIntervalRef.current) {
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
     }
   };
 
@@ -229,10 +252,11 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       
       // Clear local storage and reset state
       localStorage.removeItem(`payment_${certificateId}`);
+      setIsProcessing(false);
       setCheckoutUrl(null);
       setIsDialogOpen(false);
       clearPolling();
-      
+
       // Show success toast
       toast({
         title: "Payment Cancelled",
@@ -257,7 +281,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 border-blue-300">
+          <Button variant="outline" disabled={isInitializing} className="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 border-blue-300">
             {isProcessing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -330,17 +354,10 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
             <DialogHeader>
               <DialogTitle>Resume Payment</DialogTitle>
               <DialogDescription>
-                You have a payment in progress. Would you like to continue?
+                Your payment session is still active. You can continue with your payment or cancel it.
               </DialogDescription>
             </DialogHeader>
-            
-            <div className="py-4">
-              <p className="text-sm text-gray-500 mb-4">
-                Your payment session is still active. You can continue with your payment or cancel it.
-              </p>
-            </div>
-            
-            <DialogFooter className="flex flex-col gap-2 sm:flex-col">
+            <DialogFooter className="gap-2 flex-col sm:flex-col sm:space-x-0 sm:space-y-1">
               <Button 
                 onClick={reopenCheckout} 
                 className="w-full"
@@ -348,7 +365,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
                 Reopen Checkout
               </Button>
               <Button 
-                variant="outline" 
+                variant="outline"
                 onClick={handleCancelPayment}
                 disabled={isCancelling}
                 className="w-full"

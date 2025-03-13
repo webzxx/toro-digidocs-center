@@ -148,7 +148,7 @@ export async function initiatePayment(params: {
       },
       items: [
         {
-          name: `${certificate.certificateType} Certificate`,
+          name: `${certificate.certificateType.replaceAll("_", " ")} Certificate`,
           code: certificate.referenceNumber,
           description: `Certificate for ${resident.firstName} ${resident.lastName}`,
           quantity: '1',
@@ -195,7 +195,7 @@ export async function cancelPayment(params: {
   try {
     const session = await getSession();
     if (!session?.user) {
-      return { error: 'You must be logged in to cancel payments' };
+      return { error: 'You must be logged in to cancel payments', };
     }
 
     const { certificateId, transactionId } = params;
@@ -231,12 +231,13 @@ export async function cancelPayment(params: {
     // Cancel payment with PayMaya
     paymaya.auth('sk-X8qolYjy62kIzEbr0QRK1h4b4KDVHaNcwMYk39jInSl');
     paymaya.server('https://pg-sandbox.paymaya.com');
-    
+    console.log('Cancelling payment with PayMaya:', checkoutId);
     try {
       // Attempt to cancel the payment with PayMaya
       const { data } = await paymaya.cancelV1PaymentViaIdViaPostMethod({
         paymentId: checkoutId
       });
+      console.log('PayMaya cancellation response:', data);
       
       // Update payment status in database
       await db.payment.update({
