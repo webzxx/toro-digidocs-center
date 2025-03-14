@@ -183,8 +183,9 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
 
         if (data.status === 'SUCCEEDED') {
           handlePaymentSuccess();
-        } else if (data.status === 'FAILED' || data.status === 'EXPIRED') {
+        } else if (data.status === 'REJECTED' || data.status === 'EXPIRED') {
           clearPolling();
+          setCheckoutUrl(null);
           setIsDialogOpen(false);
           setIsProcessing(false);
           localStorage.removeItem(`payment_${certificateId}`);
@@ -197,6 +198,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
           clearPolling();
           setIsDialogOpen(false);
           setIsProcessing(false);
+          setCheckoutUrl(null);
           localStorage.removeItem(`payment_${certificateId}`);
         }
       } catch (error) {
