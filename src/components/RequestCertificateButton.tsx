@@ -9,13 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { createCertificate } from "@/app/dashboard/@user/certificates/actions";
 import { CertificateType, Resident } from "@prisma/client";
-import { DatePicker } from "./DatePicker";
 import { getCertificateTypeLabel } from "@/lib/certificate-utils";
 import { useRouter } from "next/navigation";
 import { CertificateInput, certificateSchema } from "@/types/types";
+import { CertificateFormFields } from "./form/certificate/CertificateFormFields";
+import { toast } from "@/components/ui/use-toast";
 
 type RequestCertificateButtonProps = {
   residents: Resident[]
@@ -23,6 +23,10 @@ type RequestCertificateButtonProps = {
 
 export default function RequestCertificateButton({ residents }: RequestCertificateButtonProps) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [selectedResident, setSelectedResident] = useState("");
+  const [residentError, setResidentError] = useState(false);
+  
   const form = useForm<CertificateInput>({
     resolver: zodResolver(certificateSchema),
     defaultValues: {
@@ -32,8 +36,6 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
 
   const certificateType = form.watch('certificateType');
 
-  const [selectedResident, setSelectedResident] = useState("");
-
   // Handle click on the Request Certificate button based on residents availability
   const handleRequestClick = (e: React.MouseEvent) => {
     if (residents.length === 0) {
@@ -42,8 +44,34 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
     }
   };
 
+  const onSubmit = async (values: CertificateInput) => {
+    if (!selectedResident) {
+      setResidentError(true);
+      return;
+    }
+
+    try {
+      await createCertificate(values, parseInt(selectedResident));
+      toast({
+        title: "Certificate requested successfully",
+        description: "Your certificate request has been submitted."
+      });
+      
+      // Reset form and close dialog
+      form.reset();
+      setSelectedResident("");
+      setOpen(false);
+    } catch (error) {
+      toast({
+        title: "Error submitting request",
+        description: "There was an error processing your request. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button onClick={handleRequestClick}>Request Certificate</Button>
       </DialogTrigger>
@@ -56,22 +84,35 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <form className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="resident" className="text-right">Resident</Label>
-                  <Select onValueChange={setSelectedResident}>
-                    <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="Select resident" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {residents.map((resident: Resident) => (
-                        <SelectItem key={resident.id} value={resident.id.toString()}>
-                          {resident.firstName} {resident.lastName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="resident" className="text-right">Resident <span className="text-red-600 font-bold">*</span></Label>
+                  <div className="col-span-3">
+                    <Select 
+                      onValueChange={(value) => {
+                        setSelectedResident(value);
+                        setResidentError(false);
+                      }}
+                      value={selectedResident}
+                    >
+                      <SelectTrigger className={residentError ? "border-red-500" : ""}>
+                        <SelectValue placeholder="Select resident" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {residents.map((resident: Resident) => (
+                          <SelectItem key={resident.id} value={resident.id.toString()}>
+                            {resident.firstName} {resident.lastName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {residentError && (
+                      <p className="text-sm font-medium text-red-500 mt-1">
+                        Please select a resident
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <FormField
                   control={form.control}
@@ -79,16 +120,16 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Certificate Type <span className="text-red-600 font-bold">*</span></FormLabel>
-                      <Select onValueChange={field.onChange}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select certificate type" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(CertificateType).map(([key]) => (
-                            <SelectItem key={key} value={key}>
-                              {getCertificateTypeLabel(key as CertificateType)}
+                          {Object.entries(CertificateType).map(([key, value]) => (
+                            <SelectItem key={key} value={value}>
+                              {getCertificateTypeLabel(value)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -110,299 +151,12 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                     </FormItem>
                   )}
                 />
-                {certificateType === 'SOLO_PARENT' && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="childName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="soloParentSince"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Solo Parent Since <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <DatePicker
-                              value={field.value ? new Date(field.value) : null}
-                              onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="presentedBy"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Presented by <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="registryNo"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Registry No <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-                {certificateType === 'COHABITATION' && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="birthAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="spouseName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Spouse Name <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="spouseBirthAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Spouse Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="dateOfMarriage"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date of Marriage <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <DatePicker
-                              allowFutureDates
-                              value={field.value ? new Date(field.value) : null}
-                              onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-                {certificateType === 'NO_INCOME' && (
-                  <FormField
-                    control={form.control}
-                    name="noIncomeSince"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>No Income Since <span className="text-red-600 font-bold">*</span></FormLabel>
-                        <FormControl>
-                          <DatePicker
-                            value={field.value ? new Date(field.value) : null}
-                            onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-                {certificateType === 'FIRST_TIME_JOB_SEEKER' && (
-                  <FormField
-                    control={form.control}
-                    name="dateOfResidency"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
-                        <FormControl>
-                          <DatePicker
-                            value={field.value ? new Date(field.value) : null}
-                            onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-                {certificateType === 'RESIDENCY' && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="birthAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="dateOfResidency"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <DatePicker
-                              value={field.value ? new Date(field.value) : null}
-                              onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-                {certificateType === 'TRANSFER_OF_RESIDENCY' && (
-                  <FormField
-                    control={form.control}
-                    name="newAddress"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>New Address <span className="text-red-600 font-bold">*</span></FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-                {certificateType === 'LIVING_STILL' && (
-                  <FormField
-                    control={form.control}
-                    name="dateOfTabloid"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Date of Tabloid <span className="text-red-600 font-bold">*</span></FormLabel>
-                        <FormControl>
-                          <DatePicker
-                            value={field.value ? new Date(field.value) : null}
-                            onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-                {certificateType === 'BIRTH_FACT' && (
-                  <>
-                    <FormField
-                      control={form.control}
-                      name="dateBorn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date Born <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <DatePicker
-                              value={field.value ? new Date(field.value) : null}
-                              onChange={(date) => field.onChange(date ? date.toISOString().split('T')[0] : '')}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="childName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="birthAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="witnessName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Witness Name <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="witnessType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Witness Type <span className="text-red-600 font-bold">*</span></FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
+                
+                <CertificateFormFields 
+                  certificateType={certificateType}
+                  form={form}
+                />
+                
                 {['SOLO_PARENT', 'COHABITATION', 'GOOD_MORAL', 'NO_INCOME', 'RESIDENCY', 'TRANSFER_OF_RESIDENCY', 'LIVING_STILL', 'BIRTH_FACT'].includes(certificateType) && (
                   <FormField
                     control={form.control}
@@ -420,16 +174,9 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                 )}
               </div>
               <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="submit" onClick={() => {
-                    const result = form.getValues();
-                    if (selectedResident) {
-                      createCertificate(result, parseInt(selectedResident));
-                    }
-                  }}>
-                    Submit Request
-                  </Button>
-                </DialogClose>
+                <Button type="submit">
+                  Submit Request
+                </Button>
               </DialogFooter>
             </form>
           </Form>
