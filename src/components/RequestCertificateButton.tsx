@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +23,7 @@ type RequestCertificateButtonProps = {
 
 export default function RequestCertificateButton({ residents }: RequestCertificateButtonProps) {
   const router = useRouter();
+  const formId = "certificate-request-form";
   const [open, setOpen] = useState(false);
   const [selectedResident, setSelectedResident] = useState("");
   const [residentError, setResidentError] = useState(false);
@@ -76,16 +77,19 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
         <Button onClick={handleRequestClick}>Request Certificate</Button>
       </DialogTrigger>
       {residents.length > 0 ? (
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Request New Certificate</DialogTitle>
-            <DialogDescription>
-              Fill out the form below to request a new certificate.
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid gap-4 py-4">
+        <DialogContent className="max-h-[80vh] flex flex-col p-0">
+          <div className="px-6 pt-6">
+            <DialogHeader>
+              <DialogTitle>Request New Certificate</DialogTitle>
+              <DialogDescription>
+                Fill out the form below to request a new certificate.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          
+          <div className="overflow-y-auto px-6 flex-1">
+            <Form {...form}>
+              <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="resident" className="text-right">Resident <span className="text-red-600 font-bold">*</span></Label>
                   <div className="col-span-3">
@@ -172,14 +176,19 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                     )}
                   />
                 )}
-              </div>
-              <DialogFooter>
-                <Button type="submit">
-                  Submit Request
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+              </form>
+            </Form>
+          </div>
+          
+          <div className="border-t px-6 py-4 mt-auto">
+            <Button 
+              type="submit"
+              form={formId}
+              className="w-full"
+            >
+              Submit Request
+            </Button>
+          </div>
         </DialogContent>
       ) : null}
     </Dialog>
