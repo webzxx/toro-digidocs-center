@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import getSession from '@/lib/getSession';
-import paymaya from '@api/paymaya';
-import { PaymentStatus } from '@prisma/client';
+import { getPayMayaStatus } from '@/lib/paymaya-utils';
 
 export async function GET(request: Request) {
   try {
@@ -43,14 +42,10 @@ export async function GET(request: Request) {
 
     const checkoutId = payment.metadata ? (payment.metadata as any).checkoutId : null;
 
-    paymaya.auth('sk-X8qolYjy62kIzEbr0QRK1h4b4KDVHaNcwMYk39jInSl');
-    paymaya.server('https://pg-sandbox.paymaya.com');
-    const { data } = await paymaya.getPaymentViaPaymentId({
-      paymentId: checkoutId
-    });
+    // Get payment status from PayMaya
+    const paymayaStatus = await getPayMayaStatus(checkoutId);
     
     // Check if payment status needs to be updated
-    const paymayaStatus = mapPayMayaStatusToInternal(data.status);
     if (payment.paymentStatus !== paymayaStatus) {
       console.log(`Updating payment status from ${payment.paymentStatus} to ${paymayaStatus}`);
       // Update payment status in database
@@ -83,25 +78,5 @@ export async function GET(request: Request) {
       { error: 'Failed to check payment status' },
       { status: 500 }
     );
-  }
-}
-
-// Map PayMaya status to our internal status
-function mapPayMayaStatusToInternal(paymayaStatus: string) : PaymentStatus {
-  switch (paymayaStatus) {
-    case 'PAYMENT_SUCCESS':
-      return PaymentStatus.SUCCEEDED;
-    case 'PAYMENT_FAILED':
-      return PaymentStatus.REJECTED;
-    case 'PAYMENT_EXPIRED':
-      return PaymentStatus.EXPIRED;
-    case 'PAYMENT_CANCELLED':
-      return PaymentStatus.CANCELLED;
-    case 'REFUNDED':
-      return PaymentStatus.REFUNDED
-    case 'VOIDED':
-      return PaymentStatus.VOIDED;
-    default:
-      return PaymentStatus.PENDING;
   }
 }

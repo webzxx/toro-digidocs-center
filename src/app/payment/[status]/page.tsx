@@ -6,6 +6,8 @@ import { PaymentActions } from '@/components/payment/PaymentActions';
 import { PaymentDetails } from '@/components/payment/PaymentDetails';
 import Image from 'next/image';
 import { withAuth, WithAuthProps } from '@/lib/withAuth';
+import { getPayMayaStatus } from '@/lib/paymaya-utils';
+import { PaymentStatus } from '@prisma/client';
 
 async function PaymentStatusPage({
   params,
@@ -53,77 +55,76 @@ async function PaymentStatusPage({
     redirect('/dashboard');
   }
 
-  // Determine actual payment status
-  let actualStatus: string;
-  switch (payment.paymentStatus) {
+  // For pending payments, verify with PayMaya first
+  let actualPaymentStatus = payment.paymentStatus;
+  let actualUrlStatus = urlStatus;
+  
+  if (payment.paymentStatus === 'PENDING') {
+    const checkoutId = payment.metadata ? (payment.metadata as any).checkoutId : null;
+    
+    if (checkoutId) {
+      // Get actual status from PayMaya
+      const paymayaStatus = await getPayMayaStatus(checkoutId);
+      console.log(`PayMaya status for transaction ${transactionId}: ${paymayaStatus}`);
+      
+      // Update payment in database if status (which we got from PayMaya)
+      // is different from what we have in the database which is currently PENDING (line 62)
+      if (paymayaStatus !== payment.paymentStatus) {
+        console.log(`Updating payment status from ${payment.paymentStatus} to ${paymayaStatus}`);
+        
+        await db.payment.update({
+          where: { id: payment.id },
+          data: { 
+            paymentStatus: paymayaStatus,
+            ...(paymayaStatus === 'SUCCEEDED' && { paymentDate: new Date() }),
+            isActive: false // Since we're already checked the status is in PENDING (line 62), we can safely set this to false
+          }
+        });
+
+        // If payment is successful, also update certificate status
+        if (paymayaStatus === 'SUCCEEDED') {
+          await db.certificateRequest.update({
+            where: { id: payment.certificateRequestId },
+            data: { status: 'PROCESSING' }
+          });
+        }
+        
+        actualPaymentStatus = paymayaStatus;
+      }
+    }
+  }
+
+  // Map PaymentStatus to URL status
+  switch (actualPaymentStatus) {
     case 'SUCCEEDED':
-      actualStatus = 'success';
+      actualUrlStatus = 'success';
       break;
     case 'REJECTED':
-      actualStatus = 'failure';
+      actualUrlStatus = 'failure';
       break;
     case 'CANCELLED':
-      actualStatus = 'cancel';
+      actualUrlStatus = 'cancel';
       break;
-    case 'PENDING':
-      // For pending payments, allow URL parameter to determine flow
-      actualStatus = urlStatus;
+    case 'EXPIRED':
+      actualUrlStatus = 'failure';
       break;
-    default:
-      actualStatus = 'failure'; // Default fallback
+    case 'REFUNDED':
+    case 'VOIDED':
+      actualUrlStatus = 'cancel';
+      break;
   }
 
-  // If URL status doesn't match actual status for non-pending payments, redirect to correct URL
-  if (payment.paymentStatus !== 'PENDING' && urlStatus !== actualStatus) {
-    redirect(`/payment/${actualStatus}?id=${transactionId}`);
-  }
-
-  // Update payment status if it's a successful payment and still pending
-  if (urlStatus === 'success' && payment.paymentStatus === 'PENDING') {
-    await db.payment.update({
-      where: {
-        id: payment.id,
-      },
-      data: {
-        paymentStatus: 'SUCCEEDED',
-        paymentDate: new Date(),
-      },
-    });
-
-    // Also update certificate status
-    await db.certificateRequest.update({
-      where: {
-        id: payment.certificateRequestId,
-      },
-      data: {
-        status: 'PROCESSING',
-      },
-    });
-    
-    // Set actual status to success now that we've updated it
-    actualStatus = 'success';
-  } else if ((urlStatus === 'failure' || urlStatus === 'cancel') && payment.paymentStatus === 'PENDING') {
-    // Mark payment as failed or cancelled
-    await db.payment.update({
-      where: {
-        id: payment.id,
-      },
-      data: {
-        paymentStatus: urlStatus === 'failure' ? 'REJECTED' : 'CANCELLED',
-        isActive: false,
-      },
-    });
-    
-    // Set actual status to the updated value
-    actualStatus = urlStatus;
+  // If URL status doesn't match actual status, redirect to correct URL
+  if (actualUrlStatus !== urlStatus) {
+    redirect(`/payment/${actualUrlStatus}?id=${transactionId}`);
   }
 
   return (
     <div className="min-h-[40rem] bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-3xl">
-        {actualStatus === 'success' ? (
-          <PaymentReceipt payment={payment} />
-        ) : actualStatus === 'failure' ? (
+        {actualUrlStatus === 'success' ? (
+          <PaymentReceipt payment={{...payment, paymentStatus: actualPaymentStatus}} />
+        ) : actualUrlStatus === 'failure' ? (
           <Card className="p-8">
             <div className="flex flex-col items-center space-y-4 mb-6 text-center">
               <div className="relative w-20 h-20 mb-4">
@@ -141,7 +142,7 @@ async function PaymentStatusPage({
             </div>
             
             <div className="border rounded-lg p-6 bg-white mb-6">
-              <PaymentDetails payment={payment} />
+              <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} />
             </div>
             
             <div className="flex justify-center">
@@ -166,7 +167,7 @@ async function PaymentStatusPage({
             </div>
             
             <div className="border rounded-lg p-6 bg-white mb-6">
-              <PaymentDetails payment={payment} />
+              <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} />
             </div>
             
             <div className="flex justify-center">
