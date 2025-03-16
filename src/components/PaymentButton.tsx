@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2, Truck, Store } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { Toast, useToast } from '@/components/ui/use-toast';
 import {
   Dialog,
   DialogContent,
@@ -171,6 +171,22 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
     }
   };
 
+  const resetPaymentState = (showToast = false, toastOptions:Toast = {}) => {
+    clearPolling();
+    setIsDialogOpen(false);
+    setIsProcessing(false);
+    setCheckoutUrl(null);
+    localStorage.removeItem(`payment_${certificateId}`);
+    
+    if (showToast) {
+      toast({
+        title: toastOptions.title || "Payment Status",
+        description: toastOptions.description || "",
+        variant: toastOptions.variant || "default",
+      });
+    }
+  };
+
   const pollPaymentStatus = (transactionId: string) => {
     if (pollIntervalRef.current) return; // prevent multiple intervals
 
@@ -184,22 +200,13 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
         if (data.status === 'SUCCEEDED') {
           handlePaymentSuccess();
         } else if (data.status === 'REJECTED' || data.status === 'EXPIRED') {
-          clearPolling();
-          setCheckoutUrl(null);
-          setIsDialogOpen(false);
-          setIsProcessing(false);
-          localStorage.removeItem(`payment_${certificateId}`);
-          toast({
+          resetPaymentState(true, {
             title: "Payment Failed",
             description: "Payment was not completed. Please try again.",
-            variant: "destructive",
+            variant: "destructive"
           });
         } else if (data.status === 'CANCELLED'){
-          clearPolling();
-          setIsDialogOpen(false);
-          setIsProcessing(false);
-          setCheckoutUrl(null);
-          localStorage.removeItem(`payment_${certificateId}`);
+          resetPaymentState();
         }
       } catch (error) {
         console.error('Payment status polling error:', error);
