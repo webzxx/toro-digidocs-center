@@ -22,8 +22,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Trash } from 'lucide-react';
 import { deleteCertificateRequest, updateCertificateRequest } from '@/app/dashboard/@admin/certificates/actions';
-import { Certificate } from 'crypto';
 import { CertificateStatus } from '@prisma/client';
+import { toast } from '@/components/ui/use-toast';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface CertificateActionsProps {
   certificateId: number;
@@ -40,6 +41,7 @@ export default function CertificateActions({
   purpose,
   status,
 }: CertificateActionsProps) {
+  const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
   const [editedPurpose, setEditedPurpose] = useState<string>(purpose);
   const [editedStatus, setEditedStatus] = useState<string>(status);
@@ -56,20 +58,44 @@ export default function CertificateActions({
     setDeleteConfirmation(e.target.value);
   };
 
-  const handleEditCertificate = () => {
+  const handleEditCertificate = async () => {
     if (purpose === editedPurpose && status === editedStatus) return;
-    const id = certificateId
-    const updatedData = {
-      purpose: editedPurpose,
-      status: editedStatus,
-    };
-    updateCertificateRequest(id, updatedData);
+    try {
+      await updateCertificateRequest(certificateId, {
+        purpose: editedPurpose,
+        status: editedStatus,
+      });
+      queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      toast({
+        title: "Certificate updated",
+        description: `Certificate ${referenceNumber} has been successfully updated.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Update failed",
+        description: "There was a problem updating the certificate.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleDeleteCertificate = () => {
-    const id = certificateId
-    deleteCertificateRequest(id);
+  const handleDeleteCertificate = async () => {
+    try {
+      await deleteCertificateRequest(certificateId);
+      queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      toast({
+        title: "Certificate deleted",
+        description: `Certificate ${referenceNumber} has been permanently deleted.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the certificate.",
+        variant: "destructive",
+      });
+    }
   };
+
   return (
     <div className="flex gap-2">
       <Dialog>
@@ -107,9 +133,9 @@ export default function CertificateActions({
                   <SelectValue placeholder="Select a status" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(CertificateStatus).map(([value, label]) => (
+                  {Object.entries(CertificateStatus).map(([value]) => (
                     <SelectItem key={value} value={value}>
-                      {label}
+                      {value.replace(/_/g, ' ')}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -145,7 +171,7 @@ export default function CertificateActions({
               </Label>
               <Input
                 id="confirmDelete"
-                value={deleteConfirmation}
+                defaultValue=""
                 placeholder="Type reference number to confirm"
                 className="col-span-3"
                 onChange={handleDeleteChange}
@@ -154,15 +180,16 @@ export default function CertificateActions({
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button
-                variant="destructive"
-                type="submit"
-                disabled={deleteConfirmation !== referenceNumber}
-                onClick={handleDeleteCertificate}
-              >
-                Delete Certificate
-              </Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
+            <Button
+              variant="destructive"
+              type="submit"
+              disabled={deleteConfirmation !== referenceNumber}
+              onClick={handleDeleteCertificate}
+            >
+              Delete Certificate
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
