@@ -23,34 +23,29 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
   const [status, setStatus] = useQueryState('status', { defaultValue: 'ALL' });
   const [type, setType] = useQueryState('type', { defaultValue: 'ALL' });
   const [search, setSearch] = useQueryState('search', { defaultValue: '' });
+  const isInitialLoadRef = useRef(true);
   
-  const [isInitialLoad, setIsInitialLoad] = useState(true); // Track if this is the initial load
   const previousDataRef = useRef({
     certificates: JSON.parse(initialCertificates),
     total: initialTotal,
     page: 1,
     totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE)
-  })
-
-
-  useEffect(() => {
-    // If status, type, or search changes from initial values, mark initial load as complete
-    if (status !== "ALL" || type !== "ALL" || search !== "") {
-        setIsInitialLoad(false);
-    }
-  }, [status, type, search]);
+  });
 
   // Fetch certificates with pagination, filtering, and search
   const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: ['certificates', page, status, type, search],
     queryFn: async () => {
+      // When a query executes, we're no longer in the initial load
+      isInitialLoadRef.current = false;
+      
       const params = new URLSearchParams();
       params.set('page', String(page));
       params.set('limit', ITEMS_PER_PAGE.toString());
       if (status !== "ALL") params.set('status', status);
       if (type !== "ALL") params.set('type', type);
       if (search) params.set('search', search);
-      
+      console.log("Fetching certificates with params", params.toString());
       const res = await fetch(`/api/admin/certificates?${params}`);
       if (!res.ok) throw new Error('Failed to fetch certificates');
       const data = await res.json();
@@ -59,9 +54,17 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
       return data;
     },
     staleTime: 0,
-    initialData: previousDataRef.current,
-    // Skip initial load if status, type, or search is not default
-    enabled: !(isInitialLoad && initialCertificates.length > 0),
+    placeholderData: !isInitialLoadRef.current || 
+                  (status === "ALL" && 
+                  type === "ALL" && 
+                  search === "" ) ?
+                    previousDataRef.current : undefined,
+    // Check if we should skip the initial query
+    enabled: !(isInitialLoadRef.current && 
+              status === "ALL" && 
+              type === "ALL" && 
+              search === "" && 
+              initialCertificates.length > 0),
   });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,46 +79,50 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="flex flex-col items-start justify-between pb-4 border-b md:gap-4 md:flex-row md:items-center md:justify-between">  
+      <CardHeader className="flex flex-col items-start justify-between pb-4 border-b space-y-4">  
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">Certificate Requests</CardTitle>
           <CardDescription>Manage all certificate requests for Barangay Bahay Toro</CardDescription>
         </div>
 
-        <div className="flex flex-col space-y-2 w-full md:flex-row md:space-y-0 md:space-x-2 md:w-auto">
-          <div className="relative w-full md:w-auto">
+        <div className="w-full flex flex-col space-y-3">
+          {/* Search bar - always full width */}
+          <div className="relative w-full">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search certificates..."
               value={search || ''}
               onChange={handleSearchChange}
-              className="pl-8 w-full md:w-[200px]"
+              className="pl-8 w-full"
             />
           </div>
           
-          <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="w-full md:w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All Statuses</SelectItem>
-              {Object.keys(CertificateStatus).map((key) => (
-                <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {/* Dropdown selects - will be side by side on larger screens */}
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full">
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">All Statuses</SelectItem>
+                {Object.keys(CertificateStatus).map((key) => (
+                  <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-          <Select value={type} onValueChange={setType}>
-            <SelectTrigger className="w-full md:w-[180px]">
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All Types</SelectItem>
-              {Object.keys(CertificateType).map((key) => (
-                <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <Select value={type} onValueChange={setType}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filter by type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">All Types</SelectItem>
+                {Object.keys(CertificateType).map((key) => (
+                  <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="p-0">
