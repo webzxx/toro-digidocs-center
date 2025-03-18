@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
     const status = searchParams.get('status');
     const type = searchParams.get('type');
+    const search = searchParams.get('search');
 
     // Calculate skip value for pagination
     const skip = (page - 1) * limit;
@@ -31,6 +32,22 @@ export async function GET(req: NextRequest) {
     }
     if (type && type !== 'ALL') {
       where.certificateType = type;
+    }
+    
+    // Add search functionality
+    if (search && search.trim() !== '') {
+      where.OR = [
+        { referenceNumber: { contains: search, mode: 'insensitive' } },
+        {
+          resident: {
+            OR: [
+              { bahayToroSystemId: { contains: search, mode: 'insensitive' } },
+              { firstName: { contains: search, mode: 'insensitive' } },
+              { lastName: { contains: search, mode: 'insensitive' } }
+            ]
+          }
+        }
+      ];
     }
 
     // Fetch certificates with pagination

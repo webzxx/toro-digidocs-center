@@ -4,10 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
 import { CertificateStatus, CertificateType } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CertificateTable from "./CertificateTable";
+import { Input } from "@/components/ui/input";
+import { useQueryState } from "nuqs";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -17,9 +19,11 @@ interface CertificateAdminProps {
 }
 
 export default function CertificateAdmin({ initialCertificates, initialTotal }: CertificateAdminProps) {
-  const [page, setPage] = useState(1);
-  const [status, setStatus] = useState<string>("ALL");
-  const [type, setType] = useState<string>("ALL");
+  const [page, setPage] = useQueryState('page', { defaultValue: 1, parse: Number });
+  const [status, setStatus] = useQueryState('status', { defaultValue: 'ALL' });
+  const [type, setType] = useQueryState('type', { defaultValue: 'ALL' });
+  const [search, setSearch] = useQueryState('search', { defaultValue: '' });
+  
   const [isInitialLoad, setIsInitialLoad] = useState(true); // Track if this is the initial load
   const previousDataRef = useRef({
     certificates: JSON.parse(initialCertificates),
@@ -30,36 +34,41 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
 
 
   useEffect(() => {
-    // If status or type changes from initial values, mark initial load as complete
-    if (status !== "ALL" || type !== "ALL") {
+    // If status, type, or search changes from initial values, mark initial load as complete
+    if (status !== "ALL" || type !== "ALL" || search !== "") {
         setIsInitialLoad(false);
     }
-  }, [status, type]);
+  }, [status, type, search]);
 
-
-
-  // Fetch certificates with pagination and filtering
+  // Fetch certificates with pagination, filtering, and search
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: ['certificates', page, status, type],
+    queryKey: ['certificates', page, status, type, search],
     queryFn: async () => {
       const params = new URLSearchParams();
-      params.set('page', page.toString());
+      params.set('page', String(page));
       params.set('limit', ITEMS_PER_PAGE.toString());
       if (status !== "ALL") params.set('status', status);
       if (type !== "ALL") params.set('type', type);
-      console.log('Fetching certificates with params', params.toString());
+      if (search) params.set('search', search);
+      
       const res = await fetch(`/api/admin/certificates?${params}`);
       if (!res.ok) throw new Error('Failed to fetch certificates');
       const data = await res.json();
-      console.log('Certificates data', data);
+      
       previousDataRef.current = data;
       return data;
     },
     staleTime: 0,
     initialData: previousDataRef.current,
-    // Skip initial load if status or type is not 'ALL'
+    // Skip initial load if status, type, or search is not default
     enabled: !(isInitialLoad && initialCertificates.length > 0),
   });
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearch(value || null);
+    setPage(1); // Reset to first page on search change
+  };
 
   const certificates = data?.certificates || [];
   const totalPages = data?.totalPages || Math.ceil(initialTotal / ITEMS_PER_PAGE);
@@ -72,9 +81,20 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
           <CardTitle className="text-2xl font-bold text-green-primary">Certificate Requests</CardTitle>
           <CardDescription>Manage all certificate requests for Barangay Bahay Toro</CardDescription>
         </div>
-        <div className="flex items-center space-x-2 w-full md:w-auto">
+
+        <div className="flex flex-col space-y-2 w-full md:flex-row md:space-y-0 md:space-x-2 md:w-auto">
+          <div className="relative w-full md:w-auto">
+            <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search certificates..."
+              value={search || ''}
+              onChange={handleSearchChange}
+              className="pl-8 w-full md:w-[200px]"
+            />
+          </div>
+          
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="md:w-[180px]">
+            <SelectTrigger className="w-full md:w-[180px]">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -86,7 +106,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
           </Select>
 
           <Select value={type} onValueChange={setType}>
-            <SelectTrigger className="md:w-[180px]">
+            <SelectTrigger className="w-full md:w-[180px]">
               <SelectValue placeholder="Filter by type" />
             </SelectTrigger>
             <SelectContent>
@@ -115,13 +135,13 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
             </div>
             <div className="flex items-center justify-between p-4 border-t">
               <div className="text-sm text-muted-foreground">
-                Showing {(page - 1) * ITEMS_PER_PAGE + 1} to {Math.min(page * ITEMS_PER_PAGE, totalCertificates)} of {totalCertificates} certificates
+                Showing {((page - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(page * ITEMS_PER_PAGE, totalCertificates)} of {totalCertificates} certificates
               </div>
               <div className="flex items-center space-x-2">
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  onClick={() => setPage(old => Math.max(old - 1, 1))} 
+                  onClick={() => setPage(Math.max(page - 1, 1))} 
                   disabled={page === 1 || isFetching}
                   className="px-1 min-[500px]:px-3"
                 >
@@ -133,7 +153,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  onClick={() => setPage(old => old < totalPages ? old + 1 : old)} 
+                  onClick={() => setPage(page < totalPages ? page + 1 : page)} 
                   disabled={isFetching || page >= totalPages}
                   className="px-1 min-[500px]:px-3"
                 >

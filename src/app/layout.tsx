@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import Chat from "@/components/Chat";
 import Providers from "@/components/Providers";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,13 +23,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen bg-slate-50 antialiased">
-        <Providers>
-          <Chat />
-          <Navbar />
-          {children}
-          <Toaster />
-          <Footer />
-        </Providers>
+        <NuqsAdapter>
+          <Providers>
+            <Chat />
+            <Navbar />
+            {children}
+            <Toaster />
+            <Footer />
+          </Providers>
+        </NuqsAdapter>
       </body>
     </html>
   );
