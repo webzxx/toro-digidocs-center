@@ -36,7 +36,7 @@ async function CertificatesPage() {
 
   return (
     <main className="flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full">
-      <CertificateAdmin initialCertificates={certificates} initialTotal={totalCount} />
+      <CertificateAdmin initialCertificates={JSON.stringify(certificates)} initialTotal={totalCount} />
     </main>
   );
 }

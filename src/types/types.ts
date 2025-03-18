@@ -241,3 +241,28 @@ const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
 })
 
 export type ResidentWithTypes = Prisma.ResidentGetPayload<typeof residentWithTypes>;
+
+const adminCertificateWithRelations = Prisma.validator<Prisma.CertificateRequestDefaultArgs>()({
+  include: {
+    resident: {
+      select: {
+        firstName: true,
+        lastName: true,
+        bahayToroSystemId: true
+      }
+    },
+    payments: {
+      where: {
+        isActive: true
+      },
+      select: {
+        id: true,
+        paymentStatus: true,
+        amount: true,
+        paymentDate: true
+      }
+    }
+  }
+});
+
+export type AdminCertificate = Prisma.CertificateRequestGetPayload<typeof adminCertificateWithRelations>;
