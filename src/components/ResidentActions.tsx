@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +24,8 @@ import { deleteResident, updateResident } from '@/app/dashboard/@admin/residents
 import { ResidentWithTypes } from '@/types/types';
 import { DatePicker } from './DatePicker';
 import { titleCase } from '@/lib/utils';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from '@/components/ui/use-toast';
 
 interface ResidentActionsProps {
   resident: ResidentWithTypes;
@@ -33,6 +34,9 @@ interface ResidentActionsProps {
 export default function ResidentActions({ resident }: ResidentActionsProps) {
   const [editedResident, setEditedResident] = useState(resident);
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -82,18 +86,55 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
     setDeleteConfirmation(e.target.value);
   };
 
-  const handleEditResident = () => {
-    if (JSON.stringify(resident) === JSON.stringify(editedResident)) return;
-    updateResident(resident.id, editedResident);
+  const handleEditResident = async () => {
+    if (JSON.stringify(resident) === JSON.stringify(editedResident)) {
+      setIsEditDialogOpen(false);
+      return;
+    }
+    
+    try {
+      await updateResident(resident.id, editedResident);
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['residents'] });
+      toast({
+        title: "Resident updated",
+        description: `Resident ${editedResident.bahayToroSystemId} has been successfully updated.`,
+      });
+      setIsEditDialogOpen(false);
+    } catch (error) {
+      console.error("Failed to update resident:", error);
+      toast({
+        title: "Update failed",
+        description: "There was a problem updating the resident.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleDeleteResident = () => {
-    deleteResident(resident.id);
+  const handleDeleteResident = async () => {
+    try {
+      await deleteResident(resident.id);
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['residents'] });
+      toast({
+        title: "Resident deleted",
+        description: `Resident ${resident.bahayToroSystemId} has been permanently deleted.`,
+      })
+      setIsDeleteDialogOpen(false);
+      setDeleteConfirmation("");
+    } catch (error) {
+      console.error("Failed to delete resident:", error);
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the resident.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
     <div className="flex gap-2">
-      <Dialog>
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="icon">
             <Edit className="size-4" />
@@ -147,7 +188,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
               </Label>
               <Select
                 onValueChange={handleSelectChange('gender')}
-                defaultValue={editedResident.gender}
+                value={editedResident.gender}
               >
                 <SelectTrigger className="w-[280px]" id="gender">
                   <SelectValue placeholder="Select gender" />
@@ -198,7 +239,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
               </Label>
               <Select
                 onValueChange={handleSelectChange('religion')}
-                defaultValue={editedResident.religion ?? ''}
+                value={editedResident.religion ?? ''}
               >
                 <SelectTrigger className="w-[280px]" id="religion">
                   <SelectValue placeholder="Select religion" />
@@ -221,7 +262,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
               </Label>
               <Select
                 onValueChange={handleSelectChange('status')}
-                defaultValue={editedResident.status}
+                value={editedResident.status}
               >
                 <SelectTrigger className="w-[280px]" id="status">
                   <SelectValue placeholder="Select status" />
@@ -243,7 +284,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
               </Label>
               <Select
                 onValueChange={handleSelectChange('sector')}
-                defaultValue={editedResident.sector ?? ''}
+                value={editedResident.sector ?? ''}
               >
                 <SelectTrigger className="w-[280px]" id="sector">
                   <SelectValue placeholder="Select sector" />
@@ -263,7 +304,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
               </Label>
               <Select
                 onValueChange={handleSelectChange('address.residencyType')}
-                defaultValue={editedResident.address?.residencyType}
+                value={editedResident.address?.residencyType}
               >
                 <SelectTrigger className="w-[280px]" id="residencyType">
                   <SelectValue placeholder="Select type" />
@@ -276,6 +317,8 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
                 </SelectContent>
               </Select>
             </div>
+            
+            {/* Rest of address fields (unchanged) */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="yearsInBahayToro" className="text-right">
                 Years in Bahay Toro
@@ -337,6 +380,8 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
                 onChange={handleAddressChange}
               />
             </div>
+            
+            {/* Emergency Contact section */}
             <h3 className="font-semibold mt-4">Emergency Contact</h3>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="emergencyName" className="text-right">
@@ -388,15 +433,13 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button type="submit" onClick={handleEditResident}>
-                Save changes
-              </Button>
-            </DialogClose>
+            <Button type="submit" onClick={handleEditResident}>
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Dialog>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogTrigger asChild>
           <Button variant="destructive" size="icon">
             <Trash className="size-4" />
@@ -424,16 +467,14 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                variant="destructive"
-                type="submit"
-                disabled={deleteConfirmation !== resident.bahayToroSystemId}
-                onClick={handleDeleteResident}
-              >
-                Delete Resident
-              </Button>
-            </DialogClose>
+            <Button
+              variant="destructive"
+              type="submit"
+              disabled={deleteConfirmation !== resident.bahayToroSystemId}
+              onClick={handleDeleteResident}
+            >
+              Delete Resident
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

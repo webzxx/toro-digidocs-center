@@ -1,12 +1,4 @@
 import React from 'react';
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -21,106 +13,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Gender, CivilStatus, Sector } from "@prisma/client";
 import { formatDate } from '@/lib/utils';
 import { ResidentWithTypes } from '@/types/types';
 import Image from 'next/image';
 import ResidentActions from './ResidentActions';
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from '@/lib/ui-utils';
 
 interface ResidentTableProps {
   residents?: ResidentWithTypes[];
+  isLoading?: boolean;
 }
 
-export default function ResidentTable({ residents }: ResidentTableProps) {
-  const getGenderBadge = (gender: Gender) => {
-    const variants: { [key in Gender]: "default" | "secondary" | "destructive" } = {
-      MALE: "default",
-      FEMALE: "secondary",
-      LGBTQ: "destructive",
-    };
-
-    return (
-      <Badge variant={variants[gender]}>
-        {gender}
-      </Badge>
-    );
-  };
-
-  const getCivilStatusBadge = (status: CivilStatus) => {
-    const getColor = () => {
-      switch (status) {
-        case 'SINGLE':
-          return 'bg-blue-100 text-blue-800';
-        case 'MARRIED':
-          return 'bg-green-100 text-green-800';
-        case 'WIDOW':
-          return 'bg-gray-100 text-gray-800';
-        case 'LEGALLY_SEPARATED':
-          return 'bg-red-100 text-red-800';
-        case 'LIVING_IN':
-          return 'bg-purple-100 text-purple-800';
-        case 'SEPARATED':
-          return 'bg-yellow-100 text-yellow-800';
-        case 'DIVORCED':
-          return 'bg-orange-100 text-orange-800';
-        default:
-          return 'bg-gray-100 text-gray-800';
-      }
-    };
-
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
-        {status.replace(/_/g, " ")}
-      </span>
-    );
-  };
-
-  const getSectorBadge = (sector: Sector) => {
-    const getColor = () => {
-      switch (sector) {
-        case 'SOLO_PARENT':
-          return 'bg-pink-100 text-pink-800';
-        case 'PWD':
-          return 'bg-blue-100 text-blue-800';
-        case 'SENIOR_CITIZEN':
-          return 'bg-purple-100 text-purple-800';
-        case 'INDIGENT_INDIGENOUS_PEOPLE':
-          return 'bg-green-100 text-green-800';
-        default:
-          return 'bg-gray-100 text-gray-800';
-      }
-    };
-
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
-        {sector.replace(/_/g, " ")}
-      </span>
-    );
-  };
-
-  const formatReligion = (religion: string | null) => {
-    switch (religion) {
-      case 'CATHOLIC':
-        return 'Catholic';
-      case 'IGLESIA_NI_CRISTO':
-        return 'Iglesia ni Cristo';
-      case 'AGLIPAY':
-        return 'Aglipay';
-      case 'BAPTIST':
-        return 'Baptist';
-      case 'DATING_DAAN':
-        return 'Dating Daan';
-      case 'ISLAM':
-        return 'Islam';
-      case 'JEHOVAHS_WITNESSES':
-        return 'Jehovah\'s Witnesses';
-      case 'OTHERS':
-        return 'Others';
-      default:
-        return 'N/A';
-    }
-  }
-
+export default function ResidentTable({ residents, isLoading = false }: ResidentTableProps) {
   const renderAddress = (address: any) => {
     if (!address) return "N/A";
     
@@ -155,7 +60,7 @@ export default function ResidentTable({ residents }: ResidentTableProps) {
       </TooltipProvider>
     );
   };
-
+  
   const renderEmergencyContact = (contact: any) => {
     if (!contact) return "N/A";
     
@@ -194,9 +99,7 @@ export default function ResidentTable({ residents }: ResidentTableProps) {
       </TooltipProvider>
     );
   };
-
-  // const getImagePath = (id: number, image: string) => `/certificate/resident_${id}/${image}`; for local only
-
+  
   const renderProofOfIdentity = (id: number, proof: any) => {
     if (!proof) return "N/A";
     
@@ -235,58 +138,74 @@ export default function ResidentTable({ residents }: ResidentTableProps) {
       </TooltipProvider>
     );
   };
-
+  
   return (
-    <Card>
-      <CardHeader className="px-7">
-        <CardTitle>Residents</CardTitle>
-        <CardDescription>List of Residents in Barangay Bahay Toro.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Bahay Toro ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Gender</TableHead>
-              <TableHead>Birth Date</TableHead>
-              <TableHead>Religion</TableHead>
-              <TableHead>Civil Status</TableHead>
-              <TableHead>Sector</TableHead>
-              <TableHead>Address</TableHead>
-              <TableHead>Emergency Contact</TableHead>
-              <TableHead>Proof of Identity</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {residents && residents.length > 0 ? (
-              residents.map((resident) => (
-                <TableRow key={resident.id}>
-                  <TableCell>{resident.bahayToroSystemId}</TableCell>
-                  <TableCell>{`${resident.lastName}, ${resident.firstName} ${resident.middleName || ''}`}</TableCell>
-                  <TableCell>{getGenderBadge(resident.gender)}</TableCell>
-                  <TableCell>{formatDate(resident.birthDate)}</TableCell>
-                  <TableCell>{formatReligion(resident.religion)}</TableCell>
-                  <TableCell>{getCivilStatusBadge(resident.status)}</TableCell>
-                  <TableCell>{resident.sector ? getSectorBadge(resident.sector) : 'N/A'}</TableCell>
-                  <TableCell>{renderAddress(resident.address)}</TableCell>
-                  <TableCell>{renderEmergencyContact(resident.emergencyContact)}</TableCell>
-                  <TableCell>{renderProofOfIdentity(resident.id, resident.proofOfIdentity)}</TableCell>
-                  <TableCell>
-                    <ResidentActions resident={resident} />
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={9} className="text-center">
-                  No residents found.
+    <ScrollArea className="max-h-[70vh] w-full">
+      <Table>
+        <TableHeader className="sticky top-0 bg-white z-10">
+          <TableRow>
+            <TableHead className="w-32">Bahay Toro ID</TableHead>
+            <TableHead className="w-52">Name</TableHead>
+            <TableHead className="w-24">Gender</TableHead>
+            <TableHead className="w-32">Birth Date</TableHead>
+            <TableHead className="w-32">Religion</TableHead>
+            <TableHead className="w-36">Civil Status</TableHead>
+            <TableHead className="w-40">Sector</TableHead>
+            <TableHead className="w-48">Address</TableHead>
+            <TableHead className="w-48">Emergency Contact</TableHead>
+            <TableHead className="w-36">Proof of Identity</TableHead>
+            <TableHead className="w-24">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {residents && residents.length > 0 ? (
+            residents.map((resident) => (
+              <TableRow 
+                key={resident.id}
+                className={isLoading ? "animate-pulse bg-gradient-to-r from-transparent via-gray-200/60 to-transparent bg-[length:400%_100%] bg-[0%_0] transition-all" : ""}
+              >
+                <TableCell className="font-medium">{resident.bahayToroSystemId}</TableCell>
+                <TableCell>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger className="text-left">
+                        {`${resident.lastName}, ${resident.firstName} ${resident.middleName || ''}`}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <div className="p-2">
+                          <p><strong>First Name:</strong> {resident.firstName}</p>
+                          <p><strong>Middle Name:</strong> {resident.middleName || 'N/A'}</p>
+                          <p><strong>Last Name:</strong> {resident.lastName}</p>
+                          <p><strong>Email:</strong> {resident.email || 'N/A'}</p>
+                          <p><strong>Contact:</strong> {resident.contact}</p>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </TableCell>
+                <TableCell>{getGenderBadge(resident.gender)}</TableCell>
+                <TableCell>{formatDate(resident.birthDate)}</TableCell>
+                <TableCell>{formatReligion(resident.religion)}</TableCell>
+                <TableCell>{getCivilStatusBadge(resident.status)}</TableCell>
+                <TableCell>{resident.sector ? getSectorBadge(resident.sector) : 'N/A'}</TableCell>
+                <TableCell>{renderAddress(resident.address)}</TableCell>
+                <TableCell>{renderEmergencyContact(resident.emergencyContact)}</TableCell>
+                <TableCell>{renderProofOfIdentity(resident.id, resident.proofOfIdentity)}</TableCell>
+                <TableCell>
+                  <ResidentActions resident={resident} />
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={11} className="text-center py-8">
+                No residents found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   );
 }

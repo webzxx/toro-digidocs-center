@@ -10,7 +10,7 @@ import {
   XCircle,
   BanIcon
 } from "lucide-react";
-import { CertificateType, CertificateStatus } from '@prisma/client';
+import { CertificateType, CertificateStatus, Gender, CivilStatus, Sector } from '@prisma/client';
 
 /**
  * Returns an icon component based on the certificate status
@@ -112,3 +112,101 @@ export const getCertificateTypeBadge = (type: CertificateType) => {
     </Badge>
   );
 };
+
+/**
+ * Returns a styled badge for resident gender
+ */
+export const getGenderBadge = (gender: Gender) => {
+  const variants: { [key in Gender]: "default" | "secondary" | "destructive" } = {
+    MALE: "default",
+    FEMALE: "secondary",
+    LGBTQ: "destructive",
+  };
+  return (
+    <Badge variant={variants[gender]}>
+      {gender}
+    </Badge>
+  );
+};
+
+/**
+ * Returns a styled badge for resident civil status
+ */
+export const getCivilStatusBadge = (status: CivilStatus) => {
+  const getColor = () => {
+    switch (status) {
+      case 'SINGLE':
+        return 'bg-blue-100 text-blue-800';
+      case 'MARRIED':
+        return 'bg-green-100 text-green-800';
+      case 'WIDOW':
+        return 'bg-gray-100 text-gray-800';
+      case 'LEGALLY_SEPARATED':
+        return 'bg-red-100 text-red-800';
+      case 'LIVING_IN':
+        return 'bg-purple-100 text-purple-800';
+      case 'SEPARATED':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'DIVORCED':
+        return 'bg-orange-100 text-orange-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+  return (
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
+      {status.replace(/_/g, " ")}
+    </span>
+  );
+};
+
+/**
+ * Returns a styled badge for resident sector
+ */
+export const getSectorBadge = (sector: Sector) => {
+  const getColor = () => {
+    switch (sector) {
+      case 'SOLO_PARENT':
+        return 'bg-pink-100 text-pink-800';
+      case 'PWD':
+        return 'bg-blue-100 text-blue-800';
+      case 'SENIOR_CITIZEN':
+        return 'bg-purple-100 text-purple-800';
+      case 'INDIGENT_INDIGENOUS_PEOPLE':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+  return (
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
+      {sector.replace(/_/g, " ")}
+    </span>
+  );
+};
+
+/**
+ * Formats religion for display
+ */
+export const formatReligion = (religion: string | null) => {
+  switch (religion) {
+    case 'CATHOLIC':
+      return 'Catholic';
+    case 'IGLESIA_NI_CRISTO':
+      return 'Iglesia ni Cristo';
+    case 'AGLIPAY':
+      return 'Aglipay';
+    case 'BAPTIST':
+      return 'Baptist';
+    case 'DATING_DAAN':
+      return 'Dating Daan';
+    case 'ISLAM':
+      return 'Islam';
+    case 'JEHOVAHS_WITNESSES':
+      return 'Jehovah\'s Witnesses';
+    case 'OTHERS':
+      return 'Others';
+    default:
+      return 'N/A';
+  }
+}

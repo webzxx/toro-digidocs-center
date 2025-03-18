@@ -234,9 +234,9 @@ export {
 
 const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
   include: {
-      address: true,
-      emergencyContact: true,
-      proofOfIdentity: true,
+    address: true,
+    emergencyContact: true,
+    proofOfIdentity: true,
   }
 })
 
