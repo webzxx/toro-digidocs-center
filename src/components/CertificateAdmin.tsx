@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
       if (status !== "ALL") params.set('status', status);
       if (type !== "ALL") params.set('type', type);
       if (search) params.set('search', search);
-      console.log("Fetching certificates with params", params.toString());
+
       const res = await fetch(`/api/admin/certificates?${params}`);
       if (!res.ok) throw new Error('Failed to fetch certificates');
       const data = await res.json();
@@ -79,14 +79,13 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="flex flex-col items-start justify-between pb-4 border-b space-y-4">  
+      <CardHeader className="@container flex flex-col items-start justify-between pb-4 border-b space-y-4">  
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">Certificate Requests</CardTitle>
           <CardDescription>Manage all certificate requests for Barangay Bahay Toro</CardDescription>
         </div>
 
-        <div className="w-full flex flex-col space-y-3">
-          {/* Search bar - always full width */}
+        <div className="@lg:flex-row w-full flex flex-col gap-2 sm:gap-4">
           <div className="relative w-full">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -97,8 +96,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
             />
           </div>
           
-          {/* Dropdown selects - will be side by side on larger screens */}
-          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full">
+          <div className="flex flex-col gap-2 @sm:flex-row sm:space-y-0 sm:space-x-2 w-full">
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by status" />
