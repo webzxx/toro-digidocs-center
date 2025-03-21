@@ -124,6 +124,19 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                   </div>
                   My Appointments
                 </Link>
+
+                <Link
+                  className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
+                    "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents"
+                  })}
+                  href="/dashboard/residents"
+                >
+                  <div className="text-primary dark:text-white">
+                    <FaHouseUser className="h-5 w-5" />
+                  </div>
+                  My Resident Profiles
+                </Link>
+
                 
                 <Link
                   className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
@@ -244,6 +257,19 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                     <Calendar className="h-5 w-5" />
                   </div>
                   My Appointments
+                </Link>
+
+                <Link
+                  className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
+                    "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents"
+                  })}
+                  href="/dashboard/residents"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <div className="text-primary dark:text-white">
+                    <FaHouseUser className="h-5 w-5" />
+                  </div>
+                  My Resident Profiles
                 </Link>
                 
                 <Link
