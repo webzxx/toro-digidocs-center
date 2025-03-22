@@ -96,9 +96,10 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto">
               <HelpCircle className="h-4 w-4" />
-              How to Add New Resident
+              <span className="hidden min-[590px]:block min-[680px]:hidden">New resident?</span>
+              <span className="sr-only min-[680px]:not-sr-only">How to Add New Resident</span>
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -133,26 +134,25 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
           <Accordion type="single" collapsible value={expandedResidentId || undefined} onValueChange={setExpandedResidentId}>
             {userResidents.map((resident) => (
               <AccordionItem key={resident.id} value={resident.id.toString()} className="border border-muted rounded-lg mb-3 overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0 [&>svg]:ml-2">
-                  <div className="flex flex-1 gap-9 items-center justify-between mr-4 text-start">
-                    <div className="flex flex-shrink-0 items-center gap-3">
-                      <User className="h-5 w-5 text-green-primary" />
+                <AccordionTrigger className="px-3 py-4 sm:px-6 sm:py-4 hover:no-underline [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0 [&>svg]:ml-2">
+                  <div className="flex flex-col sm:flex-row flex-1 gap-2 sm:gap-9 sm:items-center justify-between sm:mr-4 text-start">
+                    <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
+                      <User className="size-4 sm:size-5 text-green-primary flex-shrink-0" />
                       <div className="flex flex-col items-start">
                         <h4 className="font-medium">{resident.firstName} {resident.lastName}</h4>
                         <p className="text-sm text-muted-foreground">ID: {resident.bahayToroSystemId}</p>
                       </div>
                     </div>
-                    <div className="hidden sm:flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span className="text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Clock className="size-4 text-muted-foreground flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-muted-foreground">
                         Last Updated: {formatDate(resident.updatedAt)}
                       </span>
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="bg-muted/20 px-6 pb-6 pt-2 @container">
-                  {/* Action buttons at the top of content for better visibility */}
-                  <div className="flex mb-4 mt-2 @sm:absolute right-6">
+                <AccordionContent className="bg-muted/20 px-6 pb-6 pt-2">
+                  <div className="flex mb-4 mt-2 sm:justify-end">
                     <UserResidentActions resident={resident} />
                   </div>
                   
@@ -194,7 +194,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                       
                       <div>
                         <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Contact Information</h3>
-                        <div className="grid grid-cols-2 gap-2 mt-2">
+                        <div className="grid sm:grid-cols-2 gap-2 mt-2">
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Email</p>
                             <p className="text-base">{resident.email || 'N/A'}</p>
@@ -253,7 +253,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                       {resident.proofOfIdentity && (
                         <div>
                           <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Proof of Identity</h3>
-                          <div className="grid grid-cols-1 @sm:grid-cols-2 gap-3 mt-2">
+                          <div className="grid @sm:grid-cols-2 gap-3 mt-2">
                             {resident.proofOfIdentity.idPhoto1Path && (
                               <div>
                                 <p className="text-xs font-medium text-muted-foreground mb-1">ID Photo 1</p>

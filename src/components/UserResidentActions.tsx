@@ -136,11 +136,12 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
   return (
     <div className="flex gap-2">
       {/* View Certificates Button */}
-      <TooltipProvider>
+      <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="icon" onClick={handleViewCertificates}>
-              <Eye className="size-4" />
+            <Button variant="outline" className="flex gap-1 items-center p-0 w-10 min-[470px]:px-4 min-[470px]:py-2 min-[470px]:w-auto" onClick={handleViewCertificates}>
+              <Eye className="size-4 flex-shrink-0" />
+              <span className='sr-only min-[470px]:inline-block min-[470px]:not-sr-only'>View Certificates</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -150,7 +151,7 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
       </TooltipProvider>
 
       {/* Edit Resident Dialog */}
-      <TooltipProvider>
+      <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Dialog open={isEditDialogOpen} onOpenChange={(open) => {
@@ -158,8 +159,9 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
               if (!open) resetForm();
             }}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" className='flex gap-1 items-center p-0 w-10 min-[510px]:px-4 min-[510px]:py-2 min-[510px]:w-auto'>
                   <Edit className="size-4" />
+                  <span className='sr-only min-[510px]:inline-block min-[510px]:not-sr-only'>Edit</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[625px]">
@@ -196,13 +198,14 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
       </TooltipProvider>
       
       {/* Delete Button */}
-      <TooltipProvider>
+      <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="destructive" size="icon">
+                <Button variant="destructive" className='flex gap-1 items-center p-0 w-10 min-[565px]:px-4 min-[565px]:py-2 min-[565px]:w-auto'>
                   <Trash2 className="size-4" />
+                  <span className='sr-only min-[565px]:inline-block min-[565px]:not-sr-only'>Delete</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
