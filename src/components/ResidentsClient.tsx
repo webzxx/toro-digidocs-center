@@ -160,8 +160,8 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                     <div className="space-y-4">
                       <div>
                         <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Personal Information</h3>
-                        <div className="grid grid-cols-1 @sm:grid-cols-2 gap-2 mt-2">
-                          <div className="@sm:col-span-2">
+                        <div className="grid sm:grid-cols-2 gap-2 mt-2">
+                          <div className="sm:col-span-2">
                             <p className="text-sm font-medium text-muted-foreground">Full Name</p>
                             <p className="text-base">{`${resident.firstName} ${resident.middleName || ''} ${resident.lastName}`}</p>
                           </div>
@@ -253,7 +253,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                       {resident.proofOfIdentity && (
                         <div>
                           <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Proof of Identity</h3>
-                          <div className="grid @sm:grid-cols-2 gap-3 mt-2">
+                          <div className="grid sm:grid-cols-2 gap-3 mt-2">
                             {resident.proofOfIdentity.idPhoto1Path && (
                               <div>
                                 <p className="text-xs font-medium text-muted-foreground mb-1">ID Photo 1</p>
@@ -307,7 +307,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                               </div>
                             )}
                             {resident.proofOfIdentity.signaturePath && (
-                              <div className="@sm:col-span-2">
+                              <div className="sm:col-span-2">
                                 <p className="text-xs font-medium text-muted-foreground mb-1">Signature</p>
                                 <div className="h-20 relative">
                                   <Image 
