@@ -38,10 +38,10 @@ type CertificatesClientProps = {
   residents: (Resident & {
       certificateRequests: CertificateRequest[];
   })[],
-  userId: number
 };
 
-export default function CertificatesClient({ residents, userId }: CertificatesClientProps) {
+
+export default function CertificatesClient({ residents }: CertificatesClientProps) {
   const [activeTab, setActiveTab] = useState<string>(residents[0]?.bahayToroSystemId || "");
   
   // Count total certificates for this user (across all residents)

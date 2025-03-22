@@ -5,6 +5,7 @@ import RequestCertificateButton from "@/components/RequestCertificateButton";
 
 async function CertificatesPage({ user }: WithAuthProps) {
   const userId = parseInt(user.id as unknown as string); // Convert string to number
+  // Fetch residents and their certificate requests
   const residents = await db.resident.findMany({
     where: {
       userId: userId
@@ -21,7 +22,6 @@ async function CertificatesPage({ user }: WithAuthProps) {
       {hasCertificates ? (
         <CertificatesClient
           residents={residents}
-          userId={user.id}
         />
       ) : (
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
