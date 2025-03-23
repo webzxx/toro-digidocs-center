@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { ArrowRight, Briefcase, Car, Building2, Trees, LandPlot, FlagIcon as Government } from "lucide-react";
 
 const Hero = () => {

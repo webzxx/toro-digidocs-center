@@ -1,8 +1,8 @@
 // Sections
-import Hero from "../components/Hero";
-import About from "../components/About";
-import Council from "../components/Council";
-import Number from "../components/Number";
+import Hero from "@/components/home/Hero";
+import About from "@/components/home/About";
+import Council from "@/components/home/Council";
+import Number from "@/components/home/Number";
 
 export default function Home() {
   return (
