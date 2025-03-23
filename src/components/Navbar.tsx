@@ -1,5 +1,5 @@
 import NavigationMenu from "./NavigationMenu";
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 
 const Navbar = async () => {
   const session = await getSession();

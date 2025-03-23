@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { hash } from 'bcrypt';
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 import { deletePOIImages } from "../residents/actions";
 
 export async function updateUser(id: number, data: any) {

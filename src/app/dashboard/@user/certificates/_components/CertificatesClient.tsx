@@ -31,7 +31,7 @@ import {
   getCertificateStatusBadge, 
   getCertificateStatusIcon, 
   getCertificateTypeBadge
-} from '@/lib/ui-utils';
+} from '@/components/utils';
 import { formatDate } from '@/lib/utils';
 
 type CertificatesClientProps = {

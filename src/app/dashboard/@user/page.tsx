@@ -1,4 +1,4 @@
-import { withAuth, WithAuthProps } from "@/lib/withAuth";
+import { withAuth, WithAuthProps } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function UserDashboard({ user }: WithAuthProps) {

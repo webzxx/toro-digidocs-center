@@ -22,7 +22,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from 'next/navigation';
 import ResidentFormFields from '@/components/ResidentFormFields';
-import { useResidentForm } from '@/lib/useResidentForm';
+import { useResidentForm } from '@/hooks/useResidentForm';
 
 interface UserResidentActionsProps {
   resident: ResidentWithTypes;

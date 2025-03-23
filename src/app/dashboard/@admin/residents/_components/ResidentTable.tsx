@@ -18,7 +18,7 @@ import { ResidentWithTypes } from '@/types/types';
 import Image from 'next/image';
 import ResidentActions from './ResidentActions';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from '@/lib/ui-utils';
+import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from '@/components/utils';
 
 interface ResidentTableProps {
   residents?: ResidentWithTypes[];

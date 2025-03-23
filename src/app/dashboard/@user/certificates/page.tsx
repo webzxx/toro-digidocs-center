@@ -1,4 +1,4 @@
-import { withAuth, WithAuthProps } from "@/lib/withAuth";
+import { withAuth, WithAuthProps } from "@/lib/auth";
 import { db } from "@/lib/db";
 import CertificatesClient from "./_components/CertificatesClient";
 import RequestCertificateButton from "./_components/RequestCertificateButton";

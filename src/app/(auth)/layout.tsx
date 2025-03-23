@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { redirect } from "next/navigation";
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 
 interface AuthLayoutProps {
     children: ReactNode;

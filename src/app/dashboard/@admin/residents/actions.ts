@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { ResidentWithTypes } from "@/types/types";
 import { revalidatePath } from "next/cache";
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 import { UTApi } from "uploadthing/server";
 
 export async function updateResident(id: number, data: ResidentWithTypes) {

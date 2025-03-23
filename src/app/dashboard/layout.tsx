@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import DashboardSideBar from "./_components/DashboardSideBar"
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 
 interface DashboardLayoutProps {
   children: ReactNode;

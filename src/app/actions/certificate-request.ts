@@ -6,7 +6,7 @@ import {
 } from "@/types/types";
 import { db } from "@/lib/db";
 import { UTApi } from "uploadthing/server";
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 import { UploadFileResult } from "uploadthing/types";
 
 function generateFile(file: File, prefix: string, email?: string): File {

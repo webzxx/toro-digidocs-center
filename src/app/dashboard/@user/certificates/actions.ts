@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from "@/lib/db";
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 import { CertificateInput } from "@/types/types";
 import { revalidatePath } from "next/cache";
 

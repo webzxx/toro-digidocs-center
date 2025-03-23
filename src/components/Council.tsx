@@ -1,6 +1,6 @@
 import SignInForm from "@/components/form/SignInForm";
 import Link from "next/link";
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 
 // React Icons
 import { FaUserCircle } from "react-icons/fa";

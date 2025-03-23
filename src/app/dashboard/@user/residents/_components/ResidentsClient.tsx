@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
-import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from "@/lib/ui-utils";
+import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from "@/components/utils";
 import { ResidentWithTypes } from "@/types/types";
 import {
   Accordion,

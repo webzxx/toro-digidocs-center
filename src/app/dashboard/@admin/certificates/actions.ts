@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import getSession from "@/lib/getSession";
+import { getSession } from "@/lib/auth";
 
 export async function updateCertificateRequest(id: number, data: any) {
   const session = await getSession();

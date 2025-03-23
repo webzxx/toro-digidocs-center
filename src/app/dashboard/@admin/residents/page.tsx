@@ -1,4 +1,4 @@
-import { withAuth } from "@/lib/withAuth";
+import { withAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import ResidentAdmin from './_components/ResidentAdmin';
 

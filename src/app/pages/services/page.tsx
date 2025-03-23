@@ -1,5 +1,5 @@
 import CertificateRequestWizard from "@/components/form/certificate/CertificateRequestWizard"
-import { withAuth, WithAuthProps } from "@/lib/withAuth";
+import { withAuth, WithAuthProps } from "@/lib/auth";
 
 function Services({ user }: WithAuthProps) {
   return (
