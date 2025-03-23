@@ -1,6 +1,6 @@
 import { withAuth } from "@/lib/withAuth";
 import { db } from "@/lib/db";
-import ResidentAdmin from '@/components/ResidentAdmin';
+import ResidentAdmin from './_components/ResidentAdmin';
 
 async function ResidentsPage() {
   // Initial data fetch for SSR - limited to first page only

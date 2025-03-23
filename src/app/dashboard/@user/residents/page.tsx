@@ -1,7 +1,7 @@
 import { withAuth, WithAuthProps } from "@/lib/withAuth";
 import { db } from "@/lib/db";
 import { ResidentWithTypes } from "@/types/types";
-import ResidentsClient from "@/components/ResidentsClient";
+import ResidentsClient from "./_components/ResidentsClient";
 
 async function ResidentsPage({ user }: WithAuthProps) {
   const userId = parseInt(user.id as unknown as string);
@@ -22,7 +22,7 @@ async function ResidentsPage({ user }: WithAuthProps) {
   }) as ResidentWithTypes[];
 
   return (
-    <main className="flex flex-col gap-4 p-4">
+    <main className='flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full'>
       <ResidentsClient userResidents={userResidents} />
     </main>
   );

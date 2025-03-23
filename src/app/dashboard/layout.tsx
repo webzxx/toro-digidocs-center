@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import DashboardSideBar from "./(components)/DashboardSideBar"
+import DashboardSideBar from "./_components/DashboardSideBar"
 import getSession from "@/lib/getSession";
 
 interface DashboardLayoutProps {

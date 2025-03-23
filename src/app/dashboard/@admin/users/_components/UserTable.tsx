@@ -6,22 +6,22 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card";
-  import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table";
-  import { User, UserRole } from "@prisma/client";
-  import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-  } from "@radix-ui/react-tooltip";
-  import UserActions from "./UserActions";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { User, UserRole } from "@prisma/client";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
+import UserActions from "./UserActions";
 import { formatDate } from "@/lib/utils";
 import CreateUserButton from "./CreateUserButton";
   

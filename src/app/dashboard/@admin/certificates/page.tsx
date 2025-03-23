@@ -1,6 +1,6 @@
 import { withAuth } from "@/lib/withAuth";
 import { db } from "@/lib/db";
-import CertificateAdmin from '@/components/CertificateAdmin';
+import CertificateAdmin from './_components/CertificateAdmin';
 
 async function CertificatesPage() {
   // Initial data fetch for SSR

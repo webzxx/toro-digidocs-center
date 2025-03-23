@@ -1,7 +1,7 @@
 import { withAuth, WithAuthProps } from "@/lib/withAuth";
 import { db } from "@/lib/db";
-import CertificatesClient from "@/components/CertificatesClient";
-import RequestCertificateButton from "@/components/RequestCertificateButton";
+import CertificatesClient from "./_components/CertificatesClient";
+import RequestCertificateButton from "./_components/RequestCertificateButton";
 
 async function CertificatesPage({ user }: WithAuthProps) {
   const userId = parseInt(user.id as unknown as string); // Convert string to number

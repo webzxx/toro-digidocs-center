@@ -19,7 +19,7 @@ async function SettingsPage({ user }: WithAuthProps) {
   }
 
   return (
-    <main className="flex flex-col gap-4 min-h-[80vh] p-4">
+    <main className="flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full">
       <Card className="shadow-md">
         <CardHeader className="px-7 flex flex-row items-center justify-between border-b pb-4">
           <div>

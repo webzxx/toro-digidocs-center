@@ -21,7 +21,7 @@ import { ResidentWithTypes } from '@/types/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from 'next/navigation';
-import ResidentFormFields from './ResidentFormFields';
+import ResidentFormFields from '@/components/ResidentFormFields';
 import { useResidentForm } from '@/lib/useResidentForm';
 
 interface UserResidentActionsProps {

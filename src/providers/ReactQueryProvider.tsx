@@ -1,10 +1,10 @@
 'use client';
 
 import { QueryClient, QueryClientProvider, isServer} from '@tanstack/react-query'
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode } from 'react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-interface ProvidersProps {
+interface QueryProviderProps {
     children: ReactNode
 }
 
@@ -34,7 +34,7 @@ function getQueryClient() {
 
 }
 
-const Providers: FC<ProvidersProps> = ({children}) => {
+const ReactQueryProvider: FC<QueryProviderProps> = ({children}) => {
     const queryClient = getQueryClient();
 
     return (
@@ -45,4 +45,4 @@ const Providers: FC<ProvidersProps> = ({children}) => {
     )
 }
 
-export default Providers
+export default ReactQueryProvider

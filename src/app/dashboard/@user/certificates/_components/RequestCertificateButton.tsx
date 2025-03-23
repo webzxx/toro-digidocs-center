@@ -14,7 +14,7 @@ import { CertificateType, Resident } from "@prisma/client";
 import { getCertificateTypeLabel } from "@/lib/certificate-utils";
 import { useRouter } from "next/navigation";
 import { CertificateInput, certificateSchema } from "@/types/types";
-import { CertificateFormFields } from "./form/certificate/CertificateFormFields";
+import { CertificateFormFields } from "@/components/form/certificate/CertificateFormFields";
 import { toast } from "@/components/ui/use-toast";
 
 type RequestCertificateButtonProps = {
