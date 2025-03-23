@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatePicker } from './DatePicker';
+import { DatePicker } from '@/components/DatePicker';
 import { ResidentWithTypes } from '@/types/types';
 import { Gender, Religion, CivilStatus, Sector, ResidencyType } from '@prisma/client';
 
