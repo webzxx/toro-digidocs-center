@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useStepper } from '@/components/ui/stepper'
 import { scrollToForm, StepperFormActions } from './StepperFormActions'
-import { getCertificateTypeLabel, getDefaultValues } from '@/lib/certificate-utils'
+import { getCertificateTypeLabel, getDefaultValues } from '@/lib/utils/certificate'
 import { CertificateInput, certificateSchema } from '@/types/types'
 import { CertificateType } from '@prisma/client'
 import { CertificateFormFields } from './CertificateFormFields'

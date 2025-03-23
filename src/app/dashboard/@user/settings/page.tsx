@@ -1,4 +1,4 @@
-import { withAuth, WithAuthProps } from "@/lib/auth";
+import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { User as UserIcon, Mail, Shield, Calendar } from "lucide-react";

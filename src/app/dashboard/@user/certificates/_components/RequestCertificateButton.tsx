@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { createCertificate } from "@/app/dashboard/@user/certificates/actions";
 import { CertificateType, Resident } from "@prisma/client";
-import { getCertificateTypeLabel } from "@/lib/certificate-utils";
+import { getCertificateTypeLabel } from "@/lib/utils/certificate";
 import { useRouter } from "next/navigation";
 import { CertificateInput, certificateSchema } from "@/types/types";
 import { CertificateFormFields } from "@/components/form/certificate/CertificateFormFields";

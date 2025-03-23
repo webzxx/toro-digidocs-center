@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/db';
-import getSession from '@/lib/getSession';
+import getSession from '@/lib/auth/getSession';
 import paymaya from '@api/paymaya';
 import { nanoid } from "nanoid";
 import { headers } from 'next/headers';

@@ -1,4 +1,4 @@
-import { withAuth, WithAuthProps } from "@/lib/auth";
+import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
 import { ResidentWithTypes } from "@/types/types";
 import ResidentsClient from "./_components/ResidentsClient";

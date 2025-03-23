@@ -1,4 +1,4 @@
-import { withAuth, WithAuthProps } from "@/lib/auth";
+import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const sampleAppointments = [

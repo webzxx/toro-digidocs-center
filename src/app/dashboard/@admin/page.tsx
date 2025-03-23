@@ -1,4 +1,4 @@
-import { withAuth } from "@/lib/auth";
+import { withAuth } from '@/lib/auth/withAuth';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusCounts } from "../dashboard-utils";
 

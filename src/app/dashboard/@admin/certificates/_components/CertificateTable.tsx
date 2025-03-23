@@ -17,7 +17,7 @@ import { formatDate } from '@/lib/utils';
 import CertificateActions from './CertificateActions';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AdminCertificate } from '@/types/types';
-import { getCertificateStatusBadge, getCertificateStatusIcon, getCertificateTypeBadge } from '@/lib/ui-utils';
+import { getCertificateStatusBadge, getCertificateStatusIcon, getCertificateTypeBadge } from '@/components/utils';
 
 interface CertificateTableProps {
   certificates?: AdminCertificate[];

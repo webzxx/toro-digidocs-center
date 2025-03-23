@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import getSession from '@/lib/getSession';
-import { getPayMayaStatus } from '@/lib/paymaya-utils';
+import getSession from '@/lib/auth/getSession';
+import { getPayMayaStatus } from '@/lib/utils/paymaya';
 
 export async function GET(request: Request) {
   try {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import getSession from '@/lib/getSession';
+import getSession from '@/lib/auth/getSession';
 
 // GET a single resident by ID for the authenticated user
 export async function GET(

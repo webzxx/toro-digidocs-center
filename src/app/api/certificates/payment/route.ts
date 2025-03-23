@@ -21,7 +21,7 @@
 
 // import { NextResponse } from 'next/server';
 // import { db } from '@/lib/db';
-// import getSession from '@/lib/getSession';
+// import getSession from '@/lib/auth/getSession';
 // import paymaya from '@api/paymaya';
 
 // export async function POST(request: Request) {

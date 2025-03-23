@@ -79,6 +79,3 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
-
-export { default as getSession } from './getSession';
-export { withAuth, type WithAuthProps } from './withAuth';

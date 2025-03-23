@@ -6,7 +6,7 @@ import { PaymentActions } from '@/components/payment/PaymentActions';
 import { PaymentDetails } from '@/components/payment/PaymentDetails';
 import Image from 'next/image';
 import { withAuth, WithAuthProps } from '@/lib/withAuth';
-import { getPayMayaStatus } from '@/lib/paymaya-utils';
+import { getPayMayaStatus } from '@/lib/utils/paymaya';
 import { PaymentStatus } from '@prisma/client';
 
 async function PaymentStatusPage({
