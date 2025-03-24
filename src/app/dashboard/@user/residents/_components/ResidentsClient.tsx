@@ -12,7 +12,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User2, UserPlus, PenSquare, Clock, User, HelpCircle } from "lucide-react";
+import { User2, Clock, User, HelpCircle } from "lucide-react";
 import UserResidentActions from "./UserResidentActions";
 import Image from "next/image";
 import Link from "next/link";
