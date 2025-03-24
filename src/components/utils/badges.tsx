@@ -182,7 +182,7 @@ export const getPaymentStatusBadge = (status: PaymentStatus) => {
   return (
     <Badge variant="outline" 
       className={cn(
-        "flex items-center gap-1 py-1 font-normal text-xs border", 
+        "inline-flex w-fit items-center gap-1 py-1 font-normal text-xs border", 
         statusStyles[status] || "bg-gray-100 text-gray-800",
       )}
     >
