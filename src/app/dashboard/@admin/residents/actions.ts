@@ -60,7 +60,7 @@ export async function deleteResident(id: number) {
 export async function deletePOIImages(residentId: number) {
   // retrieve resident's image URLs in ProofOfIdentity first
   const [{
-    signaturePath, idPhoto1Path, idPhoto2Path, holdingIdPhoto1Path, holdingIdPhoto2Path
+    signaturePath, idPhoto1Path, idPhoto2Path, holdingIdPhoto1Path, holdingIdPhoto2Path,
   }] = await db.proofOfIdentity.findMany({
     where: { residentId },
   });

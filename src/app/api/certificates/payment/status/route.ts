@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     if (!session?.user) {
       return NextResponse.json(
         { error: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     if (!certificateId || !transactionId) {
       return NextResponse.json(
         { error: "Certificate ID and transaction ID are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -29,14 +29,14 @@ export async function GET(request: Request) {
       where: {
         certificateRequestId: parseInt(certificateId),
         transactionReference: transactionId,
-      }
+      },
     });
 
     if (!payment) {
       // If no payment record exists, return no payment found
       return NextResponse.json(
         { error: "Payment not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -56,27 +56,27 @@ export async function GET(request: Request) {
           // If payment is successful, set the payment date
           ...(paymayaStatus === "SUCCEEDED" && { paymentDate: new Date() }),
           // If payment is active, check if its still in PENDING, otherwise set to false
-          ...(payment.isActive && { isActive: paymayaStatus === "PENDING" })
-        }
+          ...(payment.isActive && { isActive: paymayaStatus === "PENDING" }),
+        },
       });
       
       // If payment is successful, also update certificate status
       if (paymayaStatus === "SUCCEEDED") {
         await db.certificateRequest.update({
           where: { id: parseInt(certificateId) },
-          data: { status: "PROCESSING" }
+          data: { status: "PROCESSING" },
         });
       }
     }
     console.log("Payment status:", paymayaStatus);
     return NextResponse.json({
-      status: paymayaStatus
+      status: paymayaStatus,
     });
   } catch (error) {
     console.error("Payment status check error:", error);
     return NextResponse.json(
       { error: "Failed to check payment status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

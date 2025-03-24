@@ -8,14 +8,14 @@ export function useResidentForm(initialResident: ResidentWithTypes) {
     const { name, value } = e.target;
     setEditedResident(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSelectChange = (name: string) => (value: string) => {
     setEditedResident(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -25,15 +25,15 @@ export function useResidentForm(initialResident: ResidentWithTypes) {
       ...prev,
       address: {
         ...prev.address,
-        [name]: value
-      } as Required<typeof prev.address>
+        [name]: value,
+      } as Required<typeof prev.address>,
     }));
   };
 
   const handleDateChange = (name: string, value: Date) => {
     setEditedResident(prev => ({
       ...prev,
-      [name]: value ? value.toISOString().split("T")[0] : ""
+      [name]: value ? value.toISOString().split("T")[0] : "",
     }));
   };
 
@@ -43,8 +43,8 @@ export function useResidentForm(initialResident: ResidentWithTypes) {
       ...prev,
       emergencyContact: {
         ...prev.emergencyContact,
-        [name]: value
-      } as Required<typeof prev.emergencyContact>
+        [name]: value,
+      } as Required<typeof prev.emergencyContact>,
     }));
   };
 
@@ -65,6 +65,6 @@ export function useResidentForm(initialResident: ResidentWithTypes) {
     handleDateChange,
     handleEmergencyContactChange,
     resetForm,
-    isDirty
+    isDirty,
   };
 }

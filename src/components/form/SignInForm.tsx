@@ -17,7 +17,7 @@ const FormSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required")
-    .min(8, "Password must have than 8 characters")
+    .min(8, "Password must have than 8 characters"),
 });
 
 const SignInForm = () => {
@@ -27,7 +27,7 @@ const SignInForm = () => {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
-      password: ""
+      password: "",
     },
   });
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
@@ -41,7 +41,7 @@ const SignInForm = () => {
       toast({
         title: "Error",
         description: "Oops! Something went wrong!",
-        variant: "destructive"
+        variant: "destructive",
       });
     } else {
       router.refresh(); // Refresh the router to update server components

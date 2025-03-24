@@ -5,7 +5,7 @@ import getSession from "@/lib/auth/getSession";
 // GET a single resident by ID for the authenticated user
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const session = await getSession();
@@ -49,7 +49,7 @@ export async function GET(
 // PATCH update a resident by ID for the authenticated user
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const session = await getSession();
@@ -140,7 +140,7 @@ export async function PATCH(
 // DELETE a resident by ID for the authenticated user
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const session = await getSession();
@@ -172,14 +172,14 @@ export async function DELETE(
       where: {
         residentId: residentId,
         status: {
-          in: ["PENDING", "UNDER_REVIEW", "AWAITING_PAYMENT", "PROCESSING", "READY_FOR_PICKUP", "IN_TRANSIT"]
-        }
-      }
+          in: ["PENDING", "UNDER_REVIEW", "AWAITING_PAYMENT", "PROCESSING", "READY_FOR_PICKUP", "IN_TRANSIT"],
+        },
+      },
     });
 
     if (pendingRequests) {
       return new NextResponse(JSON.stringify({ 
-        error: "Cannot delete resident with pending certificate requests"
+        error: "Cannot delete resident with pending certificate requests",
       }), {
         status: 400,
       });

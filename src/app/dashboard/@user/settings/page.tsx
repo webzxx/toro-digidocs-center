@@ -11,7 +11,7 @@ async function SettingsPage({ user }: WithAuthProps) {
   
   // Fetch the complete user data from Prisma DB
   const fullUser = await db.user.findUnique({
-    where: { id: userId }
+    where: { id: userId },
   });
 
   if (!fullUser) {

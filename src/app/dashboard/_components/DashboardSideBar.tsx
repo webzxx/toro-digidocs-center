@@ -7,7 +7,7 @@ import {
   Settings,
   Calendar,
   Menu,
-  X
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -49,7 +49,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
               {/* Common or role-specific navigation links */}
               <Link
                 className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                  "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard"
+                  "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard",
                 })}
                 href="/dashboard"
               >
@@ -64,7 +64,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 <>
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/users"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/users",
                     })}
                     href="/dashboard/users"
                   >
@@ -76,7 +76,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents",
                     })}
                     href="/dashboard/residents"
                   >
@@ -88,7 +88,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates",
                     })}
                     href="/dashboard/certificates"
                   >
@@ -100,7 +100,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/bookings"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/bookings",
                     })}
                     href="/dashboard/bookings"
                   >
@@ -115,7 +115,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 <>
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/appointments"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/appointments",
                     })}
                     href="/dashboard/appointments"
                   >
@@ -127,7 +127,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents",
                     })}
                     href="/dashboard/residents"
                   >
@@ -140,7 +140,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates",
                     })}
                     href="/dashboard/certificates"
                   >
@@ -152,7 +152,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/settings"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/settings",
                     })}
                     href="/dashboard/settings"
                   >
@@ -190,7 +190,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
               {/* Common or role-specific navigation links - same as desktop */}
               <Link
                 className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                  "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard"
+                  "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard",
                 })}
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
@@ -206,7 +206,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 <>
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/users"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/users",
                     })}
                     href="/dashboard/users"
                     onClick={() => setMobileMenuOpen(false)}
@@ -219,7 +219,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates",
                     })}
                     href="/dashboard/certificates"
                     onClick={() => setMobileMenuOpen(false)}
@@ -232,7 +232,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/bookings"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/bookings",
                     })}
                     href="/dashboard/bookings"
                     onClick={() => setMobileMenuOpen(false)}
@@ -248,7 +248,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 <>
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/appointments"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/appointments",
                     })}
                     href="/dashboard/appointments"
                     onClick={() => setMobileMenuOpen(false)}
@@ -261,7 +261,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/residents",
                     })}
                     href="/dashboard/residents"
                     onClick={() => setMobileMenuOpen(false)}
@@ -274,7 +274,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
                 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/certificates",
                     })}
                     href="/dashboard/certificates"
                     onClick={() => setMobileMenuOpen(false)}
@@ -287,7 +287,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/settings"
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/settings",
                     })}
                     href="/dashboard/settings"
                     onClick={() => setMobileMenuOpen(false)}

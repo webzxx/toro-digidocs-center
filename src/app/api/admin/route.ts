@@ -12,7 +12,7 @@ const adminSchema = z
       .string()
       .min(1, "Password is required")
       .min(8, "Password must have than 8 characters"),
-    adminSecret: z.string().min(1, "Admin secret is required")
+    adminSecret: z.string().min(1, "Admin secret is required"),
   });
 
 export async function POST(req: Request) {
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     // check if email already exists
     const existingUserByEmail = await db.user.findUnique({
-      where: { email: email }
+      where: { email: email },
     });
     if(existingUserByEmail) {
       return NextResponse.json({user: null, message: "User with this email already exists"}, { status : 409 });
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
     // check if username already exists
     const existingUserByUsername = await db.user.findUnique({
-      where: { username: username }
+      where: { username: username },
     });
     if(existingUserByUsername) {
       return NextResponse.json({user: null, message: "User with this username already exists"}, { status : 409 });
@@ -48,8 +48,8 @@ export async function POST(req: Request) {
         username,
         email,
         password: hashedPassword,
-        role: "ADMIN" // Set role to ADMIN
-      }
+        role: "ADMIN", // Set role to ADMIN
+      },
     });
     const { password: newAdminPassword, ...rest } = newAdmin;
         

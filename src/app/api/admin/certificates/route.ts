@@ -43,10 +43,10 @@ export async function GET(req: NextRequest) {
             OR: [
               { bahayToroSystemId: { contains: search, mode: "insensitive" } },
               { firstName: { contains: search, mode: "insensitive" } },
-              { lastName: { contains: search, mode: "insensitive" } }
-            ]
-          }
-        }
+              { lastName: { contains: search, mode: "insensitive" } },
+            ],
+          },
+        },
       ];
     }
 
@@ -56,28 +56,28 @@ export async function GET(req: NextRequest) {
       skip,
       take: limit,
       orderBy: {
-        requestDate: "desc"
+        requestDate: "desc",
       },
       include: {
         resident: {
           select: {
             firstName: true,
             lastName: true,
-            bahayToroSystemId: true
-          }
+            bahayToroSystemId: true,
+          },
         },
         payments: {
           where: {
-            isActive: true
+            isActive: true,
           },
           select: {
             id: true,
             paymentStatus: true,
             amount: true,
-            paymentDate: true
-          }
-        }
-      }
+            paymentDate: true,
+          },
+        },
+      },
     });
 
     // Get total count for pagination
@@ -93,14 +93,14 @@ export async function GET(req: NextRequest) {
       page,
       limit,
       total,
-      totalPages
+      totalPages,
     });
     
   } catch (error) {
     console.error("Error fetching certificates:", error);
     return NextResponse.json(
       { error: "Failed to fetch certificates" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -37,7 +37,7 @@ export default function ResidentFormFields({
   handleAddressChange,
   handleDateChange,
   handleEmergencyContactChange,
-  isAdmin = false
+  isAdmin = false,
 }: ResidentFormFieldsProps) {
   return (
     <div className="grid gap-4 py-4 pr-4 max-h-[60vh] overflow-y-auto">

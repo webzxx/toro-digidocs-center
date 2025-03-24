@@ -8,11 +8,11 @@ async function CertificatesPage({ user }: WithAuthProps) {
   // Fetch residents and their certificate requests
   const residents = await db.resident.findMany({
     where: {
-      userId: userId
+      userId: userId,
     },
     include: {
-      certificateRequests: true
-    }  
+      certificateRequests: true,
+    },  
   });
 
   const hasCertificates = residents.some(resident => resident.certificateRequests.length > 0);

@@ -92,7 +92,7 @@ export default function CertificateRequestWizard() {
         certificate: result.data.certificate,
         proofOfIdentity: {
           signature: result.data.proofOfIdentity.signature,
-        }
+        },
       };      
 
       let success = true;
@@ -102,7 +102,7 @@ export default function CertificateRequestWizard() {
           toast({
             title: "Error",
             description: "Certificate form is invalid.",
-            variant: "destructive"
+            variant: "destructive",
           });
           success = false;
         }
@@ -110,7 +110,7 @@ export default function CertificateRequestWizard() {
           toast({
             title: "Error",
             description: res.serverError || "Oops! Something went wrong!",
-            variant: "destructive"
+            variant: "destructive",
           });
           success = false;
         }
@@ -119,19 +119,19 @@ export default function CertificateRequestWizard() {
           toast({
             title: "Success",
             description: "Certificate has been created successfully!",
-            variant: "default"
+            variant: "default",
           });
 
           setRequestDetails({
             referenceNumber: res?.data.referenceNumber || "ERROR",
-            systemId: res?.data.bahayToroSystemId || "ERROR"
+            systemId: res?.data.bahayToroSystemId || "ERROR",
           });
         }
       } catch (error) {
         toast({
           title: "Error",
           description: "An unexpected error occurred.",
-          variant: "destructive"
+          variant: "destructive",
         });
         success = false;
       }
@@ -141,7 +141,7 @@ export default function CertificateRequestWizard() {
       toast({
         title: "Error",
         description: "Certificate form is invalid.",
-        variant: "destructive"
+        variant: "destructive",
       });
       return false;
     }

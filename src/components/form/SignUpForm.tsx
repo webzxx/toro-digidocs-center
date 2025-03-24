@@ -19,11 +19,11 @@ const FormSchema = z
       .string()
       .min(1, "Password is required")
       .min(8, "Password must have than 8 characters"),
-    confirmPassword: z.string().min(1, "Password confirmation is required")
+    confirmPassword: z.string().min(1, "Password confirmation is required"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Password do not match"
+    message: "Password do not match",
   });
 
 const SignUpForm = () => {
@@ -35,7 +35,7 @@ const SignUpForm = () => {
       username: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     },
   });
 
@@ -44,20 +44,20 @@ const SignUpForm = () => {
       const response = await fetch("/api/user", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: values.username,
           email: values.email,
-          password: values.password
-        })
+          password: values.password,
+        }),
       });
 
       if (response.ok) {
         toast({
           title: "Success",
           description: "Account created successfully!",
-          variant: "default"
+          variant: "default",
         });
         router.push("/sign-in");
       } else {
@@ -65,14 +65,14 @@ const SignUpForm = () => {
         toast({
           title: "Error",
           description: data.message || "Something went wrong during registration",
-          variant: "destructive"
+          variant: "destructive",
         });
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "An unexpected error occurred",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };

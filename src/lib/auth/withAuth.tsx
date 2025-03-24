@@ -47,10 +47,10 @@ interface AuthOptions {
  */
 export function withAuth<P extends WithAuthProps>(
   WrappedComponent: ComponentType<P>,
-  options?: AuthOptions
+  options?: AuthOptions,
 ) {
   return async function AuthenticatedComponent(
-    props: Omit<P, keyof WithAuthProps>
+    props: Omit<P, keyof WithAuthProps>,
   ) {
     const session = await getSession();
     

@@ -24,7 +24,7 @@ function generateFile(file: File, prefix: string, email?: string): File {
 
 export async function createCertificateRequest(
   values: CompleteCertificateFormInputWithoutFiles,
-  files: FormData
+  files: FormData,
 ) {
   let uploadedFiles : UploadFileResult[] = [];
   const utApi = new UTApi();
@@ -79,12 +79,12 @@ export async function createCertificateRequest(
     // Handle file uploads before starting the transaction
     const signatureBuffer = Buffer.from(
       proofOfIdentity.signature.split(",")[1],
-      "base64"
+      "base64",
     );
     const signatureFile = generateFile(
       new File([signatureBuffer], "signpadimg.png", { type: "image/png" }),
       "signature",
-      personalInfo.email
+      personalInfo.email,
     );
     const [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature] = 
       await utApi.uploadFiles([
@@ -177,7 +177,7 @@ export async function createCertificateRequest(
         },
       });
       console.log(
-        `CertificateRequest created with ID: ${certificateRequest.id} for resident ID: ${resident.id}`
+        `CertificateRequest created with ID: ${certificateRequest.id} for resident ID: ${resident.id}`,
       );
 
       // Fetch the created resident and certificate request with their generated IDs

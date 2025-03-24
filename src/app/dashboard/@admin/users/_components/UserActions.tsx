@@ -47,7 +47,7 @@ export default function UserActions({
   };
 
   const handleEditedUsernameChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setEditedUsername(e.target.value);
   };

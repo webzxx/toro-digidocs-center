@@ -7,7 +7,7 @@ import {
   CardHeader, 
   CardTitle, 
   CardDescription, 
-  CardFooter 
+  CardFooter, 
 } from "@/components/ui/card";
 import { CertificateRequest, Resident } from "@prisma/client";
 import RequestCertificateButton from "./RequestCertificateButton";
@@ -30,7 +30,7 @@ import {
 import { 
   getCertificateStatusBadge, 
   getCertificateStatusIcon, 
-  getCertificateTypeBadge
+  getCertificateTypeBadge,
 } from "@/components/utils";
 import { formatDate } from "@/lib/utils";
 

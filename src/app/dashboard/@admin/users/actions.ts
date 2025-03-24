@@ -60,7 +60,7 @@ export async function createUser(data: CreateUserParams) {
     }
     // Check if email already exists
     const existingUserByEmail = await db.user.findUnique({
-      where: { email: data.email }
+      where: { email: data.email },
     });
     if (existingUserByEmail) {
       throw new Error("User with this email already exists");
@@ -68,7 +68,7 @@ export async function createUser(data: CreateUserParams) {
 
     // Check if username already exists
     const existingUserByUsername = await db.user.findUnique({
-      where: { username: data.username }
+      where: { username: data.username },
     });
     if (existingUserByUsername) {
       throw new Error("User with this username already exists");

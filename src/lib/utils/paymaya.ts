@@ -38,7 +38,7 @@ export function initializePayMaya() {
 export async function getPayMayaStatus(checkoutId: string): Promise<PaymentStatus> {
   initializePayMaya();
   const { data } = await paymaya.getPaymentViaPaymentId({
-    paymentId: checkoutId
+    paymentId: checkoutId,
   });
   return mapPayMayaStatusToInternal(data.status);
 }

@@ -7,14 +7,14 @@ const sampleAppointments = [
     date: "2024-01-20",
     time: "10:00 AM",
     purpose: "Document Request",
-    status: "Scheduled"
+    status: "Scheduled",
   },
   {
     id: 2,
     date: "2024-01-22",
     time: "2:30 PM",
     purpose: "Certificate Pickup",
-    status: "Pending"
+    status: "Pending",
   },
 ];
 

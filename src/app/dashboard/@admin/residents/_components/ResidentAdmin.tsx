@@ -34,7 +34,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
     residents: JSON.parse(initialResidents),
     total: initialTotal,
     page: 1,
-    totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE)
+    totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE),
   });
 
   // Fetch residents with pagination, filtering, and search

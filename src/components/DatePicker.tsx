@@ -22,7 +22,7 @@ interface DatePickerProps {
 export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
   ({ value, onChange, allowFutureDates = false }, ref) => {
     const [date, setDate] = React.useState<Date | null>(
-      value ? new Date(value) : null
+      value ? new Date(value) : null,
     );
 
     const handleSelect = (date: Date | undefined) => {
@@ -40,7 +40,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             variant={"outline"}
             className={cn(
               "w-[280px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground",
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -64,7 +64,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
         </PopoverContent>
       </Popover>
     );
-  }
+  },
 );
 
 DatePicker.displayName = "DatePicker";

@@ -32,7 +32,7 @@ interface ResidentsClientProps {
 
 export default function ResidentsClient({ userResidents }: ResidentsClientProps) {
   const [expandedResidentId, setExpandedResidentId] = useState<string | null>(
-    userResidents.length > 0 ? userResidents[0].id.toString() : null
+    userResidents.length > 0 ? userResidents[0].id.toString() : null,
   );
 
   // If no residents found

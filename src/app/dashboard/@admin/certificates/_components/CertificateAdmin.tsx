@@ -29,7 +29,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
     certificates: JSON.parse(initialCertificates),
     total: initialTotal,
     page: 1,
-    totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE)
+    totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE),
   });
 
   // Fetch certificates with pagination, filtering, and search

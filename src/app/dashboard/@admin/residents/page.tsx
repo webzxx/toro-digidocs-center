@@ -7,7 +7,7 @@ async function ResidentsPage() {
   const residents = await db.resident.findMany({
     take: 10,
     orderBy: {
-      lastName: "asc"
+      lastName: "asc",
     },
     include: {
       address: true,

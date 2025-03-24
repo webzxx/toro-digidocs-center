@@ -21,7 +21,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
       const response = await fetch("/api/message", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(message),
       });
@@ -31,7 +31,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
     },
     onSuccess: (data) => {
 
-    }
+    },
   });
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
         <BotMessage
           key="0"
           fetchMessage={async () => sendMessage({ id: nanoid(), isUserMessage: false, text: "start" })}
-        />
+        />,
       ]);
     }
     loadWelcomeMessage();
@@ -60,7 +60,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
               const message: Message = {
                 id: nanoid(),
                 isUserMessage: true,
-                text: input
+                text: input,
               };
 
               const newMessages = messages.concat(
@@ -68,7 +68,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
                 <BotMessage
                   key={messages.length + 2}
                   fetchMessage={async () => sendMessage(message)}
-                />
+                />,
               );
               setMessages(newMessages);
               // clear input

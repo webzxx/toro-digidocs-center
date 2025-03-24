@@ -16,7 +16,7 @@ export const CertificateFormFields = ({
   certificateType, 
   form, 
   onChange,
-  formName = "certificate"
+  formName = "certificate",
 }: CertificateFormFieldsProps) => {
   
   // Helper function to handle date changes that works for both components

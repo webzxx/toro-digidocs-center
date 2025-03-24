@@ -14,7 +14,7 @@ export function PaymentDetails({
   payment, 
   showAmounts = false, 
   showHeader = false, 
-  showStatus = false 
+  showStatus = false, 
 }: PaymentDetailsProps) {
   const resident = payment.certificateRequest.resident;
   const metadata = payment.metadata as any;

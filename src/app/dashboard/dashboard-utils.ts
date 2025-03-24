@@ -3,8 +3,8 @@ import { db } from "@/lib/db";
 export const StatusCounts = async () => {
   const status = await db.certificateRequest.findMany({
     select: {
-      status: true
-    }
+      status: true,
+    },
   });
   
   const pendingCount = status.filter((s) => s.status === "PENDING").length;

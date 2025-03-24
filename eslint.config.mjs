@@ -11,7 +11,7 @@ export default [
       "node_modules/**",
       ".api/**",
       "dist/**",
-      "build/**"
+      "build/**",
     ],
     languageOptions: {
       parser,
@@ -43,6 +43,7 @@ export default [
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
       "react/display-name": "warn",
+      "comma-dangle": ["error", "always-multiline"],
     },
   },
 ];

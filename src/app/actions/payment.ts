@@ -45,9 +45,9 @@ export async function initiatePayment(params: {
         resident: {
           include: {
             address: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
 
     if (!certificate) {
@@ -74,10 +74,10 @@ export async function initiatePayment(params: {
       where: {
         certificateRequestId: certificateId,
         paymentStatus: {
-          in: ["PENDING"]
+          in: ["PENDING"],
         },
         isActive: true,
-      }
+      },
     });
 
     if (existingPayment) {
@@ -85,7 +85,7 @@ export async function initiatePayment(params: {
       if (existingPayment.metadata && (existingPayment.metadata as any).redirectUrl) {
         return {
           checkoutUrl: (existingPayment.metadata as any).redirectUrl,
-          transactionId: existingPayment.transactionReference
+          transactionId: existingPayment.transactionReference,
         };
       }
     }
@@ -113,7 +113,7 @@ export async function initiatePayment(params: {
           processingFee: processingFee.toFixed(2),
           serviceCharge: serviceCharge.toFixed(2),
           shippingFee: shippingFee.toFixed(2),
-        }
+        },
       },
       buyer: {
         contact: {phone: resident.contact, email: resident.email || session.user.email!},
@@ -123,7 +123,7 @@ export async function initiatePayment(params: {
           city: address.city,
           state: "Metro Manila",
           zipCode: "1106",
-          countryCode: "PH"
+          countryCode: "PH",
         },
         shippingAddress: {
           firstName: resident.firstName,
@@ -136,7 +136,7 @@ export async function initiatePayment(params: {
           city:  address.city,
           state: "Metro Manila",
           zipCode: "1106",
-          countryCode: "PH"
+          countryCode: "PH",
         },
         firstName: resident.firstName,
         lastName: resident.lastName,
@@ -153,8 +153,8 @@ export async function initiatePayment(params: {
           description: `Certificate for ${resident.firstName} ${resident.lastName}`,
           quantity: "1",
           amount: {value: baseAmount},
-          totalAmount: {value: totalAmount}
-        }
+          totalAmount: {value: totalAmount},
+        },
       ],
       requestReferenceNumber: transactionRef,
     });
@@ -171,15 +171,15 @@ export async function initiatePayment(params: {
           checkoutId: data.checkoutId,
           redirectUrl: data.redirectUrl,
           includeShipping: includeShipping,
-          shippingFee: shippingFee
-        }
-      }
+          shippingFee: shippingFee,
+        },
+      },
     });
 
     // Return the checkout URL for the client to redirect to
     return {
       checkoutUrl: data.redirectUrl,
-      transactionId: transactionRef
+      transactionId: transactionRef,
     };
 
   } catch (error) {
@@ -195,7 +195,7 @@ export async function cancelPayment(params: {
   try {
     const session = await getSession();
     if (!session?.user) {
-      return { error: "You must be logged in to cancel payments", };
+      return { error: "You must be logged in to cancel payments" };
     }
 
     const { certificateId, transactionId } = params;
@@ -210,7 +210,7 @@ export async function cancelPayment(params: {
         certificateRequestId: certificateId,
         transactionReference: transactionId,
         isActive: true,
-      }
+      },
     });
 
     if (!payment) {
@@ -235,7 +235,7 @@ export async function cancelPayment(params: {
     try {
       // Attempt to cancel the payment with PayMaya
       const { data } = await paymaya.cancelV1PaymentViaIdViaPostMethod({
-        paymentId: checkoutId
+        paymentId: checkoutId,
       });
       console.log("PayMaya cancellation response:", data);
       
@@ -244,13 +244,13 @@ export async function cancelPayment(params: {
         where: { id: payment.id },
         data: { 
           paymentStatus: "CANCELLED",
-          isActive: false
-        }
+          isActive: false,
+        },
       });
       
       return { 
         success: true,
-        message: "Payment cancelled successfully"
+        message: "Payment cancelled successfully",
       };
     } catch (paymentError) {
       console.error("PayMaya cancellation error:", paymentError);
@@ -262,19 +262,19 @@ export async function cancelPayment(params: {
         where: { id: payment.id },
         data: { 
           paymentStatus: "CANCELLED",
-          isActive: false
-        }
+          isActive: false,
+        },
       });
       
       return { 
         success: true,
-        message: "Payment marked as cancelled in our system"
+        message: "Payment marked as cancelled in our system",
       };
     }
   } catch (error) {
     console.error("Payment cancellation error:", error);
     return { 
-      error: error instanceof Error ? error.message : "Failed to cancel payment"
+      error: error instanceof Error ? error.message : "Failed to cancel payment",
     };
   }
 }

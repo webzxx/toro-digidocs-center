@@ -16,8 +16,8 @@ function makeQueryClient() {
       queries: {
         refetchOnWindowFocus: false,
         staleTime: 60 * 1000,
-      }
-    }   
+      },
+    },   
   });
 }
 

@@ -7,28 +7,28 @@ async function CertificatesPage() {
   const certificates = await db.certificateRequest.findMany({
     take: 10,
     orderBy: {
-      requestDate: "desc"
+      requestDate: "desc",
     },
     include: {
       resident: {
         select: {
           firstName: true,
           lastName: true,
-          bahayToroSystemId: true
-        }
+          bahayToroSystemId: true,
+        },
       },
       payments: {
         where: {
-          isActive: true
+          isActive: true,
         },
         select: {
           id: true,
           paymentStatus: true,
           amount: true,
-          paymentDate: true
-        }
-      }
-    }
+          paymentDate: true,
+        },
+      },
+    },
   });
 
   // Count total certificates for pagination

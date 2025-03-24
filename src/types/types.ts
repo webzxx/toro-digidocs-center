@@ -70,7 +70,7 @@ const addressSchema = z.object({
   }),
   yearsInBahayToro: z.preprocess(
     (val) => (typeof val === "string" ? +val : val),
-    z.number().int().nonnegative().optional()
+    z.number().int().nonnegative().optional(),
   ),
   blockLot: z.string().optional(),
   phase: z.string().optional(),
@@ -160,7 +160,7 @@ const certificateSchema = z
         witnessType: z.string().min(1, "Witness type is required"),
         requestOf: z.string().min(1, "Request of is required"),
       }),
-    ])
+    ]),
   );
 
 // Helper function to validate data URL
@@ -174,7 +174,7 @@ const fileSchema = z
   .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
   .refine(
     (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-    "Only .jpg, .png, .gif formats are supported"
+    "Only .jpg, .png, .gif formats are supported",
   );
 
 // Step 4: Proof of Identity schema
@@ -237,7 +237,7 @@ const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
     address: true,
     emergencyContact: true,
     proofOfIdentity: true,
-  }
+  },
 });
 
 export type ResidentWithTypes = Prisma.ResidentGetPayload<typeof residentWithTypes>;
@@ -248,21 +248,21 @@ const adminCertificateWithRelations = Prisma.validator<Prisma.CertificateRequest
       select: {
         firstName: true,
         lastName: true,
-        bahayToroSystemId: true
-      }
+        bahayToroSystemId: true,
+      },
     },
     payments: {
       where: {
-        isActive: true
+        isActive: true,
       },
       select: {
         id: true,
         paymentStatus: true,
         amount: true,
-        paymentDate: true
-      }
-    }
-  }
+        paymentDate: true,
+      },
+    },
+  },
 });
 
 export type AdminCertificate = Prisma.CertificateRequestGetPayload<typeof adminCertificateWithRelations>;

@@ -96,7 +96,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
 
     const newImages = validFiles.map(file => ({
       file,
-      preview: URL.createObjectURL(file)
+      preview: URL.createObjectURL(file),
     }));
 
     setImages(prev => {
@@ -225,7 +225,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
                           minWidth: 1,
                           maxWidth: 2,
                           penColor: "black",
-                          backgroundColor: "rgb(255, 255, 255)"
+                          backgroundColor: "rgb(255, 255, 255)",
                         }}
                       />
                     </div>

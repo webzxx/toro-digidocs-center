@@ -7,7 +7,7 @@ import {
   CheckCircle,
   TruckIcon,
   XCircle,
-  BanIcon
+  BanIcon,
 } from "lucide-react";
 
 /**

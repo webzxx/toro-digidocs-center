@@ -37,7 +37,7 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
     handleDateChange,
     handleEmergencyContactChange,
     resetForm,
-    isDirty
+    isDirty,
   } = useResidentForm(resident);
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);

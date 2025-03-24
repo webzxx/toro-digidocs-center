@@ -33,7 +33,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
     handleDateChange,
     handleEmergencyContactChange,
     resetForm,
-    isDirty
+    isDirty,
   } = useResidentForm(resident);
 
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");

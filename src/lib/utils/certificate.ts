@@ -13,7 +13,7 @@ export const getCertificateTypeLabel = (type: CertificateType): string => {
     RESIDENCY: "Residency",
     TRANSFER_OF_RESIDENCY: "Transfer of Residency",
     LIVING_STILL: "Living Still",
-    BIRTH_FACT: "Birth Fact"
+    BIRTH_FACT: "Birth Fact",
   };
   return labels[type];
 };
@@ -32,7 +32,7 @@ export const getRequiredFields = (certificateType: CertificateType): string[] =>
     RESIDENCY: ["birthAddress", "dateOfResidency", "requestOf"],
     TRANSFER_OF_RESIDENCY: ["newAddress", "requestOf"],
     LIVING_STILL: ["dateOfTabloid", "requestOf"],
-    BIRTH_FACT: ["dateBorn", "childName", "birthAddress", "witnessName", "witnessType", "requestOf"]
+    BIRTH_FACT: ["dateBorn", "childName", "birthAddress", "witnessName", "witnessType", "requestOf"],
   };
 
   return [...baseFields, ...fieldMap[certificateType]];

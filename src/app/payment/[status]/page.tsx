@@ -11,7 +11,7 @@ import { getPayMayaStatus } from "@/lib/utils/paymaya";
 async function PaymentStatusPage({
   params,
   searchParams,
-  user
+  user,
 }: {
   params: { status: string };
   searchParams: { id: string };
@@ -36,9 +36,9 @@ async function PaymentStatusPage({
       certificateRequest: {
         include: {
           resident: true,
-        }
-      }
-    }
+        },
+      },
+    },
   });
 
   if (!payment) {
@@ -76,15 +76,15 @@ async function PaymentStatusPage({
           data: { 
             paymentStatus: paymayaStatus,
             ...(paymayaStatus === "SUCCEEDED" && { paymentDate: new Date() }),
-            isActive: false // Since we're already checked the status is in PENDING (line 62), we can safely set this to false
-          }
+            isActive: false, // Since we're already checked the status is in PENDING (line 62), we can safely set this to false
+          },
         });
 
         // If payment is successful, also update certificate status
         if (paymayaStatus === "SUCCEEDED") {
           await db.certificateRequest.update({
             where: { id: payment.certificateRequestId },
-            data: { status: "PROCESSING" }
+            data: { status: "PROCESSING" },
           });
         }
         

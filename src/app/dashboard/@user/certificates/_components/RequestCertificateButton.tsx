@@ -32,7 +32,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
     resolver: zodResolver(certificateSchema),
     defaultValues: {
       purpose: "",
-    }
+    },
   });
 
   const certificateType = form.watch("certificateType");
@@ -55,7 +55,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
       await createCertificate(values, parseInt(selectedResident));
       toast({
         title: "Certificate requested successfully",
-        description: "Your certificate request has been submitted."
+        description: "Your certificate request has been submitted.",
       });
       
       // Reset form and close dialog
@@ -66,7 +66,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
       toast({
         title: "Error submitting request",
         description: "There was an error processing your request. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     }
   };

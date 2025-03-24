@@ -78,7 +78,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
         transactionId: result.transactionId,
         timestamp: Date.now(),
         checkoutUrl: result.checkoutUrl,
-        windowOpen: true
+        windowOpen: true,
       }));
       
       setCheckoutUrl(result.checkoutUrl);
@@ -113,7 +113,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
         const transaction = JSON.parse(storedTransaction);
         localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
           ...transaction,
-          windowOpen: true
+          windowOpen: true,
         }));
       }
 
@@ -127,7 +127,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
             const transaction = JSON.parse(storedTransaction);
             localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
               ...transaction,
-              windowOpen: false
+              windowOpen: false,
             }));
           }
           toast({
@@ -203,7 +203,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
           resetPaymentState(true, {
             title: "Payment Failed",
             description: "Payment was not completed. Please try again.",
-            variant: "destructive"
+            variant: "destructive",
           });
         } else if (data.status === "CANCELLED"){
           resetPaymentState();
@@ -252,7 +252,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       // Call the server action to cancel the payment
       const result = await cancelPayment({
         certificateId,
-        transactionId
+        transactionId,
       });
       
       if (result.error) {
