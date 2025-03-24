@@ -17,7 +17,8 @@ import { formatDate } from "@/lib/utils";
 import CertificateActions from "./CertificateActions";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AdminCertificate } from "@/types/types";
-import { getCertificateStatusBadge, getCertificateStatusIcon, getCertificateTypeBadge } from "@/components/utils";
+import { getCertificateStatusBadge, getCertificateTypeBadge, getPaymentStatusBadge } from "@/components/utils";
+import { PaymentStatus } from "@prisma/client";
 
 interface CertificateTableProps {
   certificates?: AdminCertificate[];
@@ -50,7 +51,7 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger className="text-left">
-            {previewString.length > 30 ? `${previewString.slice(0, 30)}...` : previewString}
+            <span>{previewString.length > 30 ? `${previewString.slice(0, 30)}...` : previewString}</span>
           </TooltipTrigger>
           <TooltipContent className="w-80 p-0">
             <div className="bg-white rounded-md shadow-lg p-4">
@@ -72,6 +73,41 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
     );
   };
 
+  // Function to determine payment status from certificate payments
+  const renderPaymentStatus = (payments?: { id: number; amount: any; paymentStatus: PaymentStatus; paymentDate: Date | null }[]) => {
+    if (!payments || payments.length === 0) {
+      return <span className="text-gray-500 text-sm">No payment</span>;
+    }
+
+    // Find the most recent active payment
+    const payment = payments[0];
+    
+    // Use the utility function to return the appropriate badge
+    return getPaymentStatusBadge(payment.paymentStatus);
+  };
+
+  // Function to display remarks with tooltip if text is long
+  const renderRemarks = (remarks: string | null) => {
+    if (!remarks) return <span className="text-gray-500 text-sm">None</span>;
+    
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <span className={remarks.length > 20 ? "cursor-pointer" : ""}>
+              {remarks.length > 20 ? `${remarks.slice(0, 20)}...` : remarks}
+            </span>
+          </TooltipTrigger>
+          {remarks.length > 20 && (
+            <TooltipContent className="w-60 whitespace-normal text-wrap break-words">
+              <div>{remarks}</div>
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
+
   return (
     <ScrollArea className="max-h-[70vh] w-full">
       <Table>
@@ -83,6 +119,8 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
             <TableHead>Purpose</TableHead>
             <TableHead>Request Date</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Payment</TableHead>
+            <TableHead>Remarks</TableHead>
             <TableHead>Additional Info</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -128,14 +166,13 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
                   {formatDate(certificate.requestDate)}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <div className="flex-shrink-0">
-                      {getCertificateStatusIcon(certificate.status)}
-                    </div>
-                    <div className="flex-grow">
-                      {getCertificateStatusBadge(certificate.status)}
-                    </div>
-                  </div>
+                  {getCertificateStatusBadge(certificate.status)}
+                </TableCell>
+                <TableCell>
+                  {renderPaymentStatus(certificate.payments)}
+                </TableCell>
+                <TableCell>
+                  {renderRemarks(certificate.remarks)}
                 </TableCell>
                 <TableCell>{renderAdditionalInfo(certificate.additionalInfo)}</TableCell>
                 <TableCell>
@@ -145,13 +182,14 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
                     certificateType={certificate.certificateType}
                     purpose={certificate.purpose}
                     status={certificate.status}
+                    remarks={certificate.remarks || ""}
                   />
                 </TableCell>
               </TableRow>
             ))
           ): (
             <TableRow>
-              <TableCell colSpan={8} className="text-center py-8">
+              <TableCell colSpan={9} className="text-center py-8">
                 No certificate requests found.
               </TableCell>
             </TableRow>
