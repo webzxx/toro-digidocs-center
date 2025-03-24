@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect } from "react";
 import { 
   Card, 
   CardContent, 
@@ -33,6 +32,7 @@ import {
   getCertificateTypeBadge,
 } from "@/components/utils";
 import { formatDate } from "@/lib/utils";
+import { useQueryState } from "nuqs";
 
 type CertificatesClientProps = {
   residents: (Resident & {
@@ -40,9 +40,22 @@ type CertificatesClientProps = {
   })[],
 };
 
-
 export default function CertificatesClient({ residents }: CertificatesClientProps) {
-  const [activeTab, setActiveTab] = useState<string>(residents[0]?.bahayToroSystemId || "");
+  const [residentId, setResidentId] = useQueryState("residentId");
+  const [activeTab, setActiveTab] = useQueryState("tab", {
+    defaultValue: residents[0]?.bahayToroSystemId || "",
+  });
+  
+  // Effect to set the active tab based on residentId query parameter
+  useEffect(() => {
+    if (residentId) {
+      // Find if there's a resident with this ID
+      const foundResident = residents.find(resident => resident.bahayToroSystemId === residentId);
+      if (foundResident) {
+        setActiveTab(foundResident.bahayToroSystemId);
+      }
+    }
+  }, [residentId, residents, setActiveTab]);
   
   // Count total certificates for this user (across all residents)
   const totalCertificates = residents.reduce((sum, resident) => {
@@ -70,7 +83,7 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
       {residents.length > 0 && (
         <>
           {residents.length > 1 ? (
-            <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <div className="px-6 pt-2">
                 <TabsList className="w-full justify-start bg-muted/30">
                   {residents.map(resident => (

@@ -49,7 +49,7 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
 
   const handleViewCertificates = () => {
     // Redirect to certificates page filtered by this resident
-    router.push(`/dashboard/certificates?residentId=${resident.id}`);
+    router.push(`/dashboard/certificates?residentId=${resident.bahayToroSystemId}`);
   };
 
   const handleEditResident = async () => {
