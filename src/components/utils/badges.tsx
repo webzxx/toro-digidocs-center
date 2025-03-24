@@ -187,7 +187,7 @@ export const getPaymentStatusBadge = (status: PaymentStatus) => {
       )}
     >
       {getPaymentStatusIcon(status)}
-      {statusNames[status] || status.replace(/_/g, " ")}
+      {statusNames[status] || status?.replace(/_/g, " ")}
     </Badge>
   );
 };

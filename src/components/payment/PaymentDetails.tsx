@@ -2,6 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { formatCurrency } from "@/lib/utils";
 
 interface PaymentDetailsProps {
   payment: any;
@@ -19,14 +20,6 @@ export function PaymentDetails({
   const resident = payment.certificateRequest.resident;
   const metadata = payment.metadata as any;
   const paidDate = payment.paymentDate || new Date();
-  
-  // Format amount as currency
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-PH", {
-      style: "currency",
-      currency: "PHP",
-    }).format(amount);
-  };
 
   // Calculate amounts
   const baseAmount = payment.amount - (metadata?.shippingFee || 0);
