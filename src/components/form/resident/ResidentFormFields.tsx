@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -8,9 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatePicker } from '@/components/DatePicker';
-import { ResidentWithTypes } from '@/types/types';
-import { Gender, Religion, CivilStatus, Sector, ResidencyType } from '@prisma/client';
+import { DatePicker } from "@/components/DatePicker";
+import { ResidentWithTypes } from "@/types/types";
+import { Gender, Religion, CivilStatus, Sector, ResidencyType } from "@prisma/client";
 
 interface ResidentFormFieldsProps {
   editedResident: ResidentWithTypes;
@@ -25,9 +25,9 @@ interface ResidentFormFieldsProps {
 // Helper function to format enum values for display
 const formatEnumValue = (value: string): string => {
   return value
-    .split('_')
+    .split("_")
     .map(word => word.charAt(0) + word.slice(1).toLowerCase())
-    .join(' ');
+    .join(" ");
 };
 
 export default function ResidentFormFields({
@@ -62,7 +62,7 @@ export default function ResidentFormFields({
         <Input
           id="middleName"
           name="middleName"
-          value={editedResident.middleName || ''}
+          value={editedResident.middleName || ""}
           className="col-span-3"
           onChange={handleInputChange}
         />
@@ -88,7 +88,7 @@ export default function ResidentFormFields({
               Gender
             </Label>
             <Select
-              onValueChange={handleSelectChange('gender')}
+              onValueChange={handleSelectChange("gender")}
               value={editedResident.gender}
             >
               <SelectTrigger className="w-[280px]" id="gender">
@@ -107,7 +107,7 @@ export default function ResidentFormFields({
             </Label>
             <DatePicker
               value={editedResident.birthDate ? new Date(editedResident.birthDate) : null}
-              onChange={(date) => handleDateChange('birthDate', date!)}
+              onChange={(date) => handleDateChange("birthDate", date!)}
             />
           </div>
         </>
@@ -122,7 +122,7 @@ export default function ResidentFormFields({
           id="email"
           name="email"
           type="email"
-          value={editedResident.email || ''}
+          value={editedResident.email || ""}
           className="col-span-3"
           onChange={handleInputChange}
         />
@@ -148,8 +148,8 @@ export default function ResidentFormFields({
               Religion
             </Label>
             <Select
-              onValueChange={handleSelectChange('religion')}
-              value={editedResident.religion ?? ''}
+              onValueChange={handleSelectChange("religion")}
+              value={editedResident.religion ?? ""}
             >
               <SelectTrigger className="w-[280px]" id="religion">
                 <SelectValue placeholder="Select religion" />
@@ -166,7 +166,7 @@ export default function ResidentFormFields({
               Civil Status
             </Label>
             <Select
-              onValueChange={handleSelectChange('status')}
+              onValueChange={handleSelectChange("status")}
               value={editedResident.status}
             >
               <SelectTrigger className="w-[280px]" id="status">
@@ -184,8 +184,8 @@ export default function ResidentFormFields({
               Sector
             </Label>
             <Select
-              onValueChange={handleSelectChange('sector')}
-              value={editedResident.sector ?? ''}
+              onValueChange={handleSelectChange("sector")}
+              value={editedResident.sector ?? ""}
             >
               <SelectTrigger className="w-[280px]" id="sector">
                 <SelectValue placeholder="Select sector" />
@@ -210,7 +210,7 @@ export default function ResidentFormFields({
             Residency Type
           </Label>
           <Select
-            onValueChange={handleSelectChange('address.residencyType')}
+            onValueChange={handleSelectChange("address.residencyType")}
             value={editedResident.address?.residencyType}
           >
             <SelectTrigger className="w-[280px]" id="residencyType">
@@ -233,7 +233,7 @@ export default function ResidentFormFields({
         <Input
           id="blockLot"
           name="blockLot"
-          value={editedResident.address?.blockLot || ''}
+          value={editedResident.address?.blockLot || ""}
           className="col-span-3"
           onChange={handleAddressChange}
         />
@@ -245,7 +245,7 @@ export default function ResidentFormFields({
         <Input
           id="phase"
           name="phase"
-          value={editedResident.address?.phase || ''}
+          value={editedResident.address?.phase || ""}
           className="col-span-3"
           onChange={handleAddressChange}
         />
@@ -257,7 +257,7 @@ export default function ResidentFormFields({
         <Input
           id="street"
           name="street"
-          value={editedResident.address?.street || ''}
+          value={editedResident.address?.street || ""}
           className="col-span-3"
           onChange={handleAddressChange}
         />
@@ -269,7 +269,7 @@ export default function ResidentFormFields({
         <Input
           id="subdivision"
           name="subdivision"
-          value={editedResident.address?.subdivision || ''}
+          value={editedResident.address?.subdivision || ""}
           className="col-span-3"
           onChange={handleAddressChange}
         />
@@ -282,7 +282,7 @@ export default function ResidentFormFields({
           id="yearsInBahayToro"
           name="yearsInBahayToro"
           type="number"
-          value={editedResident.address?.yearsInBahayToro || ''}
+          value={editedResident.address?.yearsInBahayToro || ""}
           className="col-span-3"
           onChange={handleAddressChange}
         />
@@ -297,7 +297,7 @@ export default function ResidentFormFields({
         <Input
           id="emergencyName"
           name="name"
-          value={editedResident.emergencyContact?.name || ''}
+          value={editedResident.emergencyContact?.name || ""}
           className="col-span-3"
           onChange={handleEmergencyContactChange}
         />
@@ -309,7 +309,7 @@ export default function ResidentFormFields({
         <Input
           id="emergencyRelationship"
           name="relationship"
-          value={editedResident.emergencyContact?.relationship || ''}
+          value={editedResident.emergencyContact?.relationship || ""}
           className="col-span-3"
           onChange={handleEmergencyContactChange}
         />
@@ -321,7 +321,7 @@ export default function ResidentFormFields({
         <Input
           id="emergencyContact"
           name="contact"
-          value={editedResident.emergencyContact?.contact || ''}
+          value={editedResident.emergencyContact?.contact || ""}
           className="col-span-3"
           onChange={handleEmergencyContactChange}
         />
@@ -333,7 +333,7 @@ export default function ResidentFormFields({
         <Input
           id="emergencyAddress"
           name="address"
-          value={editedResident.emergencyContact?.address || ''}
+          value={editedResident.emergencyContact?.address || ""}
           className="col-span-3"
           onChange={handleEmergencyContactChange}
         />

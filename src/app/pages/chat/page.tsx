@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
 
 export default function Chat() {
 
 
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-0">
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-0">
           
-        {/* First Section */}
-        <section id="first-section" className="relative flex justify-center items-center w-full py-8">
+      {/* First Section */}
+      <section id="first-section" className="relative flex justify-center items-center w-full py-8">
         <div className="w-full max-w-4xl text-center relative">
           <h2 className="text-7xl mb-8">CHAT</h2>
           <div className="bg-white rounded-lg shadow-lg border border-stone-300 p-8 h-[44rem] overflow-y-auto">
@@ -21,7 +21,7 @@ export default function Chat() {
         </div>
       </section>
   
-      </main>
-    )
-  }
+    </main>
+  );
+}
   

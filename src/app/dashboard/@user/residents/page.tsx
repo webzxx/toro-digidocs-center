@@ -17,7 +17,7 @@ async function ResidentsPage({ user }: WithAuthProps) {
       proofOfIdentity: true,
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   }) as ResidentWithTypes[];
 

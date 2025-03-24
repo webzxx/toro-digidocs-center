@@ -1,49 +1,49 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import getSession from '@/lib/auth/getSession';
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import getSession from "@/lib/auth/getSession";
 
 export async function GET(req: NextRequest) {
   try {
     // Check if user is authenticated and is an admin
     const session = await getSession();
     if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     
-    if (session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    if (session.user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Forbidden: Admin access required" }, { status: 403 });
     }
 
     // Parse query parameters
     const searchParams = req.nextUrl.searchParams;
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const status = searchParams.get('status');
-    const type = searchParams.get('type');
-    const search = searchParams.get('search');
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const status = searchParams.get("status");
+    const type = searchParams.get("type");
+    const search = searchParams.get("search");
 
     // Calculate skip value for pagination
     const skip = (page - 1) * limit;
 
     // Build where clause based on filters
     const where: any = {};
-    if (status && status !== 'ALL') {
+    if (status && status !== "ALL") {
       where.status = status;
     }
-    if (type && type !== 'ALL') {
+    if (type && type !== "ALL") {
       where.certificateType = type;
     }
     
     // Add search functionality
-    if (search && search.trim() !== '') {
+    if (search && search.trim() !== "") {
       where.OR = [
-        { referenceNumber: { contains: search, mode: 'insensitive' } },
+        { referenceNumber: { contains: search, mode: "insensitive" } },
         {
           resident: {
             OR: [
-              { bahayToroSystemId: { contains: search, mode: 'insensitive' } },
-              { firstName: { contains: search, mode: 'insensitive' } },
-              { lastName: { contains: search, mode: 'insensitive' } }
+              { bahayToroSystemId: { contains: search, mode: "insensitive" } },
+              { firstName: { contains: search, mode: "insensitive" } },
+              { lastName: { contains: search, mode: "insensitive" } }
             ]
           }
         }
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
       skip,
       take: limit,
       orderBy: {
-        requestDate: 'desc'
+        requestDate: "desc"
       },
       include: {
         resident: {
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
     // Calculate total pages
     const totalPages = Math.ceil(total / limit);
 
-    console.log('Certificates', certificates);
+    console.log("Certificates", certificates);
 
     return NextResponse.json({
       certificates,
@@ -97,9 +97,9 @@ export async function GET(req: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Error fetching certificates:', error);
+    console.error("Error fetching certificates:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch certificates' },
+      { error: "Failed to fetch certificates" },
       { status: 500 }
     );
   }

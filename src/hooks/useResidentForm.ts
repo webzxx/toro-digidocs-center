@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ResidentWithTypes } from '@/types/types';
+import { useState } from "react";
+import { ResidentWithTypes } from "@/types/types";
 
 export function useResidentForm(initialResident: ResidentWithTypes) {
   const [editedResident, setEditedResident] = useState<ResidentWithTypes>(initialResident);
@@ -33,9 +33,9 @@ export function useResidentForm(initialResident: ResidentWithTypes) {
   const handleDateChange = (name: string, value: Date) => {
     setEditedResident(prev => ({
       ...prev,
-      [name]: value ? value.toISOString().split('T')[0] : ''
+      [name]: value ? value.toISOString().split("T")[0] : ""
     }));
-  }
+  };
 
   const handleEmergencyContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

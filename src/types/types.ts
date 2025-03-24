@@ -238,7 +238,7 @@ const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
     emergencyContact: true,
     proofOfIdentity: true,
   }
-})
+});
 
 export type ResidentWithTypes = Prisma.ResidentGetPayload<typeof residentWithTypes>;
 

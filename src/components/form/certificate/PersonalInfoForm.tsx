@@ -10,7 +10,7 @@ import { personalInfoSchema, PersonalInfoInput } from "@/types/types";
 
 import {
   useStepper,
-} from "@/components/ui/stepper"
+} from "@/components/ui/stepper";
 import { scrollToForm, StepperFormActions } from "./StepperFormActions";
 
 export interface PersonalInfoFormProps {
@@ -19,7 +19,7 @@ export interface PersonalInfoFormProps {
 }
 
 const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) => {
-  const formName = 'personalInfo';
+  const formName = "personalInfo";
   const { nextStep } = useStepper();
 
   const form = useForm<PersonalInfoInput>({
@@ -45,9 +45,9 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
   });
 
   const onSubmit = async (values: PersonalInfoInput) => {
-    nextStep()
-    scrollToForm()
-  }
+    nextStep();
+    scrollToForm();
+  };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -111,7 +111,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
               <FormLabel>Gender <span className="text-red-600 font-bold">*</span></FormLabel>
               <FormControl>
                 <RadioGroup
-                  onValueChange={value => {onChange(formName, field.name, value); field.onChange(value)}}
+                  onValueChange={value => {onChange(formName, field.name, value); field.onChange(value);}}
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
                 >
@@ -155,7 +155,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
                 <div>
                   <DatePicker
                     value={field.value ? new Date(field.value) : null}
-                    onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split('T')[0] : ''); field.onChange(date ? date.toISOString().split('T')[0] : '')}}
+                    onChange={(date) => {onChange(formName, field.name, date ? date.toISOString().split("T")[0] : ""); field.onChange(date ? date.toISOString().split("T")[0] : "");}}
                   />
                 </div>
               </FormControl>
@@ -195,7 +195,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           render={({ field }) => (
             <FormItem>
               <FormLabel>Religion</FormLabel>
-              <Select onValueChange={value => { onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => { onChange(formName, field.name, value); field.onChange(value);}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select religion" />
@@ -222,7 +222,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           render={({ field }) => (
             <FormItem>
               <FormLabel>Status <span className="text-red-600 font-bold">*</span></FormLabel>
-              <Select onValueChange={value => { onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => { onChange(formName, field.name, value); field.onChange(value);}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select status" />
@@ -248,7 +248,7 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
           render={({ field }) => (
             <FormItem>
               <FormLabel>Sector</FormLabel>
-              <Select onValueChange={value => {onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => {onChange(formName, field.name, value); field.onChange(value);}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select sector" />
@@ -321,6 +321,6 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
       </form>
     </Form>
   );
-}
+};
 
 export default PersonalInfoForm;

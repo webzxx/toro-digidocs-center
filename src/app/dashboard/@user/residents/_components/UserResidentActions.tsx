@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,13 +16,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
-import { Edit, Eye, Trash2 } from 'lucide-react';
-import { ResidentWithTypes } from '@/types/types';
-import { useQueryClient } from '@tanstack/react-query';
+import { Edit, Eye, Trash2 } from "lucide-react";
+import { ResidentWithTypes } from "@/types/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from 'next/navigation';
-import ResidentFormFields from '@/components/form/resident/ResidentFormFields';
-import { useResidentForm } from '@/hooks/useResidentForm';
+import { useRouter } from "next/navigation";
+import ResidentFormFields from "@/components/form/resident/ResidentFormFields";
+import { useResidentForm } from "@/hooks/useResidentForm";
 
 interface UserResidentActionsProps {
   resident: ResidentWithTypes;
@@ -42,7 +42,7 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
@@ -61,19 +61,19 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
     try {
       // Call API to update resident
       const response = await fetch(`/api/user/residents/${resident.id}`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(editedResident),
       });
       
       if (!response.ok) {
-        throw new Error('Failed to update resident');
+        throw new Error("Failed to update resident");
       }
       
       // Refresh data
-      queryClient.invalidateQueries({ queryKey: ['user-residents'] });
+      queryClient.invalidateQueries({ queryKey: ["user-residents"] });
       toast({
         title: "Success",
         description: "Resident updated successfully",
@@ -105,15 +105,15 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
     try {
       // Call API to delete resident
       const response = await fetch(`/api/user/residents/${resident.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
       
       if (!response.ok) {
-        throw new Error('Failed to delete resident');
+        throw new Error("Failed to delete resident");
       }
       
       // Refresh data
-      queryClient.invalidateQueries({ queryKey: ['user-residents'] });
+      queryClient.invalidateQueries({ queryKey: ["user-residents"] });
       toast({
         title: "Success",
         description: "Resident deleted successfully",

@@ -20,11 +20,11 @@ interface ResidentAdminProps {
 
 export default function ResidentAdmin({ initialResidents, initialTotal }: ResidentAdminProps) {
   // Query states for URL parameters
-  const [page, setPage] = useQueryState('page', { defaultValue: 1, parse: Number });
-  const [gender, setGender] = useQueryState('gender', { defaultValue: 'ALL' });
-  const [status, setStatus] = useQueryState('status', { defaultValue: 'ALL' });
-  const [sector, setSector] = useQueryState('sector', { defaultValue: 'ALL' });
-  const [search, setSearch] = useQueryState('search', { defaultValue: '' });
+  const [page, setPage] = useQueryState("page", { defaultValue: 1, parse: Number });
+  const [gender, setGender] = useQueryState("gender", { defaultValue: "ALL" });
+  const [status, setStatus] = useQueryState("status", { defaultValue: "ALL" });
+  const [sector, setSector] = useQueryState("sector", { defaultValue: "ALL" });
+  const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   
   // Track if this is the initial load
   const isInitialLoadRef = useRef(true);
@@ -39,21 +39,21 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
 
   // Fetch residents with pagination, filtering, and search
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: ['residents', page, gender, status, sector, search],
+    queryKey: ["residents", page, gender, status, sector, search],
     queryFn: async () => {
       // When a query executes, we're no longer in the initial load
       isInitialLoadRef.current = false;
       
       const params = new URLSearchParams();
-      params.set('page', String(page));
-      params.set('limit', ITEMS_PER_PAGE.toString());
-      if (gender !== "ALL") params.set('gender', gender);
-      if (status !== "ALL") params.set('status', status);
-      if (sector !== "ALL") params.set('sector', sector);
-      if (search) params.set('search', search);
+      params.set("page", String(page));
+      params.set("limit", ITEMS_PER_PAGE.toString());
+      if (gender !== "ALL") params.set("gender", gender);
+      if (status !== "ALL") params.set("status", status);
+      if (sector !== "ALL") params.set("sector", sector);
+      if (search) params.set("search", search);
       
       const res = await fetch(`/api/admin/residents?${params}`);
-      if (!res.ok) throw new Error('Failed to fetch residents');
+      if (!res.ok) throw new Error("Failed to fetch residents");
       const data = await res.json();
       
       previousDataRef.current = data;
@@ -65,7 +65,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
                   status === "ALL" && 
                   sector === "ALL" && 
                   search === "") ?
-                    previousDataRef.current : undefined,
+      previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
               gender === "ALL" && 
@@ -99,7 +99,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search by name or ID..."
-              value={search || ''}
+              value={search || ""}
               onChange={handleSearchChange}
               className="pl-8 w-full"
             />
@@ -130,7 +130,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
               <SelectContent>
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.keys(CivilStatus).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
+                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -144,7 +144,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
               <SelectContent>
                 <SelectItem value="ALL">All Sectors</SelectItem>
                 {Object.keys(Sector).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
+                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -212,9 +212,9 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
 }
 
 function LoaderComponent() {
-    return (
-        <div className="absolute inset-0 bg-white/60 flex justify-center items-center pt-10 z-10">
-            <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
-        </div>
-    )
+  return (
+    <div className="absolute inset-0 bg-white/60 flex justify-center items-center pt-10 z-10">
+      <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
+    </div>
+  );
 }

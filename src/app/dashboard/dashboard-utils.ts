@@ -7,9 +7,9 @@ export const StatusCounts = async () => {
     }
   });
   
-  const pendingCount = status.filter((s) => s.status === 'PENDING').length;
-  const processingCount = status.filter((s) => s.status === 'PROCESSING').length;
-  const completedCount = status.filter((s) => s.status === 'COMPLETED').length;
+  const pendingCount = status.filter((s) => s.status === "PENDING").length;
+  const processingCount = status.filter((s) => s.status === "PROCESSING").length;
+  const completedCount = status.filter((s) => s.status === "COMPLETED").length;
 
   return { pendingCount, processingCount, completedCount };
 };

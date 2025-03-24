@@ -1,6 +1,6 @@
-import { ReactNode } from "react"
-import DashboardSideBar from "./_components/DashboardSideBar"
-import getSession from '@/lib/auth/getSession';
+import { ReactNode } from "react";
+import DashboardSideBar from "./_components/DashboardSideBar";
+import getSession from "@/lib/auth/getSession";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -19,5 +19,5 @@ export default async function DashboardLayout({ children, admin, user }: Dashboa
         {role === "ADMIN" ? admin : user}
       </main>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableBody,
@@ -13,11 +13,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatDate } from '@/lib/utils';
-import CertificateActions from './CertificateActions';
+import { formatDate } from "@/lib/utils";
+import CertificateActions from "./CertificateActions";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { AdminCertificate } from '@/types/types';
-import { getCertificateStatusBadge, getCertificateStatusIcon, getCertificateTypeBadge } from '@/components/utils';
+import { AdminCertificate } from "@/types/types";
+import { getCertificateStatusBadge, getCertificateStatusIcon, getCertificateTypeBadge } from "@/components/utils";
 
 interface CertificateTableProps {
   certificates?: AdminCertificate[];
@@ -30,13 +30,13 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
   };
 
   const formatValue = (value: any): string => {
-    if (typeof value === 'string' && isValidDate(value)) {
+    if (typeof value === "string" && isValidDate(value)) {
       return formatDate(new Date(value));
     }
     return String(value);
   };
 
-  const formatTitleCase = (str: string): string => str.replace(/([A-Z])/g, ' $1').trim().replace(/^./, str => str.toUpperCase())
+  const formatTitleCase = (str: string): string => str.replace(/([A-Z])/g, " $1").trim().replace(/^./, str => str.toUpperCase());
 
   const renderAdditionalInfo = (additionalInfo: any) => {
     if (!additionalInfo || Object.keys(additionalInfo).length === 0) return "N/A";
@@ -44,7 +44,7 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
     const previewFields = Object.keys(additionalInfo).slice(0, 2);
     const previewString = previewFields
       .map(field => `${formatTitleCase(field)}: ${formatValue(additionalInfo[field])}`)
-      .join(', ');
+      .join(", ");
   
     return (
       <TooltipProvider>
@@ -59,7 +59,7 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
                 {Object.entries(additionalInfo).map(([key, value]) => (
                   <div key={key} className="grid grid-cols-3 gap-2">
                     <dt className="text-sm font-medium text-gray-500 capitalize col-span-1">
-                      {key.replace(/([A-Z])/g, ' $1').trim()}
+                      {key.replace(/([A-Z])/g, " $1").trim()}
                     </dt>
                     <dd className="text-sm text-gray-900 col-span-2">{formatValue(value)}</dd>
                   </div>
@@ -99,14 +99,14 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
                 </TableCell>
                 <TableCell>
                   <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                    {certificate.resident.bahayToroSystemId}
-                    </TooltipTrigger>
-                    <TooltipContent>
-                    {`${certificate.resident.firstName} ${certificate.resident.lastName}`}
-                    </TooltipContent>
-                  </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        {certificate.resident.bahayToroSystemId}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {`${certificate.resident.firstName} ${certificate.resident.lastName}`}
+                      </TooltipContent>
+                    </Tooltip>
                   </TooltipProvider>
                 </TableCell>
                 <TableCell>{getCertificateTypeBadge(certificate.certificateType)}</TableCell>

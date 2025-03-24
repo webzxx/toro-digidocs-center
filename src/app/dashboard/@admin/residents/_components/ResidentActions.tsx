@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,14 +11,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit, Trash } from 'lucide-react';
-import { deleteResident, updateResident } from '@/app/dashboard/@admin/residents/actions';
-import { ResidentWithTypes } from '@/types/types';
-import { titleCase } from '@/lib/utils';
-import { useQueryClient } from '@tanstack/react-query';
-import { toast } from '@/components/ui/use-toast';
-import ResidentFormFields from '@/components/form/resident/ResidentFormFields';
-import { useResidentForm } from '@/hooks/useResidentForm';
+import { Edit, Trash } from "lucide-react";
+import { deleteResident, updateResident } from "@/app/dashboard/@admin/residents/actions";
+import { ResidentWithTypes } from "@/types/types";
+import { titleCase } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import ResidentFormFields from "@/components/form/resident/ResidentFormFields";
+import { useResidentForm } from "@/hooks/useResidentForm";
 
 interface ResidentActionsProps {
   resident: ResidentWithTypes;
@@ -54,7 +54,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
     try {
       await updateResident(resident.id, editedResident);
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['residents'] });
+      queryClient.invalidateQueries({ queryKey: ["residents"] });
       toast({
         title: "Resident updated",
         description: `Resident ${editedResident.bahayToroSystemId} has been successfully updated.`,
@@ -74,7 +74,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
     try {
       await deleteResident(resident.id);
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['residents'] });
+      queryClient.invalidateQueries({ queryKey: ["residents"] });
       toast({
         title: "Resident deleted",
         description: `Resident ${resident.bahayToroSystemId} has been permanently deleted.`,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableBody,
@@ -13,12 +13,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatDate } from '@/lib/utils';
-import { ResidentWithTypes } from '@/types/types';
-import Image from 'next/image';
-import ResidentActions from './ResidentActions';
+import { formatDate } from "@/lib/utils";
+import { ResidentWithTypes } from "@/types/types";
+import Image from "next/image";
+import ResidentActions from "./ResidentActions";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from '@/components/utils';
+import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from "@/components/utils";
 
 interface ResidentTableProps {
   residents?: ResidentWithTypes[];
@@ -29,7 +29,7 @@ export default function ResidentTable({ residents, isLoading = false }: Resident
   const renderAddress = (address: any) => {
     if (!address) return "N/A";
     
-    const addressString = `${address.blockLot || ''} ${address.phase || ''} ${address.street || ''}, ${address.subdivision}, ${address.barangay}, ${address.city}, ${address.province}`;
+    const addressString = `${address.blockLot || ""} ${address.phase || ""} ${address.street || ""}, ${address.subdivision}, ${address.barangay}, ${address.city}, ${address.province}`;
     
     return (
       <TooltipProvider>
@@ -47,7 +47,7 @@ export default function ResidentTable({ residents, isLoading = false }: Resident
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Years in Bahay Toro:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{address.yearsInBahayToro || 'N/A'}</dd>
+                  <dd className="text-sm text-gray-900 col-span-2">{address.yearsInBahayToro || "N/A"}</dd>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Full Address:</dt>
@@ -169,14 +169,14 @@ export default function ResidentTable({ residents, isLoading = false }: Resident
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger className="text-left">
-                        {`${resident.lastName}, ${resident.firstName} ${resident.middleName || ''}`}
+                        {`${resident.lastName}, ${resident.firstName} ${resident.middleName || ""}`}
                       </TooltipTrigger>
                       <TooltipContent>
                         <div className="p-2">
                           <p><strong>First Name:</strong> {resident.firstName}</p>
-                          <p><strong>Middle Name:</strong> {resident.middleName || 'N/A'}</p>
+                          <p><strong>Middle Name:</strong> {resident.middleName || "N/A"}</p>
                           <p><strong>Last Name:</strong> {resident.lastName}</p>
-                          <p><strong>Email:</strong> {resident.email || 'N/A'}</p>
+                          <p><strong>Email:</strong> {resident.email || "N/A"}</p>
                           <p><strong>Contact:</strong> {resident.contact}</p>
                         </div>
                       </TooltipContent>
@@ -187,7 +187,7 @@ export default function ResidentTable({ residents, isLoading = false }: Resident
                 <TableCell>{formatDate(resident.birthDate)}</TableCell>
                 <TableCell>{formatReligion(resident.religion)}</TableCell>
                 <TableCell>{getCivilStatusBadge(resident.status)}</TableCell>
-                <TableCell>{resident.sector ? getSectorBadge(resident.sector) : 'N/A'}</TableCell>
+                <TableCell>{resident.sector ? getSectorBadge(resident.sector) : "N/A"}</TableCell>
                 <TableCell>{renderAddress(resident.address)}</TableCell>
                 <TableCell>{renderEmergencyContact(resident.emergencyContact)}</TableCell>
                 <TableCell>{renderProofOfIdentity(resident.id, resident.proofOfIdentity)}</TableCell>

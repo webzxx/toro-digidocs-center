@@ -2,8 +2,8 @@
 
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { hash } from 'bcrypt';
-import getSession from '@/lib/auth/getSession';
+import { hash } from "bcrypt";
+import getSession from "@/lib/auth/getSession";
 import { deletePOIImages } from "../residents/actions";
 
 export async function updateUser(id: number, data: any) {

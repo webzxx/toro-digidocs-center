@@ -1,6 +1,6 @@
-import { withAuth } from '@/lib/auth/withAuth';
+import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
-import UserTable from './_components/UserTable';
+import UserTable from "./_components/UserTable";
 
 async function UsersPage() {
   const users = await db.user.findMany();

@@ -1,40 +1,40 @@
-'use server';
+"use server";
 
-import { db } from '@/lib/db';
-import getSession from '@/lib/auth/getSession';
-import paymaya from '@api/paymaya';
+import { db } from "@/lib/db";
+import getSession from "@/lib/auth/getSession";
+import paymaya from "@api/paymaya";
 import { nanoid } from "nanoid";
-import { headers } from 'next/headers';
+import { headers } from "next/headers";
 
 // Generate transaction reference number with prefix, date, and random string
-function generateTransactionRef(prefix = 'TR'){
-    // Format: TR-YYYYMMDD-XXXXX (where X is alphanumeric)
-    const date = new Date();
-    const dateStr = date.getFullYear().toString() +
-      (date.getMonth() + 1).toString().padStart(2, '0') +
-      date.getDate().toString().padStart(2, '0');
+function generateTransactionRef(prefix = "TR"){
+  // Format: TR-YYYYMMDD-XXXXX (where X is alphanumeric)
+  const date = new Date();
+  const dateStr = date.getFullYear().toString() +
+      (date.getMonth() + 1).toString().padStart(2, "0") +
+      date.getDate().toString().padStart(2, "0");
     
-    // Generate 5 character unique ID
-    const uniqueId = nanoid(5).toUpperCase();
+  // Generate 5 character unique ID
+  const uniqueId = nanoid(5).toUpperCase();
     
-    return `${prefix}-${dateStr}-${uniqueId}`;
+  return `${prefix}-${dateStr}-${uniqueId}`;
 };
   
 export async function initiatePayment(params: {
   certificateId: number;
-  deliveryMethod: 'pickup' | 'delivery';
+  deliveryMethod: "pickup" | "delivery";
 }) {
   try {
     const session = await getSession();
     if (!session?.user) {
-      return { error: 'You must be logged in to process payments' };
+      return { error: "You must be logged in to process payments" };
     }
 
     const { certificateId, deliveryMethod } = params;
-    const includeShipping = deliveryMethod === 'delivery';
+    const includeShipping = deliveryMethod === "delivery";
     
     if (!certificateId) {
-      return { error: 'Certificate ID is required for payment processing' };
+      return { error: "Certificate ID is required for payment processing" };
     }
 
     const certificate = await db.certificateRequest.findUnique({
@@ -51,22 +51,22 @@ export async function initiatePayment(params: {
     });
 
     if (!certificate) {
-      throw new Error('Certificate not found with the provided ID');
+      throw new Error("Certificate not found with the provided ID");
     }
-    if (certificate.status !== 'AWAITING_PAYMENT') {
-      throw new Error('This certificate is not ready for payment');
+    if (certificate.status !== "AWAITING_PAYMENT") {
+      throw new Error("This certificate is not ready for payment");
     }
     if (!certificate.resident) {
-      throw new Error('Resident information is missing for this certificate');
+      throw new Error("Resident information is missing for this certificate");
     }
     
     const resident = certificate.resident;
     if (!resident.address) {
-      throw new Error('Resident address information is required for payment');
+      throw new Error("Resident address information is required for payment");
     }
     const address = resident.address;
-    const line1 = `${address.blockLot || ''} ${address.phase || ''}`;
-    const line2 = `${address.street || ''}, ${address.subdivision}, ${address.barangay}`;
+    const line1 = `${address.blockLot || ""} ${address.phase || ""}`;
+    const line2 = `${address.street || ""}, ${address.subdivision}, ${address.barangay}`;
     const transactionRef = generateTransactionRef();
         
     // Check if payment already exists for this certificate
@@ -74,7 +74,7 @@ export async function initiatePayment(params: {
       where: {
         certificateRequestId: certificateId,
         paymentStatus: {
-          in: ['PENDING']
+          in: ["PENDING"]
         },
         isActive: true,
       }
@@ -99,15 +99,15 @@ export async function initiatePayment(params: {
     
     // Get the host from headers
     const headersList = headers();
-    const host = headersList.get('host') || 'localhost:3000';
-    const protocol = host.includes('localhost') ? 'http' : 'https';
+    const host = headersList.get("host") || "localhost:3000";
+    const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
 
     // Create PayMaya checkout
-    paymaya.auth('pk-Z0OSzLvIcOI2UIvDhdTGVVfRSSeiGStnceqwUE7n0Ah', 'sk-X8qolYjy62kIzEbr0QRK1h4b4KDVHaNcwMYk39jInSl');
+    paymaya.auth("pk-Z0OSzLvIcOI2UIvDhdTGVVfRSSeiGStnceqwUE7n0Ah", "sk-X8qolYjy62kIzEbr0QRK1h4b4KDVHaNcwMYk39jInSl");
     const { data } = await paymaya.createV1Checkout({
       totalAmount: {
-        currency: 'PHP',
+        currency: "PHP",
         value: totalAmount,
         details: {
           processingFee: processingFee.toFixed(2),
@@ -121,9 +121,9 @@ export async function initiatePayment(params: {
           line1: line1,
           line2: line2,
           city: address.city,
-          state: 'Metro Manila',
-          zipCode: '1106',
-          countryCode: 'PH'
+          state: "Metro Manila",
+          zipCode: "1106",
+          countryCode: "PH"
         },
         shippingAddress: {
           firstName: resident.firstName,
@@ -134,9 +134,9 @@ export async function initiatePayment(params: {
           line1: line1,
           line2: line2,
           city:  address.city,
-          state: 'Metro Manila',
-          zipCode: '1106',
-          countryCode: 'PH'
+          state: "Metro Manila",
+          zipCode: "1106",
+          countryCode: "PH"
         },
         firstName: resident.firstName,
         lastName: resident.lastName,
@@ -151,13 +151,13 @@ export async function initiatePayment(params: {
           name: `${certificate.certificateType.replaceAll("_", " ")} Certificate`,
           code: certificate.referenceNumber,
           description: `Certificate for ${resident.firstName} ${resident.lastName}`,
-          quantity: '1',
+          quantity: "1",
           amount: {value: baseAmount},
           totalAmount: {value: totalAmount}
         }
       ],
       requestReferenceNumber: transactionRef,
-    })
+    });
 
     // Save payment record in database
     await db.payment.create({
@@ -165,8 +165,8 @@ export async function initiatePayment(params: {
         transactionReference: transactionRef,
         certificateRequestId: certificateId,
         amount: totalAmount,
-        paymentMethod: 'MAYA',
-        paymentStatus: 'PENDING',
+        paymentMethod: "MAYA",
+        paymentStatus: "PENDING",
         metadata: {
           checkoutId: data.checkoutId,
           redirectUrl: data.redirectUrl,
@@ -183,8 +183,8 @@ export async function initiatePayment(params: {
     };
 
   } catch (error) {
-    console.error('Payment processing error:', error);
-    return { error: error instanceof Error ? error.message : 'Unable to initialize payment gateway. Please try again later.' };
+    console.error("Payment processing error:", error);
+    return { error: error instanceof Error ? error.message : "Unable to initialize payment gateway. Please try again later." };
   }
 }
 
@@ -195,13 +195,13 @@ export async function cancelPayment(params: {
   try {
     const session = await getSession();
     if (!session?.user) {
-      return { error: 'You must be logged in to cancel payments', };
+      return { error: "You must be logged in to cancel payments", };
     }
 
     const { certificateId, transactionId } = params;
     
     if (!certificateId || !transactionId) {
-      return { error: 'Certificate ID and transaction ID are required' };
+      return { error: "Certificate ID and transaction ID are required" };
     }
 
     // Check if payment exists in database
@@ -214,46 +214,46 @@ export async function cancelPayment(params: {
     });
 
     if (!payment) {
-      return { error: 'Active payment not found' };
+      return { error: "Active payment not found" };
     }
 
     // Only allow cancellation of pending payments
-    if (payment.paymentStatus !== 'PENDING') {
+    if (payment.paymentStatus !== "PENDING") {
       return { error: `Cannot cancel payment with status: ${payment.paymentStatus}` };
     }
 
     const checkoutId = payment.metadata ? (payment.metadata as any).checkoutId : null;
     
     if (!checkoutId) {
-      return { error: 'Payment checkout information is missing' };
+      return { error: "Payment checkout information is missing" };
     }
 
     // Cancel payment with PayMaya
-    paymaya.auth('sk-X8qolYjy62kIzEbr0QRK1h4b4KDVHaNcwMYk39jInSl');
-    paymaya.server('https://pg-sandbox.paymaya.com');
-    console.log('Cancelling payment with PayMaya:', checkoutId);
+    paymaya.auth("sk-X8qolYjy62kIzEbr0QRK1h4b4KDVHaNcwMYk39jInSl");
+    paymaya.server("https://pg-sandbox.paymaya.com");
+    console.log("Cancelling payment with PayMaya:", checkoutId);
     try {
       // Attempt to cancel the payment with PayMaya
       const { data } = await paymaya.cancelV1PaymentViaIdViaPostMethod({
         paymentId: checkoutId
       });
-      console.log('PayMaya cancellation response:', data);
+      console.log("PayMaya cancellation response:", data);
       
       // Update payment status in database
       await db.payment.update({
         where: { id: payment.id },
         data: { 
-          paymentStatus: 'CANCELLED',
+          paymentStatus: "CANCELLED",
           isActive: false
         }
       });
       
       return { 
         success: true,
-        message: 'Payment cancelled successfully'
+        message: "Payment cancelled successfully"
       };
     } catch (paymentError) {
-      console.error('PayMaya cancellation error:', paymentError);
+      console.error("PayMaya cancellation error:", paymentError);
       
       // If PayMaya cancellation fails, we still mark our payment as cancelled
       // This handles cases where the payment might be in a state that can't be cancelled in PayMaya
@@ -261,20 +261,20 @@ export async function cancelPayment(params: {
       await db.payment.update({
         where: { id: payment.id },
         data: { 
-          paymentStatus: 'CANCELLED',
+          paymentStatus: "CANCELLED",
           isActive: false
         }
       });
       
       return { 
         success: true,
-        message: 'Payment marked as cancelled in our system'
+        message: "Payment marked as cancelled in our system"
       };
     }
   } catch (error) {
-    console.error('Payment cancellation error:', error);
+    console.error("Payment cancellation error:", error);
     return { 
-      error: error instanceof Error ? error.message : 'Failed to cancel payment'
+      error: error instanceof Error ? error.message : "Failed to cancel payment"
     };
   }
 }

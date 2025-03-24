@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { z } from "zod"
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -13,67 +13,67 @@ import { useToast } from "../ui/use-toast";
 
 const FormSchema = z
   .object({
-    username: z.string().min(1, 'Username is required').max(100),
-    email: z.string().min(1, 'Email is required').email('Invalid email'),
+    username: z.string().min(1, "Username is required").max(100),
+    email: z.string().min(1, "Email is required").email("Invalid email"),
     password: z
-        .string()
-        .min(1, 'Password is required')
-        .min(8, 'Password must have than 8 characters'),
-    confirmPassword: z.string().min(1, 'Password confirmation is required')
+      .string()
+      .min(1, "Password is required")
+      .min(8, "Password must have than 8 characters"),
+    confirmPassword: z.string().min(1, "Password confirmation is required")
   })
   .refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    message: 'Password do not match'
+    path: ["confirmPassword"],
+    message: "Password do not match"
   });
 
 const SignUpForm = () => {
   const router = useRouter();
-  const { toast } = useToast()
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof FormSchema>>({
-      resolver: zodResolver(FormSchema),
-      defaultValues: {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      },
-    });
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    },
+  });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
+      const response = await fetch("/api/user", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           username: values.username,
           email: values.email,
           password: values.password
         })
-      })
+      });
 
       if (response.ok) {
         toast({
           title: "Success",
           description: "Account created successfully!",
           variant: "default"
-        })
-        router.push('/sign-in')
+        });
+        router.push("/sign-in");
       } else {
-        const data = await response.json()
+        const data = await response.json();
         toast({
           title: "Error",
           description: data.message || "Something went wrong during registration",
           variant: "destructive"
-        })
+        });
       }
     } catch (error) {
       toast({
         title: "Error",
         description: "An unexpected error occurred",
         variant: "destructive"
-      })
+      });
     }
   };
 
@@ -81,7 +81,7 @@ const SignUpForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="space-y-6">
-        <FormField
+          <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
@@ -145,7 +145,7 @@ const SignUpForm = () => {
         <Link className="text-blue-500 hover:underline" href='/sign-in'>Sign in</Link>
       </p>
     </Form>
-  )
-}
+  );
+};
 
 export default SignUpForm;

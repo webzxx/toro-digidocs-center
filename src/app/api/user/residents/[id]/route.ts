@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import getSession from '@/lib/auth/getSession';
+import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import getSession from "@/lib/auth/getSession";
 
 // GET a single resident by ID for the authenticated user
 export async function GET(
@@ -10,7 +10,7 @@ export async function GET(
   try {
     const session = await getSession();
     if (!session) {
-      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
@@ -32,15 +32,15 @@ export async function GET(
     });
 
     if (!resident) {
-      return new NextResponse(JSON.stringify({ error: 'Resident not found' }), {
+      return new NextResponse(JSON.stringify({ error: "Resident not found" }), {
         status: 404,
       });
     }
 
     return NextResponse.json(resident);
   } catch (error) {
-    console.error('Error fetching resident:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to fetch resident' }), {
+    console.error("Error fetching resident:", error);
+    return new NextResponse(JSON.stringify({ error: "Failed to fetch resident" }), {
       status: 500,
     });
   }
@@ -54,7 +54,7 @@ export async function PATCH(
   try {
     const session = await getSession();
     if (!session) {
-      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
@@ -72,7 +72,7 @@ export async function PATCH(
     });
 
     if (!existingResident) {
-      return new NextResponse(JSON.stringify({ error: 'Resident not found or access denied' }), {
+      return new NextResponse(JSON.stringify({ error: "Resident not found or access denied" }), {
         status: 404,
       });
     }
@@ -104,7 +104,7 @@ export async function PATCH(
             phase: address.phase,
             street: address.street,
             subdivision: address.subdivision,
-            yearsInBahayToro: typeof address.yearsInBahayToro === 'string' 
+            yearsInBahayToro: typeof address.yearsInBahayToro === "string" 
               ? parseInt(address.yearsInBahayToro) 
               : address.yearsInBahayToro,
             // Residency type usually requires verification, so only allow admin to update
@@ -130,8 +130,8 @@ export async function PATCH(
 
     return NextResponse.json(updatedResident);
   } catch (error) {
-    console.error('Error updating resident:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to update resident' }), {
+    console.error("Error updating resident:", error);
+    return new NextResponse(JSON.stringify({ error: "Failed to update resident" }), {
       status: 500,
     });
   }
@@ -145,7 +145,7 @@ export async function DELETE(
   try {
     const session = await getSession();
     if (!session) {
-      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+      return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
@@ -162,7 +162,7 @@ export async function DELETE(
     });
 
     if (!existingResident) {
-      return new NextResponse(JSON.stringify({ error: 'Resident not found or access denied' }), {
+      return new NextResponse(JSON.stringify({ error: "Resident not found or access denied" }), {
         status: 404,
       });
     }
@@ -172,14 +172,14 @@ export async function DELETE(
       where: {
         residentId: residentId,
         status: {
-          in: ['PENDING', 'UNDER_REVIEW', 'AWAITING_PAYMENT', 'PROCESSING', 'READY_FOR_PICKUP', 'IN_TRANSIT']
+          in: ["PENDING", "UNDER_REVIEW", "AWAITING_PAYMENT", "PROCESSING", "READY_FOR_PICKUP", "IN_TRANSIT"]
         }
       }
     });
 
     if (pendingRequests) {
       return new NextResponse(JSON.stringify({ 
-        error: 'Cannot delete resident with pending certificate requests'
+        error: "Cannot delete resident with pending certificate requests"
       }), {
         status: 400,
       });
@@ -192,8 +192,8 @@ export async function DELETE(
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
-    console.error('Error deleting resident:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to delete resident' }), {
+    console.error("Error deleting resident:", error);
+    return new NextResponse(JSON.stringify({ error: "Failed to delete resident" }), {
       status: 500,
     });
   }

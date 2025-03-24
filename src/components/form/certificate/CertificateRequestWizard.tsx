@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react"
+import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react";
 
 import {
   Step,
   StepItem,
   Stepper,
   useStepper,
-} from "@/components/ui/stepper"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+} from "@/components/ui/stepper";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import PersonalInfoForm from "./PersonalInfoForm";
 import AddressForm from "./AddressForm";
@@ -26,7 +26,7 @@ const steps = [
   { label: "Step 2", description: "Address", icon: House },
   { label: "Step 3", description: "Important Information", icon: Scroll },
   { label: "Step 4", description: "Proof of Identity", icon: ScanFace },
-] satisfies StepItem[]
+] satisfies StepItem[];
 
 const initialFormData = {
   personalInfo: {
@@ -66,10 +66,10 @@ const initialFormData = {
     photoHoldingId: undefined,
     signature: undefined,
   },
-}
+};
 
 export default function CertificateRequestWizard() {
-  const { toast } = useToast()
+  const { toast } = useToast();
   const [formData, setFormData] = useState(initialFormData);
   const [requestDetails, setRequestDetails] = useState({ referenceNumber: "", systemId: "" });
 
@@ -93,7 +93,7 @@ export default function CertificateRequestWizard() {
         proofOfIdentity: {
           signature: result.data.proofOfIdentity.signature,
         }
-      }      
+      };      
 
       let success = true;
       try {
@@ -145,13 +145,13 @@ export default function CertificateRequestWizard() {
       });
       return false;
     }
-  }
+  };
 
   const resetFormData = () => { 
     console.log("Resetting form data");
     setFormData(initialFormData);
     
-  }
+  };
 
   const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
     setFormData((prevData) => ({
@@ -159,9 +159,9 @@ export default function CertificateRequestWizard() {
       [section]: reset
         ? { [field]: value }
         : {
-            ...prevData[section as keyof typeof prevData],
-            [field]: value,
-          },
+          ...prevData[section as keyof typeof prevData],
+          [field]: value,
+        },
     }));
   };
 
@@ -177,7 +177,7 @@ export default function CertificateRequestWizard() {
                   onChange={handleChange}
                 />
               </Step>
-            )
+            );
           }
           else if(index === 1) {
             return (
@@ -187,7 +187,7 @@ export default function CertificateRequestWizard() {
                   onChange={handleChange}
                 />
               </Step>
-            )
+            );
           }
           else if(index === 2) {
             return (
@@ -197,7 +197,7 @@ export default function CertificateRequestWizard() {
                   onChange={handleChange}
                 />
               </Step>
-            )
+            );
           }
           return (
             <Step key={stepProps.label} {...stepProps}>
@@ -207,12 +207,12 @@ export default function CertificateRequestWizard() {
                 validateAndSubmit={validateAndSubmit}
               />
             </Step>
-          )
+          );
         })}
         <Footer details={requestDetails} resetFormData={resetFormData} />
       </Stepper>
     </div>
-  )
+  );
 }
 
 type FooterProps = {
@@ -224,17 +224,17 @@ type FooterProps = {
 };
 
 function Footer({ details, resetFormData }: FooterProps) {
-  const { activeStep, steps, resetSteps } = useStepper()
+  const { activeStep, steps, resetSteps } = useStepper();
 
   if (activeStep !== steps.length) {
-    return null
+    return null;
   }
 
   const resetMultiForm = () => {
     resetFormData();
     resetSteps();
     scrollToForm();
-  }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -263,5 +263,5 @@ function Footer({ details, resetFormData }: FooterProps) {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

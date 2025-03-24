@@ -1,4 +1,4 @@
-import CertificateRequestWizard from "@/components/form/certificate/CertificateRequestWizard"
+import CertificateRequestWizard from "@/components/form/certificate/CertificateRequestWizard";
 import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 
 function Services({ user }: WithAuthProps) {
@@ -20,7 +20,7 @@ function Services({ user }: WithAuthProps) {
         </div>
       </section>
     </main>
-  )
+  );
 }
 
 export default withAuth(Services, { allowedRoles: ["USER"], adminOverride: false });

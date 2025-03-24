@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 interface PaymentActionsProps {
-  variant: 'success' | 'failure' | 'cancel';
+  variant: "success" | "failure" | "cancel";
 }
 
 export function PaymentActions({ variant }: PaymentActionsProps) {
   const handleReturn = () => {
     if (!window.closed) {
-      window.location.href = '/';
+      window.location.href = "/";
     }
   };
 
@@ -23,7 +23,7 @@ export function PaymentActions({ variant }: PaymentActionsProps) {
   //   }
   // };
 
-  if (variant === 'failure') {
+  if (variant === "failure") {
     return (
       <div className="flex flex-col items-center gap-4">
         {/* <Button onClick={handleRetry}>
@@ -37,7 +37,7 @@ export function PaymentActions({ variant }: PaymentActionsProps) {
     );
   }
 
-  if (variant === 'success') {
+  if (variant === "success") {
     return (
       <div className="flex flex-col items-center gap-4">
         <div className="flex gap-4">

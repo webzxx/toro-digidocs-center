@@ -1,12 +1,12 @@
-import { db } from '@/lib/db';
-import { notFound, redirect } from 'next/navigation';
-import { Card } from '@/components/ui/card';
-import { PaymentReceipt } from '@/components/payment/PaymentReceipt';
-import { PaymentActions } from '@/components/payment/PaymentActions';
-import { PaymentDetails } from '@/components/payment/PaymentDetails';
-import Image from 'next/image';
-import { withAuth, WithAuthProps } from '@/lib/auth/withAuth';
-import { getPayMayaStatus } from '@/lib/utils/paymaya';
+import { db } from "@/lib/db";
+import { notFound, redirect } from "next/navigation";
+import { Card } from "@/components/ui/card";
+import { PaymentReceipt } from "@/components/payment/PaymentReceipt";
+import { PaymentActions } from "@/components/payment/PaymentActions";
+import { PaymentDetails } from "@/components/payment/PaymentDetails";
+import Image from "next/image";
+import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
+import { getPayMayaStatus } from "@/lib/utils/paymaya";
 
 async function PaymentStatusPage({
   params,
@@ -23,7 +23,7 @@ async function PaymentStatusPage({
     notFound();
   }
 
-  if (!['success', 'failure', 'cancel'].includes(urlStatus)) {
+  if (!["success", "failure", "cancel"].includes(urlStatus)) {
     notFound();
   }
 
@@ -46,19 +46,19 @@ async function PaymentStatusPage({
   }
 
   // Ensure user can only see their own payments unless they are an admin
-  const isAdmin = user.role === 'ADMIN';
+  const isAdmin = user.role === "ADMIN";
   const isOwner = payment.certificateRequest.resident.userId === Number(user.id);
 
   if (!isAdmin && !isOwner) {
     // User is attempting to view someone else's payment
-    redirect('/dashboard');
+    redirect("/dashboard");
   }
 
   // For pending payments, verify with PayMaya first
   let actualPaymentStatus = payment.paymentStatus;
   let actualUrlStatus = urlStatus;
   
-  if (payment.paymentStatus === 'PENDING') {
+  if (payment.paymentStatus === "PENDING") {
     const checkoutId = payment.metadata ? (payment.metadata as any).checkoutId : null;
     
     if (checkoutId) {
@@ -75,16 +75,16 @@ async function PaymentStatusPage({
           where: { id: payment.id },
           data: { 
             paymentStatus: paymayaStatus,
-            ...(paymayaStatus === 'SUCCEEDED' && { paymentDate: new Date() }),
+            ...(paymayaStatus === "SUCCEEDED" && { paymentDate: new Date() }),
             isActive: false // Since we're already checked the status is in PENDING (line 62), we can safely set this to false
           }
         });
 
         // If payment is successful, also update certificate status
-        if (paymayaStatus === 'SUCCEEDED') {
+        if (paymayaStatus === "SUCCEEDED") {
           await db.certificateRequest.update({
             where: { id: payment.certificateRequestId },
-            data: { status: 'PROCESSING' }
+            data: { status: "PROCESSING" }
           });
         }
         
@@ -95,22 +95,22 @@ async function PaymentStatusPage({
 
   // Map PaymentStatus to URL status
   switch (actualPaymentStatus) {
-    case 'SUCCEEDED':
-      actualUrlStatus = 'success';
-      break;
-    case 'REJECTED':
-      actualUrlStatus = 'failure';
-      break;
-    case 'CANCELLED':
-      actualUrlStatus = 'cancel';
-      break;
-    case 'EXPIRED':
-      actualUrlStatus = 'failure';
-      break;
-    case 'REFUNDED':
-    case 'VOIDED':
-      actualUrlStatus = 'cancel';
-      break;
+  case "SUCCEEDED":
+    actualUrlStatus = "success";
+    break;
+  case "REJECTED":
+    actualUrlStatus = "failure";
+    break;
+  case "CANCELLED":
+    actualUrlStatus = "cancel";
+    break;
+  case "EXPIRED":
+    actualUrlStatus = "failure";
+    break;
+  case "REFUNDED":
+  case "VOIDED":
+    actualUrlStatus = "cancel";
+    break;
   }
 
   // If URL status doesn't match actual status, redirect to correct URL
@@ -121,9 +121,9 @@ async function PaymentStatusPage({
   return (
     <div className="min-h-[40rem] bg-gray-50 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-3xl">
-        {actualUrlStatus === 'success' ? (
+        {actualUrlStatus === "success" ? (
           <PaymentReceipt payment={{...payment, paymentStatus: actualPaymentStatus}} />
-        ) : actualUrlStatus === 'failure' ? (
+        ) : actualUrlStatus === "failure" ? (
           <Card className="p-8">
             <div className="flex flex-col items-center space-y-4 mb-6 text-center">
               <div className="relative w-20 h-20 mb-4">

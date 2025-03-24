@@ -6,18 +6,18 @@ import {
 } from "@/types/types";
 import { db } from "@/lib/db";
 import { UTApi } from "uploadthing/server";
-import getSession from '@/lib/auth/getSession';
+import getSession from "@/lib/auth/getSession";
 import { UploadFileResult } from "uploadthing/types";
 
 function generateFile(file: File, prefix: string, email?: string): File {
-  const emailPrefix = email ? `${email.split('@')[0]}-` : '';
+  const emailPrefix = email ? `${email.split("@")[0]}-` : "";
   const now = new Date();
   const dateStr = now.getFullYear().toString() +
-    (now.getMonth() + 1).toString().padStart(2, '0') +
-    now.getDate().toString().padStart(2, '0') +
-    now.getHours().toString().padStart(2, '0') +
-    now.getMinutes().toString().padStart(2, '0') +
-    now.getSeconds().toString().padStart(2, '0');
+    (now.getMonth() + 1).toString().padStart(2, "0") +
+    now.getDate().toString().padStart(2, "0") +
+    now.getHours().toString().padStart(2, "0") +
+    now.getMinutes().toString().padStart(2, "0") +
+    now.getSeconds().toString().padStart(2, "0");
   const fileName = `${dateStr}-${emailPrefix}${prefix}-${file.name.replaceAll(" ", "_")}`;
   return new File([file], fileName, { type: file.type });
 }

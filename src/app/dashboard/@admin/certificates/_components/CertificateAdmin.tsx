@@ -19,10 +19,10 @@ interface CertificateAdminProps {
 }
 
 export default function CertificateAdmin({ initialCertificates, initialTotal }: CertificateAdminProps) {
-  const [page, setPage] = useQueryState('page', { defaultValue: 1, parse: Number });
-  const [status, setStatus] = useQueryState('status', { defaultValue: 'ALL' });
-  const [type, setType] = useQueryState('type', { defaultValue: 'ALL' });
-  const [search, setSearch] = useQueryState('search', { defaultValue: '' });
+  const [page, setPage] = useQueryState("page", { defaultValue: 1, parse: Number });
+  const [status, setStatus] = useQueryState("status", { defaultValue: "ALL" });
+  const [type, setType] = useQueryState("type", { defaultValue: "ALL" });
+  const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const isInitialLoadRef = useRef(true);
   
   const previousDataRef = useRef({
@@ -34,20 +34,20 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
 
   // Fetch certificates with pagination, filtering, and search
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: ['certificates', page, status, type, search],
+    queryKey: ["certificates", page, status, type, search],
     queryFn: async () => {
       // When a query executes, we're no longer in the initial load
       isInitialLoadRef.current = false;
       
       const params = new URLSearchParams();
-      params.set('page', String(page));
-      params.set('limit', ITEMS_PER_PAGE.toString());
-      if (status !== "ALL") params.set('status', status);
-      if (type !== "ALL") params.set('type', type);
-      if (search) params.set('search', search);
+      params.set("page", String(page));
+      params.set("limit", ITEMS_PER_PAGE.toString());
+      if (status !== "ALL") params.set("status", status);
+      if (type !== "ALL") params.set("type", type);
+      if (search) params.set("search", search);
 
       const res = await fetch(`/api/admin/certificates?${params}`);
-      if (!res.ok) throw new Error('Failed to fetch certificates');
+      if (!res.ok) throw new Error("Failed to fetch certificates");
       const data = await res.json();
       
       previousDataRef.current = data;
@@ -58,7 +58,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
                   (status === "ALL" && 
                   type === "ALL" && 
                   search === "" ) ?
-                    previousDataRef.current : undefined,
+      previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
               status === "ALL" && 
@@ -90,7 +90,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search certificates..."
-              value={search || ''}
+              value={search || ""}
               onChange={handleSearchChange}
               className="pl-8 w-full"
             />
@@ -104,7 +104,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
               <SelectContent>
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.keys(CertificateStatus).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
+                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -116,7 +116,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
               <SelectContent>
                 <SelectItem value="ALL">All Types</SelectItem>
                 {Object.keys(CertificateType).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, ' ')}</SelectItem>
+                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -184,9 +184,9 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
 }
 
 function LoaderComponent() {
-    return (
-        <div className="absolute inset-0 bg-white/60 flex justify-center items-center pt-10 z-10">
-            <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
-        </div>
-    )
+  return (
+    <div className="absolute inset-0 bg-white/60 flex justify-center items-center pt-10 z-10">
+      <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
+    </div>
+  );
 }

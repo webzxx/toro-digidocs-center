@@ -3,10 +3,10 @@
 * @see https://v0.dev/t/eycXnMic5tq
 * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
 */
-import { AvatarImage, Avatar } from "@/components/ui/avatar"
-import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
-import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table"
-import Link from "next/link"
+import { AvatarImage, Avatar } from "@/components/ui/avatar";
+import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
+import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
+import Link from "next/link";
 
 export function Evals() {
   return (
@@ -139,7 +139,7 @@ export function Evals() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
 function BarChartIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -160,7 +160,7 @@ function BarChartIcon(props: React.SVGProps<SVGSVGElement>) {
       <line x1="18" x2="18" y1="20" y2="4" />
       <line x1="6" x2="6" y1="20" y2="16" />
     </svg>
-  )
+  );
 }
 
 
@@ -181,7 +181,7 @@ function BellIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
       <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
     </svg>
-  )
+  );
 }
 
 
@@ -203,7 +203,7 @@ function BoxIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d="m3.3 7 8.7 5 8.7-5" />
       <path d="M12 22V12" />
     </svg>
-  )
+  );
 }
 
 
@@ -233,7 +233,7 @@ function BuildingIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d="M8 10h.01" />
       <path d="M8 14h.01" />
     </svg>
-  )
+  );
 }
 
 
@@ -254,7 +254,7 @@ function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
-  )
+  );
 }
 
 
@@ -275,7 +275,7 @@ function LineChartIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d="M3 3v18h18" />
       <path d="m19 9-5 5-4-4-3 3" />
     </svg>
-  )
+  );
 }
 
 
@@ -300,7 +300,7 @@ function MicroscopeIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" />
       <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" />
     </svg>
-  )
+  );
 }
 
 
@@ -323,5 +323,5 @@ function UsersIcon(props: React.SVGProps<SVGSVGElement>) {
       <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </svg>
-  )
+  );
 }

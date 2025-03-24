@@ -8,7 +8,7 @@ const Hero = () => {
       id="hero-section"
       className="relative w-full h-[50vh] md:h-[45rem] flex items-center justify-center bg-cover bg-center bg-no-repeat"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/hero.png')`,
+        backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/hero.png')",
       }}
     >
       <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 h-auto md:h-[45rem] px-4 md:px-8 text-white">

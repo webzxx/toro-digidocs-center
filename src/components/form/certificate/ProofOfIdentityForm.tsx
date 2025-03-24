@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useForm } from "react-hook-form"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { X } from "lucide-react"
+import React, { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -11,7 +11,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,19 +21,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import SignaturePad from 'react-signature-pad-wrapper'
-import { StepperFormActions } from './StepperFormActions'
-import Image from 'next/image'
-import { ProofOfIdentityInput, proofOfIdentitySchema } from '@/types/types'
-import { useStepper } from '../../ui/stepper'
+} from "@/components/ui/alert-dialog";
+import SignaturePad from "react-signature-pad-wrapper";
+import { StepperFormActions } from "./StepperFormActions";
+import Image from "next/image";
+import { ProofOfIdentityInput, proofOfIdentitySchema } from "@/types/types";
+import { useStepper } from "../../ui/stepper";
 
 type ImageFile = {
   file: File;
   preview: string;
 };
 
-type ImageCategory = 'photoId' | 'photoHoldingId';
+type ImageCategory = "photoId" | "photoHoldingId";
 
 export interface ProofOfIdentityFormProps {
   data: Partial<ProofOfIdentityInput>;
@@ -42,19 +42,19 @@ export interface ProofOfIdentityFormProps {
 }
 
 export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit }: ProofOfIdentityFormProps) {
-  const { nextStep } = useStepper()
+  const { nextStep } = useStepper();
   const [open, setOpen] = useState(false);
-  const signaturePadRef = useRef<SignaturePad>(null)
+  const signaturePadRef = useRef<SignaturePad>(null);
   const [images, setImages] = useState<Record<ImageCategory, ImageFile[]>>({
     photoId: [],
     photoHoldingId: [],
-  })
+  });
 
   const form = useForm<ProofOfIdentityInput>();
 
   useEffect(() => {
     // Load existing images in data to the state every time the component mounts
-    (['photoId', 'photoHoldingId'] as ImageCategory[]).forEach((category) => {
+    (["photoId", "photoHoldingId"] as ImageCategory[]).forEach((category) => {
       if (data[category]) {
         setImages((prevImages) => ({
           ...prevImages,
@@ -70,34 +70,34 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
 
   const handleSignatureSave = () => {
     if (signaturePadRef.current) {
-      const signatureData = signaturePadRef.current.toDataURL()
-      form.setValue('signature', signatureData)
-      onChange('proofOfIdentity', 'signature', signatureData)
+      const signatureData = signaturePadRef.current.toDataURL();
+      form.setValue("signature", signatureData);
+      onChange("proofOfIdentity", "signature", signatureData);
     }
-  }
+  };
 
   const handleSignatureClear = () => {
     if (signaturePadRef.current) {
-      signaturePadRef.current.clear()
-      form.setValue('signature', '')
-      onChange('proofOfIdentity', 'signature', null)
+      signaturePadRef.current.clear();
+      form.setValue("signature", "");
+      onChange("proofOfIdentity", "signature", null);
     }
-  }
+  };
 
   const handleFileUpload = (files: FileList | null, category: ImageCategory) => {
-    if (!files) return
+    if (!files) return;
 
-    const fileArray = Array.from(files)
-    const validFiles = fileArray.filter(file => file.size <= 5 * 1024 * 1024) // 5MB limit
+    const fileArray = Array.from(files);
+    const validFiles = fileArray.filter(file => file.size <= 5 * 1024 * 1024); // 5MB limit
 
     if (validFiles.length !== fileArray.length) {
-      alert('Some files exceed the 5MB size limit and were not included.')
+      alert("Some files exceed the 5MB size limit and were not included.");
     }
 
     const newImages = validFiles.map(file => ({
       file,
       preview: URL.createObjectURL(file)
-    }))
+    }));
 
     setImages(prev => {
       let updatedCategoryImages = [...prev[category], ...newImages];
@@ -110,11 +110,11 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
       let updatedFiles = updatedCategoryImages.map(i => i.file);
 
       // Call onChange with the updated files
-      onChange('proofOfIdentity', category, updatedFiles);
+      onChange("proofOfIdentity", category, updatedFiles);
 
       return updatedImages;
     });
-  }
+  };
 
   const removeImage = (category: ImageCategory, index: number) => {
     setImages(prev => {
@@ -128,16 +128,16 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
       let updatedFiles = updatedCategoryImages.map(i => i.file);
   
       // Call onChange with the updated files
-      onChange('proofOfIdentity', category, updatedFiles);
+      onChange("proofOfIdentity", category, updatedFiles);
   
       return updatedImages;
     });
-  }
+  };
 
-  const hasAnyImage = () => Object.values(images).some(categoryImages => categoryImages.length > 0)
+  const hasAnyImage = () => Object.values(images).some(categoryImages => categoryImages.length > 0);
   
   const onSubmit = (e : React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     form.clearErrors();
 
     const result = proofOfIdentitySchema.safeParse(data);
@@ -148,16 +148,16 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
       // Set errors based on zod validation result
       result.error.errors.forEach((error) => {
         return form.setError(error.path[0] as keyof ProofOfIdentityInput, {
-          type: 'manual',
+          type: "manual",
           message: error.message,
-        })
+        });
       });
     }
-  }
+  };
 
 
   const renderImageGallery = (category: ImageCategory) => (
-    <div className={`grid grid-cols-2 gap-4 mt-2 ${hasAnyImage() ? 'h-24 sm:h-32 md:h-64': ''}`}>
+    <div className={`grid grid-cols-2 gap-4 mt-2 ${hasAnyImage() ? "h-24 sm:h-32 md:h-64": ""}`}>
       {images[category].map((image, index) => (
         <div key={index} className="relative group">
           <Image
@@ -176,7 +176,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
         </div>
       ))}
     </div>
-  )
+  );
 
   return (
     <div>
@@ -186,14 +186,14 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
             <Label className="block mb-2">Please Provide Two(2) Valid ID&apos;s and Two(2) Photo of you holding the ID&apos;s.</Label>
             <p className="text-sm text-muted-foreground mb-4">Max file size: 5MB, accepted: jpg|gif|png</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {(['photoId', 'photoHoldingId'] as const).map((category) => (
+              {(["photoId", "photoHoldingId"] as const).map((category) => (
                 <FormField
                   key={category}
                   control={form.control}
                   name={category}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{category === 'photoId' ? 'Photo ID' : 'Photo Holding ID'}</FormLabel>
+                      <FormLabel>{category === "photoId" ? "Photo ID" : "Photo Holding ID"}</FormLabel>
                       <FormControl>
                         <Input
                           type="file"
@@ -224,8 +224,8 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
                         options={{
                           minWidth: 1,
                           maxWidth: 2,
-                          penColor: 'black',
-                          backgroundColor: 'rgb(255, 255, 255)'
+                          penColor: "black",
+                          backgroundColor: "rgb(255, 255, 255)"
                         }}
                       />
                     </div>
@@ -261,11 +261,11 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={async ()=> {
-              if(await validateAndSubmit()) nextStep()
+              if(await validateAndSubmit()) nextStep();
             }}>Proceed</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
+  );
 }

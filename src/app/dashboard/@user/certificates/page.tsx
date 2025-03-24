@@ -13,7 +13,7 @@ async function CertificatesPage({ user }: WithAuthProps) {
     include: {
       certificateRequests: true
     }  
-  })
+  });
 
   const hasCertificates = residents.some(resident => resident.certificateRequests.length > 0);
 

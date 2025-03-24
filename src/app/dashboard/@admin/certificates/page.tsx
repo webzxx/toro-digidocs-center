@@ -1,13 +1,13 @@
-import { withAuth } from '@/lib/auth/withAuth';
+import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
-import CertificateAdmin from './_components/CertificateAdmin';
+import CertificateAdmin from "./_components/CertificateAdmin";
 
 async function CertificatesPage() {
   // Initial data fetch for SSR
   const certificates = await db.certificateRequest.findMany({
     take: 10,
     orderBy: {
-      requestDate: 'desc'
+      requestDate: "desc"
     },
     include: {
       resident: {

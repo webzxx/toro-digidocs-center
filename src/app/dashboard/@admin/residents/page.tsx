@@ -1,13 +1,13 @@
-import { withAuth } from '@/lib/auth/withAuth';
+import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
-import ResidentAdmin from './_components/ResidentAdmin';
+import ResidentAdmin from "./_components/ResidentAdmin";
 
 async function ResidentsPage() {
   // Initial data fetch for SSR - limited to first page only
   const residents = await db.resident.findMany({
     take: 10,
     orderBy: {
-      lastName: 'asc'
+      lastName: "asc"
     },
     include: {
       address: true,

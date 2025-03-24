@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -163,7 +163,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                         <div className="grid sm:grid-cols-2 gap-2 mt-2">
                           <div className="sm:col-span-2">
                             <p className="text-sm font-medium text-muted-foreground">Full Name</p>
-                            <p className="text-base">{`${resident.firstName} ${resident.middleName || ''} ${resident.lastName}`}</p>
+                            <p className="text-base">{`${resident.firstName} ${resident.middleName || ""} ${resident.lastName}`}</p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Bahay Toro ID</p>
@@ -187,7 +187,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Sector</p>
-                            <div className="mt-1">{resident.sector ? getSectorBadge(resident.sector) : 'None'}</div>
+                            <div className="mt-1">{resident.sector ? getSectorBadge(resident.sector) : "None"}</div>
                           </div>
                         </div>
                       </div>
@@ -197,7 +197,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                         <div className="grid sm:grid-cols-2 gap-2 mt-2">
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Email</p>
-                            <p className="text-base">{resident.email || 'N/A'}</p>
+                            <p className="text-base">{resident.email || "N/A"}</p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Contact Number</p>
@@ -212,16 +212,16 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Current Address</p>
                             <p className="text-base break-words">{resident.address ? 
-                              `${resident.address.blockLot || ''} ${resident.address.phase || ''} ${resident.address.street || ''}, ${resident.address.subdivision}, ${resident.address.barangay}, ${resident.address.city}, ${resident.address.province}` 
-                              : 'N/A'}</p>
+                              `${resident.address.blockLot || ""} ${resident.address.phase || ""} ${resident.address.street || ""}, ${resident.address.subdivision}, ${resident.address.barangay}, ${resident.address.city}, ${resident.address.province}` 
+                              : "N/A"}</p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Residency Type</p>
-                            <p className="text-base">{resident.address?.residencyType?.replace(/_/g, ' ') || 'N/A'}</p>
+                            <p className="text-base">{resident.address?.residencyType?.replace(/_/g, " ") || "N/A"}</p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Years in Bahay Toro</p>
-                            <p className="text-base">{resident.address?.yearsInBahayToro || 'N/A'}</p>
+                            <p className="text-base">{resident.address?.yearsInBahayToro || "N/A"}</p>
                           </div>
                         </div>
                       </div>
@@ -233,19 +233,19 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                         <div className="grid gap-2 mt-2">
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Name</p>
-                            <p className="text-base">{resident.emergencyContact?.name || 'N/A'}</p>
+                            <p className="text-base">{resident.emergencyContact?.name || "N/A"}</p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Relationship</p>
-                            <p className="text-base">{resident.emergencyContact?.relationship || 'N/A'}</p>
+                            <p className="text-base">{resident.emergencyContact?.relationship || "N/A"}</p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Contact</p>
-                            <p className="text-base">{resident.emergencyContact?.contact || 'N/A'}</p>
+                            <p className="text-base">{resident.emergencyContact?.contact || "N/A"}</p>
                           </div>
                           <div>
                             <p className="text-sm font-medium text-muted-foreground">Address</p>
-                            <p className="text-base break-words">{resident.emergencyContact?.address || 'N/A'}</p>
+                            <p className="text-base break-words">{resident.emergencyContact?.address || "N/A"}</p>
                           </div>
                         </div>
                       </div>

@@ -10,5 +10,5 @@ export default function News() {
       </section>
 
     </main>
-  )
+  );
 }

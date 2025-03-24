@@ -1,5 +1,5 @@
-import { Button } from "../../ui/button"
-import { useStepper } from "../../ui/stepper"
+import { Button } from "../../ui/button";
+import { useStepper } from "../../ui/stepper";
 
 export const StepperFormActions = () => {
   const {
@@ -9,11 +9,11 @@ export const StepperFormActions = () => {
     isLastStep,
     isOptionalStep,
     isDisabledStep,
-  } = useStepper()
+  } = useStepper();
 
   function backStep() {
-    prevStep()
-    scrollToForm()
+    prevStep();
+    scrollToForm();
   }
 
   return (
@@ -38,12 +38,12 @@ export const StepperFormActions = () => {
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
 export const scrollToForm = () => {
   const formElement = document.querySelector("form");
   if (formElement && formElement.previousElementSibling) {
     formElement.previousElementSibling.scrollIntoView({ behavior: "smooth" });
   }
-}
+};

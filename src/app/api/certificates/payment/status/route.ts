@@ -1,25 +1,25 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import getSession from '@/lib/auth/getSession';
-import { getPayMayaStatus } from '@/lib/utils/paymaya';
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import getSession from "@/lib/auth/getSession";
+import { getPayMayaStatus } from "@/lib/utils/paymaya";
 
 export async function GET(request: Request) {
   try {
     const session = await getSession();
     if (!session?.user) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: "Unauthorized" },
         { status: 401 }
       );
     }
 
     const url = new URL(request.url);
-    const certificateId = url.searchParams.get('certificateId');
-    const transactionId = url.searchParams.get('transactionId');
+    const certificateId = url.searchParams.get("certificateId");
+    const transactionId = url.searchParams.get("transactionId");
     
     if (!certificateId || !transactionId) {
       return NextResponse.json(
-        { error: 'Certificate ID and transaction ID are required' },
+        { error: "Certificate ID and transaction ID are required" },
         { status: 400 }
       );
     }
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
     if (!payment) {
       // If no payment record exists, return no payment found
       return NextResponse.json(
-        { error: 'Payment not found' },
+        { error: "Payment not found" },
         { status: 404 }
       );
     }
@@ -54,28 +54,28 @@ export async function GET(request: Request) {
         data: { 
           paymentStatus: paymayaStatus,
           // If payment is successful, set the payment date
-          ...(paymayaStatus === 'SUCCEEDED' && { paymentDate: new Date() }),
+          ...(paymayaStatus === "SUCCEEDED" && { paymentDate: new Date() }),
           // If payment is active, check if its still in PENDING, otherwise set to false
           ...(payment.isActive && { isActive: paymayaStatus === "PENDING" })
         }
       });
       
       // If payment is successful, also update certificate status
-      if (paymayaStatus === 'SUCCEEDED') {
+      if (paymayaStatus === "SUCCEEDED") {
         await db.certificateRequest.update({
           where: { id: parseInt(certificateId) },
-          data: { status: 'PROCESSING' }
+          data: { status: "PROCESSING" }
         });
       }
     }
-    console.log('Payment status:', paymayaStatus);
+    console.log("Payment status:", paymayaStatus);
     return NextResponse.json({
       status: paymayaStatus
     });
   } catch (error) {
-    console.error('Payment status check error:', error);
+    console.error("Payment status check error:", error);
     return NextResponse.json(
-      { error: 'Failed to check payment status' },
+      { error: "Failed to check payment status" },
       { status: 500 }
     );
   }

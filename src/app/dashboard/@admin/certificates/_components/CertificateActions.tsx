@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,11 +20,11 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit, Trash } from 'lucide-react';
-import { deleteCertificateRequest, updateCertificateRequest } from '@/app/dashboard/@admin/certificates/actions';
-import { CertificateStatus } from '@prisma/client';
-import { toast } from '@/components/ui/use-toast';
-import { useQueryClient } from '@tanstack/react-query';
+import { Edit, Trash } from "lucide-react";
+import { deleteCertificateRequest, updateCertificateRequest } from "@/app/dashboard/@admin/certificates/actions";
+import { CertificateStatus } from "@prisma/client";
+import { toast } from "@/components/ui/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface CertificateActionsProps {
   certificateId: number;
@@ -65,7 +65,7 @@ export default function CertificateActions({
         purpose: editedPurpose,
         status: editedStatus,
       });
-      queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      queryClient.invalidateQueries({ queryKey: ["certificates"] });
       toast({
         title: "Certificate updated",
         description: `Certificate ${referenceNumber} has been successfully updated.`,
@@ -82,7 +82,7 @@ export default function CertificateActions({
   const handleDeleteCertificate = async () => {
     try {
       await deleteCertificateRequest(certificateId);
-      queryClient.invalidateQueries({ queryKey: ['certificates'] });
+      queryClient.invalidateQueries({ queryKey: ["certificates"] });
       toast({
         title: "Certificate deleted",
         description: `Certificate ${referenceNumber} has been permanently deleted.`,
@@ -135,7 +135,7 @@ export default function CertificateActions({
                 <SelectContent>
                   {Object.entries(CertificateStatus).map(([value]) => (
                     <SelectItem key={value} value={value}>
-                      {value.replace(/_/g, ' ')}
+                      {value.replace(/_/g, " ")}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -162,7 +162,7 @@ export default function CertificateActions({
             <h2>{referenceNumber}</h2>
             <DialogDescription>
               <span className="text-red-600 font-bold">This action cannot be undone!</span> This will <span className="text-red-600 font-bold">permanently delete</span> the certificate request with reference number <b>{referenceNumber}</b>. Please review carefully before proceeding.
-              </DialogDescription>
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">

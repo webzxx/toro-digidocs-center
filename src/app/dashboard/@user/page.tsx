@@ -14,7 +14,7 @@ function UserDashboard({ user }: WithAuthProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
 
 export default withAuth(UserDashboard, { allowedRoles: ["USER"], adminOverride: false });

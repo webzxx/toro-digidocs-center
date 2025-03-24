@@ -1,14 +1,14 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useStepper } from '@/components/ui/stepper'
-import { scrollToForm, StepperFormActions } from './StepperFormActions'
-import { getCertificateTypeLabel, getDefaultValues } from '@/lib/utils/certificate'
-import { CertificateInput, certificateSchema } from '@/types/types'
-import { CertificateType } from '@prisma/client'
-import { CertificateFormFields } from './CertificateFormFields'
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useStepper } from "@/components/ui/stepper";
+import { scrollToForm, StepperFormActions } from "./StepperFormActions";
+import { getCertificateTypeLabel, getDefaultValues } from "@/lib/utils/certificate";
+import { CertificateInput, certificateSchema } from "@/types/types";
+import { CertificateType } from "@prisma/client";
+import { CertificateFormFields } from "./CertificateFormFields";
 
 export interface CertificateFormProps {
   data: Partial<CertificateInput>
@@ -16,30 +16,30 @@ export interface CertificateFormProps {
 }
 
 const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => {
-  const formName = 'certificate'
-  const { nextStep } = useStepper()
+  const formName = "certificate";
+  const { nextStep } = useStepper();
     
   const form = useForm<CertificateInput>({
     resolver: zodResolver(certificateSchema),
     defaultValues: getDefaultValues(data),
-  })
+  });
 
-  const certificateType = form.watch('certificateType')
+  const certificateType = form.watch("certificateType");
 
   const onSubmit = async (values: CertificateInput) => {
-    nextStep()
-    scrollToForm()
-  }
+    nextStep();
+    scrollToForm();
+  };
 
   const handleCertificateChange = (value: string) => {
-    const fields = form.getValues()
+    const fields = form.getValues();
     Object.keys(fields).forEach((key) => {
-      if (key !== 'certificateType') {
-        form.setValue(key as keyof CertificateInput, '');
+      if (key !== "certificateType") {
+        form.setValue(key as keyof CertificateInput, "");
       }
     });
-    onChange(formName, 'certificateType', value, true);
-  }
+    onChange(formName, "certificateType", value, true);
+  };
 
   return (
     <Form {...form}>
@@ -50,7 +50,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => 
           render={({ field }) => (
             <FormItem>
               <FormLabel>Certificate Type <span className="text-red-600 font-bold">*</span></FormLabel>
-              <Select onValueChange={value => { handleCertificateChange(value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => { handleCertificateChange(value); field.onChange(value);}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select certificate type" />
@@ -87,7 +87,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => 
           formName={formName}
         />
         
-        {['SOLO_PARENT', 'COHABITATION', 'GOOD_MORAL', 'NO_INCOME', 'RESIDENCY', 'TRANSFER_OF_RESIDENCY', 'LIVING_STILL', 'BIRTH_FACT'].includes(certificateType) && (
+        {["SOLO_PARENT", "COHABITATION", "GOOD_MORAL", "NO_INCOME", "RESIDENCY", "TRANSFER_OF_RESIDENCY", "LIVING_STILL", "BIRTH_FACT"].includes(certificateType) && (
           <FormField
             control={form.control}
             name="requestOf"
@@ -105,7 +105,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => 
         <StepperFormActions />
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default CertificateForm
+export default CertificateForm;

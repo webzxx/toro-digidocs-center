@@ -1,13 +1,13 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AddressInput, addressSchema } from '@/types/types';
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AddressInput, addressSchema } from "@/types/types";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { StepperFormActions } from './StepperFormActions';
-import { useStepper } from '../../ui/stepper'
-import { scrollToForm } from './StepperFormActions'
+import { StepperFormActions } from "./StepperFormActions";
+import { useStepper } from "../../ui/stepper";
+import { scrollToForm } from "./StepperFormActions";
 
 export interface AddressFormProps {
   data: Partial<AddressInput>;
@@ -16,7 +16,7 @@ export interface AddressFormProps {
 
 
 const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
-  const formName = 'address';
+  const formName = "address";
   const { nextStep } = useStepper();
 
   const form = useForm<AddressInput>({
@@ -24,13 +24,13 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
     defaultValues: {
       residency: undefined,
       yearsInBahayToro: 0,
-      blockLot: '',
-      phase: '',
-      street: '',
-      subdivision: '',
-      barangay: 'Bahay Toro',
-      city: 'Quezon City',
-      province: 'Metro Manila',
+      blockLot: "",
+      phase: "",
+      street: "",
+      subdivision: "",
+      barangay: "Bahay Toro",
+      city: "Quezon City",
+      province: "Metro Manila",
       ...data,
     },
   });
@@ -49,7 +49,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Residency <span className="text-red-600 font-bold">*</span></FormLabel>
-              <Select onValueChange={value => {onChange(formName, field.name, value); field.onChange(value)}} defaultValue={field.value}>
+              <Select onValueChange={value => {onChange(formName, field.name, value); field.onChange(value);}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select residency type" />
@@ -174,6 +174,6 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
       </form>
     </Form>
   );
-}
+};
 
 export default AddressForm;

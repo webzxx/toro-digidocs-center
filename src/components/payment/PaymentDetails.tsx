@@ -22,9 +22,9 @@ export function PaymentDetails({
   
   // Format amount as currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-PH', {
-      style: 'currency',
-      currency: 'PHP',
+    return new Intl.NumberFormat("en-PH", {
+      style: "currency",
+      currency: "PHP",
     }).format(amount);
   };
 
@@ -63,7 +63,7 @@ export function PaymentDetails({
       <div>
         <h3 className="text-sm font-medium text-gray-500 mb-1">Certificate</h3>
         <p className="text-base font-medium">
-          {payment.certificateRequest.certificateType.replaceAll('_', ' ')} Certificate
+          {payment.certificateRequest.certificateType.replaceAll("_", " ")} Certificate
         </p>
         <p className="text-sm text-gray-600">
           Reference: {payment.certificateRequest.referenceNumber}

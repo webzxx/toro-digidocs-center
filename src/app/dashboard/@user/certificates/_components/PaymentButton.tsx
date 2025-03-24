@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Loader2, Truck, Store } from 'lucide-react';
-import { Toast, useToast } from '@/components/ui/use-toast';
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2, Truck, Store } from "lucide-react";
+import { Toast, useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -10,10 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { initiatePayment, cancelPayment } from '@/app/actions/payment';
+} from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { initiatePayment, cancelPayment } from "@/app/actions/payment";
 
 interface PaymentButtonProps {
   certificateId: number;
@@ -26,7 +26,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
   const [isInitializing, setIsInitializing] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
-  const [deliveryMethod, setDeliveryMethod] = useState<'pickup' | 'delivery'>('pickup');
+  const [deliveryMethod, setDeliveryMethod] = useState<"pickup" | "delivery">("pickup");
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const { toast } = useToast();
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -47,7 +47,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
           localStorage.removeItem(`payment_${certificateId}`);
         }
       } catch (error) {
-        console.error('Error parsing stored transaction:', error);
+        console.error("Error parsing stored transaction:", error);
         localStorage.removeItem(`payment_${certificateId}`);
       }
     }
@@ -71,7 +71,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       });
 
       if(result.error || !result.transactionId)
-        throw new Error(result.error || 'Payment initialization failed');
+        throw new Error(result.error || "Payment initialization failed");
 
       // Store transaction info in localStorage with checkout URL
       localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
@@ -90,7 +90,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       pollPaymentStatus(result.transactionId);
       
     } catch (error) {
-      console.error('Payment error:', error);
+      console.error("Payment error:", error);
       
       // Show error toast
       toast({
@@ -104,7 +104,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
   };
 
   const openCheckoutWindow = (url: string) => {
-    checkoutWindow = window.open(url, '_blank');
+    checkoutWindow = window.open(url, "_blank");
     
     if (checkoutWindow) {
       // Update localStorage with window state
@@ -154,10 +154,10 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       const response = await fetch(`/api/certificates/payment/status?certificateId=${certificateId}&transactionId=${transactionId}`);
       const data = await response.json();
       
-      if (data.status === 'PENDING') {
+      if (data.status === "PENDING") {
         // Transaction exists and is still pending, resume polling
         pollPaymentStatus(transactionId);
-      } else if (data.status === 'SUCCEEDED') {
+      } else if (data.status === "SUCCEEDED") {
         // Transaction already completed
         handlePaymentSuccess();
       } else {
@@ -166,7 +166,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
         localStorage.removeItem(`payment_${certificateId}`);
       }
     } catch (error) {
-      console.error('Error checking transaction status:', error);
+      console.error("Error checking transaction status:", error);
       setIsProcessing(false);
     }
   };
@@ -197,19 +197,19 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
         const response = await fetch(`/api/certificates/payment/status?certificateId=${certificateId}&transactionId=${transactionId}`);
         const data = await response.json();
 
-        if (data.status === 'SUCCEEDED') {
+        if (data.status === "SUCCEEDED") {
           handlePaymentSuccess();
-        } else if (data.status === 'REJECTED' || data.status === 'EXPIRED') {
+        } else if (data.status === "REJECTED" || data.status === "EXPIRED") {
           resetPaymentState(true, {
             title: "Payment Failed",
             description: "Payment was not completed. Please try again.",
             variant: "destructive"
           });
-        } else if (data.status === 'CANCELLED'){
+        } else if (data.status === "CANCELLED"){
           resetPaymentState();
         }
       } catch (error) {
-        console.error('Payment status polling error:', error);
+        console.error("Payment status polling error:", error);
       }
     }, 5000); // Poll every 5 seconds
   };
@@ -244,7 +244,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       // Get the transaction ID from localStorage
       const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
       if (!storedTransaction) {
-        throw new Error('No active payment found');
+        throw new Error("No active payment found");
       }
       
       const { transactionId } = JSON.parse(storedTransaction);
@@ -273,7 +273,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       });
       
     } catch (error) {
-      console.error('Payment cancellation error:', error);
+      console.error("Payment cancellation error:", error);
       
       // Show error toast
       toast({
@@ -297,9 +297,9 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
                 Processing Payment...
               </>
             ) : checkoutUrl ? (
-              'Reopen Checkout'
+              "Reopen Checkout"
             ) : (
-              'Pay Now'
+              "Pay Now"
             )}
           </Button>
         </DialogTrigger>
@@ -316,7 +316,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
             
             <RadioGroup 
               value={deliveryMethod} 
-              onValueChange={(value) => setDeliveryMethod(value as 'pickup' | 'delivery')}
+              onValueChange={(value) => setDeliveryMethod(value as "pickup" | "delivery")}
               className="grid gap-6 py-4"
             >
               <div className="flex items-center space-x-2 border p-4 rounded-md">
@@ -328,8 +328,8 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
                     <p className="text-sm text-gray-500">No additional fee</p>
                   </div>
                 </Label>
-                </div>
-                <div className="flex items-center space-x-2 border p-4 rounded-md">
+              </div>
+              <div className="flex items-center space-x-2 border p-4 rounded-md">
                 <RadioGroupItem value="delivery" id="delivery" />
                 <Label htmlFor="delivery" className="flex items-center gap-3 cursor-pointer">
                   <Truck className="h-5 w-5" />
@@ -353,7 +353,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
                     Processing Payment...
                   </>
                 ) : (
-                  `Proceed to Payment (₱${deliveryMethod === 'delivery' ? '350' : '300'})`
+                  `Proceed to Payment (₱${deliveryMethod === "delivery" ? "350" : "300"})`
                 )}
               </Button>
             </DialogFooter>
@@ -385,7 +385,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
                     Cancelling Payment...
                   </>
                 ) : (
-                  'Cancel Payment'
+                  "Cancel Payment"
                 )}
               </Button>
             </DialogFooter>

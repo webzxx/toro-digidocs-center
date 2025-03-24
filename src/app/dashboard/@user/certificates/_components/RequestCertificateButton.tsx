@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,13 +35,13 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
     }
   });
 
-  const certificateType = form.watch('certificateType');
+  const certificateType = form.watch("certificateType");
 
   // Handle click on the Request Certificate button based on residents availability
   const handleRequestClick = (e: React.MouseEvent) => {
     if (residents.length === 0) {
       e.preventDefault();
-      router.push('/pages/services');
+      router.push("/pages/services");
     }
   };
 
@@ -161,7 +161,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                   form={form}
                 />
                 
-                {['SOLO_PARENT', 'COHABITATION', 'GOOD_MORAL', 'NO_INCOME', 'RESIDENCY', 'TRANSFER_OF_RESIDENCY', 'LIVING_STILL', 'BIRTH_FACT'].includes(certificateType) && (
+                {["SOLO_PARENT", "COHABITATION", "GOOD_MORAL", "NO_INCOME", "RESIDENCY", "TRANSFER_OF_RESIDENCY", "LIVING_STILL", "BIRTH_FACT"].includes(certificateType) && (
                   <FormField
                     control={form.control}
                     name="requestOf"

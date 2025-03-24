@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import { 
   Card, 
   CardContent, 
@@ -31,8 +31,8 @@ import {
   getCertificateStatusBadge, 
   getCertificateStatusIcon, 
   getCertificateTypeBadge
-} from '@/components/utils';
-import { formatDate } from '@/lib/utils';
+} from "@/components/utils";
+import { formatDate } from "@/lib/utils";
 
 type CertificatesClientProps = {
   residents: (Resident & {
@@ -110,7 +110,7 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
                   </span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{status.replace(/_/g, ' ')}: {count}</p>
+                  <p>{status.replace(/_/g, " ")}: {count}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -143,7 +143,7 @@ function CertificateList({ resident }: { resident: Resident & { certificateReque
                 <AccordionTrigger className="px-4 py-3 hover:no-underline [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0">
                   <div className="flex flex-1 items-center justify-between">
                     <div className='flex flex-col items-start'>
-                      <h4 className="font-medium">{certificate.certificateType.replace(/_/g, ' ')}</h4>
+                      <h4 className="font-medium">{certificate.certificateType.replace(/_/g, " ")}</h4>
                       <p className="text-sm text-muted-foreground">Ref: {certificate.referenceNumber}</p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ function CertificateList({ resident }: { resident: Resident & { certificateReque
                         <div>{certificate.remarks}</div>
                       </div>
                     )}
-                    {certificate.status === 'AWAITING_PAYMENT' && (
+                    {certificate.status === "AWAITING_PAYMENT" && (
                       <div className="mt-2">
                         <PaymentButton 
                           certificateId={certificate.id} 

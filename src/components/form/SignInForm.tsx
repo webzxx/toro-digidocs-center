@@ -1,37 +1,37 @@
-'use client';
+"use client";
 
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { z } from "zod"
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { getSession, signIn } from "next-auth/react";
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
 
 const FormSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Invalid email'),
+  email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z
-  .string()
-  .min(1, 'Password is required')
-  .min(8, 'Password must have than 8 characters')
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must have than 8 characters")
 });
 
 const SignInForm = () => {
-  const router = useRouter()
-  const { toast } = useToast()
+  const router = useRouter();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: '',
-      password: ''
+      email: "",
+      password: ""
     },
   });
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    const signInData = await signIn('credentials', {
+    const signInData = await signIn("credentials", {
       email: values.email,
       password: values.password,
       redirect: false,
@@ -42,7 +42,7 @@ const SignInForm = () => {
         title: "Error",
         description: "Oops! Something went wrong!",
         variant: "destructive"
-      })
+      });
     } else {
       router.refresh(); // Refresh the router to update server components
       if(signInData?.ok) {
@@ -55,7 +55,7 @@ const SignInForm = () => {
         // Determine destination based on user role
         // const destination = userRole === 'ADMIN' ? '/dashboard' : '/';
         
-        const destination = '/dashboard';
+        const destination = "/dashboard";
         router.push(destination);
       }
     }
@@ -98,7 +98,7 @@ const SignInForm = () => {
         <Link className="text-blue-500 hover:underline" href='/sign-up'>Sign up</Link>
       </p>
     </Form>
-  )
-}
+  );
+};
 
 export default SignInForm;

@@ -10,7 +10,7 @@ export default function BotMessage({ fetchMessage } : { fetchMessage: () => Prom
     async function loadMessage() {
       const data= await fetchMessage();
       setLoading(false);
-      const formattedMessage = data.replace(/\n/g, '<br />')
+      const formattedMessage = data.replace(/\n/g, "<br />");
       setMessage(formattedMessage);
     }
     loadMessage();
