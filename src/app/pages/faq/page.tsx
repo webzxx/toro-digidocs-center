@@ -20,61 +20,55 @@ export default function Faq() {
             <AccordionItem value="item-1">
               <AccordionTrigger>Ano-ano ang mga kailangan sa pagkuha ng Barangay I.D.?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum quibusdam, nesciunt accusamus corporis vel dignissimos minima, doloremque provident adipisci sint quas voluptates et animi! Ut perferendis ad ratione quidem praesentium.
+                2 Valid ID&apos;s, at iyong mga personal na impormasyon
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger>Ano-ano ang mga requirements para sa Solo Parent I.D.?</AccordionTrigger>
               <AccordionContent>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit reprehenderit asperiores aperiam animi dolores delectus debitis atque tempore nesciunt tenetur! Tenetur asperiores ipsa aut nulla magnam commodi dolores minima ut.
+              2 Valid ID&apos;s, at iyong mga personal na impormasyon
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
               <AccordionTrigger>Ano ang kailangan sa pagkuha ng Barangay Clearance?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
+              2 Valid ID&apos;s, at iyong mga personal na impormasyon
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4">
-              <AccordionTrigger>Kailan ang check-up ng mga buntis sa Health Center?</AccordionTrigger>
+              <AccordionTrigger>Paano gumawa ng account?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
+                Magpunta sa register account.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-5">
-              <AccordionTrigger>Paano gumawa ng account?</AccordionTrigger>
+              <AccordionTrigger>Paano malaman kung ano ang status ng Certificate Request?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
+                Maaring mag provide ng Reference Number ng iyong request para malaman.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-6">
-              <AccordionTrigger>Sino-sino ang kwalipikado sa pagkuha ng Solo Parent I.D.?</AccordionTrigger>
+              <AccordionTrigger>Ano ang kailangan sa pagkuha ng Cohabitation Certificate?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
+              2 Valid ID&apos;s, at iyong mga personal na impormasyon
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-7">
-              <AccordionTrigger>Ano ang kailangan sa pagkuha ng Cohabitation Certificate?</AccordionTrigger>
+              <AccordionTrigger>Paano mag palipat ng Residency?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
+                Mag file lamang ng Transfer or Residency Certification.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-8">
-              <AccordionTrigger>Paano mag palipat ng Residency?</AccordionTrigger>
+              <AccordionTrigger>May bayad ba ang pagkuha ng mga requirements sa ating barangay?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
+                Meron, depende kung anong uri ng Certificate and kailangan.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-9">
-              <AccordionTrigger>May bayad ba ang pagkuha ng mga requirements sa ating barangay?</AccordionTrigger>
-              <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-10">
               <AccordionTrigger>Ano-ano ang mga open hours ng barangay?</AccordionTrigger>
               <AccordionContent>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam eius ad, nulla nemo beatae nam! Assumenda magnam incidunt quos ea voluptas omnis expedita sed non, culpa natus iusto, minus eveniet.
+                Monday - Friday, 8AM - 5PM
               </AccordionContent>
             </AccordionItem>
 
