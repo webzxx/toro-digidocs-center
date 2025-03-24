@@ -23,12 +23,15 @@ import React, { useState } from "react";
 
 import { updateUser, deleteUser } from "@/app/dashboard/@admin/users/actions";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { toast } from "@/components/ui/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserActionsProps {
   userId: string;
   username: string;
   email: string;
   role: string;
+  refetch?: () => void;
 }
 
 export default function UserActions({
@@ -36,11 +39,13 @@ export default function UserActions({
   username,
   email,
   role,
+  refetch,
 }: UserActionsProps) {
   const [deleteUserId, setDeleteUserId] = useState<string>("");
   const [editedUsername, setEditedUsername] = useState<string>(username);
   const [editedEmail, setEditedEmail] = useState<string>(email);
   const [editedRole, setEditedRole] = useState<string>(role);
+  const queryClient = useQueryClient();
 
   const handleEditedEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedEmail(e.target.value);
@@ -60,30 +65,65 @@ export default function UserActions({
     setDeleteUserId(e.target.value);
   };
 
-  const handleEditUser = () => {
+  const handleEditUser = async () => {
     if (
       username === editedUsername &&
       email === editedEmail &&
       role === editedRole
     )
       return;
-    const id = parseInt(userId);
-    const updatedData = {
-      username: editedUsername,
-      email: editedEmail,
-      role: editedRole,
-    };
-    updateUser(id, updatedData);
+    
+    try {
+      const id = parseInt(userId);
+      const updatedData = {
+        username: editedUsername,
+        email: editedEmail,
+        role: editedRole,
+      };
+      await updateUser(id, updatedData);
+      
+      // Invalidate queries and refetch
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      if (refetch) refetch();
+      
+      toast({
+        title: "User updated",
+        description: `User ${username} has been successfully updated.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Update failed",
+        description: "There was a problem updating the user.",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleDeleteUser = () => {
-    const id = parseInt(userId);
-    deleteUser(id);
+  const handleDeleteUser = async () => {
+    try {
+      const id = parseInt(userId);
+      await deleteUser(id);
+      
+      // Invalidate queries and refetch
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      if (refetch) refetch();
+      
+      toast({
+        title: "User deleted",
+        description: `User ${username} has been permanently deleted.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the user.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
     // Provide options to edit or delete user
-    <div className="flex gap-2">
+    <div className="flex gap-2 justify-end">
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" size="icon">
@@ -181,7 +221,7 @@ export default function UserActions({
                   disabled={deleteUserId !== userId}
                   onClick={handleDeleteUser}
                 >
-                  Save changes
+                  Delete User
                 </Button>
               </DialogClose>
             </DialogFooter>

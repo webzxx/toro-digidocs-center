@@ -1,26 +1,22 @@
 import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
-import UserTable from "./_components/UserTable";
+import UserAdmin from "./_components/UserAdmin";
 
 async function UsersPage() {
-  const users = await db.user.findMany();
+  // Initial data fetch for SSR - limited to first page only
+  const users = await db.user.findMany({
+    take: 10,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  // Count total users for pagination
+  const totalCount = await db.user.count();
 
   return (
     <main className="flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full">
-      {users && users.length > 0 ? (
-        <UserTable users={users} />
-      ) : (
-        <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
-          <div className="flex flex-col items-center text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
-              You have no users
-            </h3>
-            <p className="text-sm text-muted-foreground mb-3">
-              Users will be shown here including their roles.
-            </p>
-          </div>
-        </div>
-      )}
+      <UserAdmin initialUsers={JSON.stringify(users)} initialTotal={totalCount} />
     </main>
   );
 }
