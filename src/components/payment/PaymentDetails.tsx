@@ -1,8 +1,8 @@
 import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
+import { getPaymentStatusBadge } from "../utils";
 
 interface PaymentDetailsProps {
   payment: any;
@@ -97,9 +97,7 @@ export function PaymentDetails({
       
       {showStatus && (
         <div className="mt-4">
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-            {payment.paymentStatus}
-          </Badge>
+          {getPaymentStatusBadge(payment.paymentStatus)}
         </div>
       )}
     </div>
