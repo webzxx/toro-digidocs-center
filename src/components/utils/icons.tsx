@@ -28,29 +28,27 @@ import { PaymentStatus } from "@prisma/client";
  * Returns an icon component based on the certificate status
  */
 export const getCertificateStatusIcon = (status: string) => {
-  const iconProps = { className: "h-4 w-4" };
-  
   switch(status) {
   case "COMPLETED":
-    return <Check className="h-4 w-4 text-green-500" />;
+    return <Check className="h-4 w-4 text-green-500 flex-shrink-0" />;
   case "PENDING":
-    return <Clock className="h-4 w-4 text-yellow-500" />;
+    return <Clock className="h-4 w-4 text-yellow-500 flex-shrink-0" />;
   case "UNDER_REVIEW":
-    return <AlertCircle className="h-4 w-4 text-purple-500" />;
+    return <AlertCircle className="h-4 w-4 text-purple-500 flex-shrink-0" />;
   case "AWAITING_PAYMENT":
-    return <CircleDollarSign className="h-4 w-4 text-orange-500" />;
+    return <CircleDollarSign className="h-4 w-4 text-orange-500 flex-shrink-0" />;
   case "PROCESSING":
-    return <Hourglass className="h-4 w-4 text-blue-500" />;
+    return <Hourglass className="h-4 w-4 text-blue-500 flex-shrink-0" />;
   case "READY_FOR_PICKUP":
-    return <PackageCheck className="h-4 w-4 text-indigo-500" />;
+    return <PackageCheck className="h-4 w-4 text-indigo-500 flex-shrink-0" />;
   case "IN_TRANSIT":
-    return <Truck className="h-4 w-4 text-cyan-500" />;
+    return <Truck className="h-4 w-4 text-cyan-500 flex-shrink-0" />;
   case "REJECTED":
-    return <XCircle className="h-4 w-4 text-red-500" />;
+    return <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />;
   case "CANCELLED":
-    return <BanIcon className="h-4 w-4 text-gray-500" />;
+    return <BanIcon className="h-4 w-4 text-gray-500 flex-shrink-0" />;
   default:
-    return <FileText className="h-4 w-4" />;
+    return <FileText className="h-4 w-4 flex-shrink-0" />;
   }
 };
 
@@ -58,7 +56,7 @@ export const getCertificateStatusIcon = (status: string) => {
  * Returns an icon for payment status
  */
 export const getPaymentStatusIcon = (status: PaymentStatus) => {
-  const iconProps = { className: "size-3.5" };
+  const iconProps = { className: "size-3.5 flex-shrink-0" };
   
   switch (status) {
   case "PENDING":

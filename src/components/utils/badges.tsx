@@ -40,7 +40,7 @@ export const getCertificateStatusBadge = (status: string) => {
         statusStyles[status] || "bg-gray-100 text-gray-800",
       )}
     >
-      {getCertificateStatusIcon(status)}
+      <span className="flex-shrink-0">{getCertificateStatusIcon(status)}</span>
       {statusNames[status] || status.replace(/_/g, " ")}
     </Badge>
   );
