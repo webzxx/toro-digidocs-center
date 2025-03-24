@@ -5,9 +5,8 @@ import { PaymentReceipt } from '@/components/payment/PaymentReceipt';
 import { PaymentActions } from '@/components/payment/PaymentActions';
 import { PaymentDetails } from '@/components/payment/PaymentDetails';
 import Image from 'next/image';
-import { withAuth, WithAuthProps } from '@/lib/withAuth';
+import { withAuth, WithAuthProps } from '@/lib/auth/withAuth';
 import { getPayMayaStatus } from '@/lib/utils/paymaya';
-import { PaymentStatus } from '@prisma/client';
 
 async function PaymentStatusPage({
   params,

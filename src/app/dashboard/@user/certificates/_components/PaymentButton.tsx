@@ -58,7 +58,7 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
     return () => {
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     };
-  }, [certificateId]);
+  }, [certificateId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // When "Proceed to Payment" button is clicked
   const handlePayment = async () => {
