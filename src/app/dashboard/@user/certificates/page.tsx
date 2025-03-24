@@ -5,15 +5,30 @@ import RequestCertificateButton from "./_components/RequestCertificateButton";
 
 async function CertificatesPage({ user }: WithAuthProps) {
   const userId = parseInt(user.id as unknown as string); // Convert string to number
-  // Fetch residents and their certificate requests
+  // Fetch residents and their certificate requests including payment information
   const residents = await db.resident.findMany({
     where: {
       userId: userId,
     },
     include: {
-      certificateRequests: true,
+      certificateRequests: {
+        include: {
+          payments: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            where: {
+              isActive: true,
+            },
+            take: 1,
+          },
+        },
+      },
     },  
   });
+
+  // Serialize the data to avoid "only plain objects can be passed to Client Components" warning
+  const serializedResidents = JSON.parse(JSON.stringify(residents));
 
   const hasCertificates = residents.some(resident => resident.certificateRequests.length > 0);
 
@@ -21,7 +36,7 @@ async function CertificatesPage({ user }: WithAuthProps) {
     <main className='flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full'>
       {hasCertificates ? (
         <CertificatesClient
-          residents={residents}
+          residents={serializedResidents}
         />
       ) : (
         <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
@@ -32,7 +47,7 @@ async function CertificatesPage({ user }: WithAuthProps) {
             <p className="text-sm text-muted-foreground mb-3">
               Your certificate requests will be shown here.
             </p>
-            <RequestCertificateButton residents={residents} />
+            <RequestCertificateButton residents={serializedResidents} />
           </div>
         </div>
       )}

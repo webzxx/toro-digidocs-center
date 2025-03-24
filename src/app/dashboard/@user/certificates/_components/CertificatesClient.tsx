@@ -8,7 +8,7 @@ import {
   CardDescription, 
   CardFooter, 
 } from "@/components/ui/card";
-import { CertificateRequest, Resident } from "@prisma/client";
+import { CertificateRequest, Payment, Resident } from "@prisma/client";
 import RequestCertificateButton from "./RequestCertificateButton";
 import PaymentButton from "./PaymentButton";
 import { FileText } from "lucide-react";
@@ -27,36 +27,30 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { 
-  getCertificateStatusBadge, 
-  getCertificateStatusIcon, 
-  getCertificateTypeBadge,
+  getCertificateStatusBadge,
+  getCertificateStatusIcon,
+  getPaymentStatusBadge, 
 } from "@/components/utils";
 import { formatDate } from "@/lib/utils";
 import { useQueryState } from "nuqs";
 
+type CertificateWithPayment = CertificateRequest & {
+  payments: Payment[];
+};
+
+type ResidentWithCertificates = Resident & {
+  certificateRequests: CertificateWithPayment[];
+};
+
 type CertificatesClientProps = {
-  residents: (Resident & {
-      certificateRequests: CertificateRequest[];
-  })[],
+  residents: ResidentWithCertificates[],
 };
 
 export default function CertificatesClient({ residents }: CertificatesClientProps) {
-  const [residentId, setResidentId] = useQueryState("residentId");
-  const [activeTab, setActiveTab] = useQueryState("tab", {
+  const [activeTab, setActiveTab] = useQueryState("residentId", {
     defaultValue: residents[0]?.bahayToroSystemId || "",
   });
-  
-  // Effect to set the active tab based on residentId query parameter
-  useEffect(() => {
-    if (residentId) {
-      // Find if there's a resident with this ID
-      const foundResident = residents.find(resident => resident.bahayToroSystemId === residentId);
-      if (foundResident) {
-        setActiveTab(foundResident.bahayToroSystemId);
-      }
-    }
-  }, [residentId, residents, setActiveTab]);
-  
+
   // Count total certificates for this user (across all residents)
   const totalCertificates = residents.reduce((sum, resident) => {
     return sum + resident.certificateRequests.length;
@@ -134,8 +128,26 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
   );
 }
 
-function CertificateList({ resident }: { resident: Resident & { certificateRequests: CertificateRequest[] }}) {
+function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
   const hasCertificates = resident.certificateRequests.length > 0;
+
+  // Helper function to check if a certificate has been paid
+  const isCertificatePaid = (certificate: CertificateWithPayment): boolean => {
+    // Certificate is considered paid if status is beyond AWAITING_PAYMENT
+    if (certificate.status !== "AWAITING_PAYMENT" && certificate.status !== "PENDING" && 
+        certificate.status !== "UNDER_REVIEW" && certificate.status !== "REJECTED" && 
+        certificate.status !== "CANCELLED") {
+      return true;
+    }
+    
+    // Or if there's an active payment with SUCCEEDED or VERIFIED status
+    if (certificate.payments.length > 0) {
+      const latestPayment = certificate.payments[0]; // We're getting the most recent active payment
+      return latestPayment.paymentStatus === "SUCCEEDED" || latestPayment.paymentStatus === "VERIFIED";
+    }
+    
+    return false;
+  };
 
   return (
     <CardContent className="p-6">
@@ -155,7 +167,7 @@ function CertificateList({ resident }: { resident: Resident & { certificateReque
               <AccordionItem key={certificate.id} value={certificate.id.toString()} className="border border-muted rounded-lg mb-3 overflow-hidden">
                 <AccordionTrigger className="px-4 py-3 hover:no-underline [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0">
                   <div className="flex flex-1 items-center justify-between">
-                    <div className='flex flex-col items-start'>
+                    <div className='flex flex-col items-start text-start'>
                       <h4 className="font-medium">{certificate.certificateType.replace(/_/g, " ")}</h4>
                       <p className="text-sm text-muted-foreground">Ref: {certificate.referenceNumber}</p>
                     </div>
@@ -174,13 +186,21 @@ function CertificateList({ resident }: { resident: Resident & { certificateReque
                       <div className="text-muted-foreground">Requested:</div>
                       <div>{formatDate(certificate.requestDate)}</div>
                     </div>
+                    {certificate.payments.length > 0 && (
+                      <div className="grid grid-cols-2 gap-1">
+                        <div className="text-muted-foreground">Payment Status:</div>
+                        <div className="flex items-center">
+                          {getPaymentStatusBadge(certificate.payments[0].paymentStatus)}
+                        </div>
+                      </div>
+                    )}
                     {certificate.remarks && (
                       <div className="grid grid-cols-2 gap-1">
                         <div className="text-muted-foreground">Remarks:</div>
                         <div>{certificate.remarks}</div>
                       </div>
                     )}
-                    {certificate.status === "AWAITING_PAYMENT" && (
+                    {certificate.status === "AWAITING_PAYMENT" && !isCertificatePaid(certificate) && (
                       <div className="mt-2">
                         <PaymentButton 
                           certificateId={certificate.id} 
