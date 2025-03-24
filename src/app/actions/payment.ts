@@ -15,7 +15,11 @@ function generateTransactionRef(prefix = "TR"){
       date.getDate().toString().padStart(2, "0");
     
   // Generate 5 character unique ID
-  const uniqueId = nanoid(5).toUpperCase();
+  const uniqueId = nanoid(5).replace(/[^A-Z0-9]/g, () => {
+    // Generate random alphanumeric character if not A-Z or 0-9
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    return chars.charAt(Math.floor(Math.random() * chars.length));
+  }).toUpperCase();
     
   return `${prefix}-${dateStr}-${uniqueId}`;
 };
