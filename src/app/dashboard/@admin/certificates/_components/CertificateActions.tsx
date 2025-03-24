@@ -30,19 +30,19 @@ import { Textarea } from "@/components/ui/textarea";
 interface CertificateActionsProps {
   certificateId: number;
   referenceNumber: string;
-  certificateType: string;
   purpose: string;
   status: string;
   remarks?: string;
+  refetch: () => void;  // Add this line
 }
 
 export default function CertificateActions({
   certificateId,
   referenceNumber,
-  certificateType,
   purpose,
   status,
   remarks = "",
+  refetch,
 }: CertificateActionsProps) {
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
@@ -75,6 +75,7 @@ export default function CertificateActions({
         remarks: editedRemarks,
       });
       queryClient.invalidateQueries({ queryKey: ["certificates"] });
+      refetch();
       toast({
         title: "Certificate updated",
         description: `Certificate ${referenceNumber} has been successfully updated.`,
@@ -92,6 +93,7 @@ export default function CertificateActions({
     try {
       await deleteCertificateRequest(certificateId);
       queryClient.invalidateQueries({ queryKey: ["certificates"] });
+      refetch();
       toast({
         title: "Certificate deleted",
         description: `Certificate ${referenceNumber} has been permanently deleted.`,

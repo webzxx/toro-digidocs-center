@@ -23,9 +23,10 @@ import { PaymentStatus } from "@prisma/client";
 interface CertificateTableProps {
   certificates?: AdminCertificate[];
   isLoading?: boolean;
+  refetch: () => void;
 }
 
-export default function CertificateTable({ certificates, isLoading = false }: CertificateTableProps) {
+export default function CertificateTable({ certificates, isLoading = false, refetch}: CertificateTableProps) {
   const isValidDate = (dateString: string): boolean => {
     return !isNaN(Date.parse(dateString));
   };
@@ -179,10 +180,10 @@ export default function CertificateTable({ certificates, isLoading = false }: Ce
                   <CertificateActions
                     certificateId={certificate.id}
                     referenceNumber={certificate.referenceNumber}
-                    certificateType={certificate.certificateType}
                     purpose={certificate.purpose}
                     status={certificate.status}
                     remarks={certificate.remarks || ""}
+                    refetch={refetch}
                   />
                 </TableCell>
               </TableRow>

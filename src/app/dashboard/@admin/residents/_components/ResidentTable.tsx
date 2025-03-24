@@ -23,9 +23,10 @@ import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } f
 interface ResidentTableProps {
   residents?: ResidentWithTypes[];
   isLoading?: boolean;
+  refetch: () => void;
 }
 
-export default function ResidentTable({ residents, isLoading = false }: ResidentTableProps) {
+export default function ResidentTable({ residents, isLoading = false, refetch }: ResidentTableProps) {
   const renderAddress = (address: any) => {
     if (!address) return "N/A";
     
@@ -192,7 +193,7 @@ export default function ResidentTable({ residents, isLoading = false }: Resident
                 <TableCell>{renderEmergencyContact(resident.emergencyContact)}</TableCell>
                 <TableCell>{renderProofOfIdentity(resident.id, resident.proofOfIdentity)}</TableCell>
                 <TableCell>
-                  <ResidentActions resident={resident} />
+                  <ResidentActions resident={resident} refetch={refetch}/>
                 </TableCell>
               </TableRow>
             ))

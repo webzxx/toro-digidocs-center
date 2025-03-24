@@ -38,7 +38,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
   });
 
   // Fetch residents with pagination, filtering, and search
-  const { data, isLoading, isError, isFetching } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["residents", page, gender, status, sector, search],
     queryFn: async () => {
       // When a query executes, we're no longer in the initial load
@@ -164,7 +164,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
           <>
             <div className="relative w-full overflow-x-auto">
               {isFetching && <LoaderComponent/>}
-              <ResidentTable residents={residents} isLoading={isFetching} />
+              <ResidentTable residents={residents} isLoading={isFetching} refetch={refetch} />
             </div>
             <div className="flex items-center justify-between p-4 border-t">
               <div className="text-sm text-muted-foreground">

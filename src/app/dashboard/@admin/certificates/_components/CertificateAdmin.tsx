@@ -33,7 +33,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
   });
 
   // Fetch certificates with pagination, filtering, and search
-  const { data, isLoading, isError, isFetching } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["certificates", page, status, type, search],
     queryFn: async () => {
       // When a query executes, we're no longer in the initial load
@@ -136,7 +136,11 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
           <>
             <div className="relative w-full overflow-x-auto">
               {isFetching && <LoaderComponent/>}
-              <CertificateTable certificates={certificates} isLoading={isFetching} />
+              <CertificateTable 
+                certificates={certificates} 
+                isLoading={isFetching} 
+                refetch={refetch}  // Add this line
+              />
             </div>
             <div className="flex items-center justify-between p-4 border-t">
               <div className="text-sm text-muted-foreground">

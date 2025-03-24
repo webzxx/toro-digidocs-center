@@ -22,9 +22,10 @@ import { useResidentForm } from "@/hooks/useResidentForm";
 
 interface ResidentActionsProps {
   resident: ResidentWithTypes;
+  refetch: () => void;
 }
 
-export default function ResidentActions({ resident }: ResidentActionsProps) {
+export default function ResidentActions({ resident, refetch }: ResidentActionsProps) {
   const {
     editedResident,
     handleInputChange,
@@ -55,6 +56,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
       await updateResident(resident.id, editedResident);
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["residents"] });
+      refetch();
       toast({
         title: "Resident updated",
         description: `Resident ${editedResident.bahayToroSystemId} has been successfully updated.`,
@@ -75,6 +77,7 @@ export default function ResidentActions({ resident }: ResidentActionsProps) {
       await deleteResident(resident.id);
       // Invalidate and refetch
       queryClient.invalidateQueries({ queryKey: ["residents"] });
+      refetch();
       toast({
         title: "Resident deleted",
         description: `Resident ${resident.bahayToroSystemId} has been permanently deleted.`,
