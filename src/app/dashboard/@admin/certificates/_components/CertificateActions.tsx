@@ -25,6 +25,7 @@ import { deleteCertificateRequest, updateCertificateRequest } from "@/app/dashbo
 import { CertificateStatus } from "@prisma/client";
 import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CertificateActionsProps {
   certificateId: number;
@@ -32,6 +33,7 @@ interface CertificateActionsProps {
   certificateType: string;
   purpose: string;
   status: string;
+  remarks?: string;
 }
 
 export default function CertificateActions({
@@ -40,11 +42,13 @@ export default function CertificateActions({
   certificateType,
   purpose,
   status,
+  remarks = "",
 }: CertificateActionsProps) {
   const queryClient = useQueryClient();
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
   const [editedPurpose, setEditedPurpose] = useState<string>(purpose);
   const [editedStatus, setEditedStatus] = useState<string>(status);
+  const [editedRemarks, setEditedRemarks] = useState<string>(remarks || "");
 
   const handleEditedPurposeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedPurpose(e.target.value);
@@ -54,16 +58,21 @@ export default function CertificateActions({
     setEditedStatus(selected);
   };
 
+  const handleEditedRemarksChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditedRemarks(e.target.value);
+  };
+
   const handleDeleteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDeleteConfirmation(e.target.value);
   };
 
   const handleEditCertificate = async () => {
-    if (purpose === editedPurpose && status === editedStatus) return;
+    if (purpose === editedPurpose && status === editedStatus && remarks === editedRemarks) return;
     try {
       await updateCertificateRequest(certificateId, {
         purpose: editedPurpose,
         status: editedStatus,
+        remarks: editedRemarks,
       });
       queryClient.invalidateQueries({ queryKey: ["certificates"] });
       toast({
@@ -141,10 +150,30 @@ export default function CertificateActions({
                 </SelectContent>
               </Select>
             </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="remarks" className="text-right">
+                Remarks
+                {editedStatus === "REJECTED" && (
+                  <span className="text-red-500 ml-1">*</span>
+                )}
+              </Label>
+              <Textarea
+                id="remarks"
+                placeholder={editedStatus === "REJECTED" ? "Please provide a reason for rejection" : "Add any additional comments here"}
+                className="col-span-3"
+                value={editedRemarks}
+                onChange={handleEditedRemarksChange}
+                required={editedStatus === "REJECTED"}
+              />
+            </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit" onClick={handleEditCertificate}>
+              <Button 
+                type="submit" 
+                onClick={handleEditCertificate}
+                disabled={editedStatus === "REJECTED" && !editedRemarks.trim()}
+              >
                 Save changes
               </Button>
             </DialogClose>

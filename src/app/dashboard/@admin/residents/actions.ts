@@ -13,6 +13,13 @@ export async function updateResident(id: number, data: ResidentWithTypes) {
     throw new Error("Unauthorized: Only admins can update residents");
   }
   const { address, emergencyContact, proofOfIdentity, ...residentData } = data;
+
+  // Update yearsInBahayToro to be a number in address
+  if (address?.yearsInBahayToro) {
+    address.yearsInBahayToro = parseInt(address.yearsInBahayToro as unknown as string);
+  }
+  
+
   await db.$transaction(async (prisma) => {
     // Update resident data
     await prisma.resident.update({
