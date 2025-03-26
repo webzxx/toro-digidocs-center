@@ -5,6 +5,9 @@ import getSession from "@/lib/auth/getSession";
 import paymaya from "@api/paymaya";
 import { nanoid } from "nanoid";
 import { headers } from "next/headers";
+import { UTApi } from "uploadthing/server";
+import { ManualPaymentInput, manualPaymentSchema } from "@/types/types";
+import { revalidatePath } from "next/cache";
 
 // Generate transaction reference number with prefix, date, and random string
 function generateTransactionRef(prefix = "TR"){
@@ -23,7 +26,163 @@ function generateTransactionRef(prefix = "TR"){
     
   return `${prefix}-${dateStr}-${uniqueId}`;
 };
-  
+
+function generateFile(file: File): File {
+  const now = new Date();
+  const dateStr = now.getFullYear().toString() +
+    (now.getMonth() + 1).toString().padStart(2, "0") +
+    now.getDate().toString().padStart(2, "0") +
+    now.getHours().toString().padStart(2, "0") +
+    now.getMinutes().toString().padStart(2, "0") +
+    now.getSeconds().toString().padStart(2, "0");
+  const fileName = `${dateStr}-payment-proof-${file.name.replaceAll(" ", "_")}`;
+  return new File([file], fileName, { type: file.type });
+}
+
+export async function createManualPayment(
+  values: Omit<ManualPaymentInput, "proofOfPayment">,
+  files?: FormData,
+) {
+  try {
+    const session = await getSession();
+    if (!session?.user || session.user.role !== "ADMIN") {
+      return {
+        serverError: "Unauthorized. Only administrators can create manual payments.",
+      };
+    }
+
+    // Create a complete object for validation by adding the file if present
+    const valuesForValidation = { ...values } as ManualPaymentInput;
+    let proofOfPaymentFile = null;
+    
+    if (files && files.has("proofOfPayment")) {
+      proofOfPaymentFile = files.get("proofOfPayment") as File;
+      valuesForValidation.proofOfPayment = proofOfPaymentFile;
+    }
+
+    // Validate incoming data against schema
+    const validatedData = await manualPaymentSchema.safeParseAsync(valuesForValidation);
+
+    if (!validatedData.success) {
+      const err = validatedData.error.flatten();
+      return { fieldErrors: err.fieldErrors };
+    }
+
+    // Get the certificate request to verify it exists
+    const certificateRequest = await db.certificateRequest.findUnique({
+      where: { id: values.certificateRequestId },
+      include: {
+        payments: {
+          where: { isActive: true },
+        },
+      },
+    });
+
+    if (!certificateRequest) {
+      return {
+        serverError: "Certificate request not found",
+      };
+    }
+
+    // Generate a unique transaction reference
+    const transactionReference = generateTransactionRef("MAN");
+    
+    // Handle file upload if a proof of payment is provided
+    let proofOfPaymentPath = null;
+    
+    if (proofOfPaymentFile) {
+      const utApi = new UTApi();
+      
+      try {
+        const [uploadedFile] = await utApi.uploadFiles([
+          generateFile(proofOfPaymentFile),
+        ]);
+        
+        if (!uploadedFile.data) {
+          throw new Error("Unable to process file upload");
+        }
+        
+        proofOfPaymentPath = uploadedFile.data.ufsUrl;
+      } catch (error) {
+        console.error("Error uploading proof of payment:", error);
+        return {
+          serverError: "Failed to upload proof of payment",
+        };
+      }
+    }
+
+    // Start a transaction for database operations
+    const result = await db.$transaction(async (prisma) => {
+      // Create a new payment
+      const payment = await prisma.payment.create({
+        data: {
+          transactionReference,
+          certificateRequestId: values.certificateRequestId,
+          amount: parseFloat(values.amount),
+          paymentMethod: values.paymentMethod,
+          paymentStatus: values.paymentStatus,
+          paymentDate: new Date(values.paymentDate),
+          notes: values.notes || null,
+          proofOfPaymentPath,
+          receiptNumber: values.receiptNumber || null,
+          isActive: true,
+        },
+      });
+
+      // Set previous active payments to inactive
+      if (certificateRequest.payments.length > 0) {
+        await prisma.payment.updateMany({
+          where: {
+            certificateRequestId: values.certificateRequestId,
+            id: { not: payment.id },
+            isActive: true,
+          },
+          data: {
+            isActive: false,
+          },
+        });
+      }
+
+      // Update certificate status based on payment status
+      if (
+        values.paymentStatus === "SUCCEEDED" ||
+        values.paymentStatus === "VERIFIED"
+      ) {
+        // If payment is successful, move certificate to processing status
+        await prisma.certificateRequest.update({
+          where: { id: values.certificateRequestId },
+          data: {
+            status: "PROCESSING",
+          },
+        });
+      } else if (values.paymentStatus === "PENDING") {
+        // Ensure certificate is in AWAITING_PAYMENT status if payment is pending
+        await prisma.certificateRequest.update({
+          where: { id: values.certificateRequestId },
+          data: {
+            status: "AWAITING_PAYMENT",
+          },
+        });
+      }
+
+      return payment;
+    });
+
+    // Revalidate the payments page to show the new payment
+    revalidatePath("/dashboard/payments");
+
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    console.error("Error creating manual payment:", error);
+    return {
+      serverError: "Unable to process payment request",
+    };
+  }
+}
+
 export async function initiatePayment(params: {
   certificateId: number;
   deliveryMethod: "pickup" | "delivery";

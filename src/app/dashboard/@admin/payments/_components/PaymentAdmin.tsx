@@ -11,6 +11,7 @@ import PaymentTable from "./PaymentTable";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
 import { getPaymentStatusBadge } from "@/components/utils";
+import ManualPaymentButton from "./ManualPaymentButton";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -25,9 +26,10 @@ type PaymentWithDetails = Payment & {
 interface PaymentAdminProps {
   initialPayments: PaymentWithDetails[];
   initialTotal: number;
+  initialCertificates: CertificateRequest[];
 }
 
-export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentAdminProps) {
+export default function PaymentAdmin({ initialPayments, initialTotal, initialCertificates }: PaymentAdminProps) {
   // Query states for URL parameters
   const [page, setPage] = useQueryState("page", { defaultValue: 1, parse: Number });
   const [status, setStatus] = useQueryState("status", { defaultValue: "ALL" });
@@ -80,6 +82,20 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
               initialPayments.length > 0),
   });
 
+  // For certificates that need payment, we'll use the server-provided data
+  // and refresh it only when a new payment is added
+  const { data: certificatesData, refetch: refetchCertificates } = useQuery({
+    queryKey: ["certificate-requests-for-payment"],
+    queryFn: async () => {
+      const res = await fetch("/api/admin/certificates?status=AWAITING_PAYMENT&limit=100");
+      if (!res.ok) throw new Error("Failed to fetch certificate requests");
+      const data = await res.json();
+      return data.certificates;
+    },
+    initialData: initialCertificates,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
   // Handle search input changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -87,17 +103,30 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
     setPage(1); // Reset to first page on search change
   };
 
+  // Function to handle successful payment creation
+  const handlePaymentSuccess = () => {
+    refetch();
+    refetchCertificates();
+  };
+
   // Get the payments data to display
   const payments = data?.payments || [];
   const totalPages = data?.totalPages || Math.ceil(initialTotal / ITEMS_PER_PAGE);
   const totalPayments = data?.total || initialTotal;
+  const certificates = certificatesData || initialCertificates;
 
   return (
     <Card className="shadow-md">
       <CardHeader className="@container flex flex-col items-start justify-between pb-4 border-b space-y-4">  
-        <div>
-          <CardTitle className="text-2xl font-bold text-green-primary">Payments</CardTitle>
-          <CardDescription>Manage all payments for certificate requests</CardDescription>
+        <div className="w-full flex flex-row justify-between items-center">
+          <div>
+            <CardTitle className="text-2xl font-bold text-green-primary">Payments</CardTitle>
+            <CardDescription>Manage all payments for certificate requests</CardDescription>
+          </div>
+          <ManualPaymentButton 
+            certificates={certificates}
+            onSuccess={handlePaymentSuccess}
+          />
         </div>
         <div className="@lg:flex-row w-full flex flex-col gap-2 sm:gap-4">
           <div className="relative w-full">

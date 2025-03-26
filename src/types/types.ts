@@ -1,5 +1,5 @@
 // types.ts
-import { Prisma } from "@prisma/client";
+import { Prisma, PaymentMethod, PaymentStatus } from "@prisma/client";
 import { z } from "zod";
 
 // Helper function to create a date schema with a custom error message
@@ -191,6 +191,46 @@ const proofOfIdentitySchema = z.object({
     .length(2, "Exactly two Photo Holding IDs are required"),
 });
 
+// Manual Payment Form schema
+const manualPaymentSchema = z.object({
+  certificateRequestId: z.number({
+    required_error: "Certificate request is required",
+  }),
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .refine(
+      (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
+      "Amount must be a valid positive number",
+    ),
+  paymentMethod: z.nativeEnum(PaymentMethod, {
+    required_error: "Payment method is required",
+  }),
+  paymentStatus: z.nativeEnum(PaymentStatus, {
+    required_error: "Payment status is required",
+  }),
+  paymentDate: dateSchema("Invalid payment date"),
+  notes: z.string().optional(),
+  proofOfPayment: z
+    .instanceof(File)
+    .optional()
+    .refine(
+      (file) => !file || file.size <= 5 * 1024 * 1024,
+      "Max file size is 5MB",
+    )
+    .refine(
+      (file) =>
+        !file ||
+        ["image/jpeg", "image/png", "image/gif", "application/pdf"].includes(
+          file.type,
+        ),
+      "Only .jpg, .png, .gif and .pdf formats are supported",
+    ),
+  receiptNumber: z.string().optional(),
+});
+
+export type ManualPaymentInput = z.infer<typeof manualPaymentSchema>;
+
 export type PersonalInfoInput = z.infer<typeof personalInfoSchema>;
 export type AddressInput = z.infer<typeof addressSchema>;
 export type CertificateInput = z.infer<typeof certificateSchema>;
@@ -230,6 +270,7 @@ export {
   proofOfIdentitySchema,
   completeCertificateFormSchema,
   completeCertificateFormSchemaWithoutFiles,
+  manualPaymentSchema,
 };
 
 const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
