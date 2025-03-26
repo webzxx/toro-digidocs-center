@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CertificateTable from "./CertificateTable";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
+import { getCertificateStatusBadge } from "@/components/utils";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -104,7 +105,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
               <SelectContent>
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.keys(CertificateStatus).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
+                  <SelectItem key={key} value={key}>{getCertificateStatusBadge(key)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
