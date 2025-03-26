@@ -5,11 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
-import { CertificateRequest, Payment, PaymentStatus, Resident } from "@prisma/client";
+import { CertificateRequest, Payment, PaymentMethod, PaymentStatus, Resident } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PaymentTable from "./PaymentTable";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
+import { getPaymentStatusBadge } from "@/components/utils";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -30,6 +31,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
   // Query states for URL parameters
   const [page, setPage] = useQueryState("page", { defaultValue: 1, parse: Number });
   const [status, setStatus] = useQueryState("status", { defaultValue: "ALL" });
+  const [method, setMethod] = useQueryState("method", { defaultValue: "ALL" });
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   
   // Track if this is the initial load
@@ -45,7 +47,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
   
   // Fetch payments with pagination, filtering, and search
   const { data, isLoading, isError, isFetching, refetch } = useQuery({
-    queryKey: ["payments", page, status, search],
+    queryKey: ["payments", page, status, method, search],
     queryFn: async () => {
       // When a query executes, we're no longer in the initial load
       isInitialLoadRef.current = false;
@@ -54,6 +56,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
       params.set("page", String(page));
       params.set("limit", ITEMS_PER_PAGE.toString());
       if (status !== "ALL") params.set("status", status);
+      if (method !== "ALL") params.set("method", method);
       if (search) params.set("search", search);
       
       const res = await fetch(`/api/admin/payments?${params}`);
@@ -66,11 +69,13 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
     staleTime: 0,
     placeholderData: !isInitialLoadRef.current || 
                   (status === "ALL" && 
-                  search === "") ?
+                   method === "ALL" &&
+                   search === "") ?
       previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
-              status === "ALL" && 
+              status === "ALL" &&
+              method === "ALL" && 
               search === "" && 
               initialPayments.length > 0),
   });
@@ -94,8 +99,8 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
           <CardTitle className="text-2xl font-bold text-green-primary">Payments</CardTitle>
           <CardDescription>Manage all payments for certificate requests</CardDescription>
         </div>
-        <div className="@xl:flex-row w-full flex flex-col gap-2 sm:gap-4">
-          <div className="relative basis-3/4">
+        <div className="@lg:flex-row w-full flex flex-col gap-2 sm:gap-4">
+          <div className="relative w-full">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search payments by reference number or resident name..."
@@ -104,7 +109,22 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
               className="pl-8 w-full"
             />
           </div>
-          <div className="flex flex-col gap-2 @sm:flex-row space-y-0 @sm:space-x-2 basis-1/4">
+          <div className="flex flex-col gap-2 @sm:flex-row space-y-0 @sm:space-x-2 w-full">
+            <Select value={method} onValueChange={(value) => {
+              setMethod(value);
+              setPage(1);
+            }}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Filter by method" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">All Methods</SelectItem>
+                {Object.keys(PaymentMethod).map((key) => (
+                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
             <Select value={status} onValueChange={(value) => {
               setStatus(value);
               setPage(1);
@@ -115,7 +135,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal }: PaymentA
               <SelectContent>
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.keys(PaymentStatus).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
+                  <SelectItem key={key} value={key}>{getPaymentStatusBadge(key as PaymentStatus)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
