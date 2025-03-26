@@ -242,7 +242,7 @@ const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
 
 export type ResidentWithTypes = Prisma.ResidentGetPayload<typeof residentWithTypes>;
 
-const adminCertificateWithRelations = Prisma.validator<Prisma.CertificateRequestDefaultArgs>()({
+export const adminCertificateWithRelations = Prisma.validator<Prisma.CertificateRequestDefaultArgs>()({
   include: {
     resident: {
       select: {
@@ -252,14 +252,16 @@ const adminCertificateWithRelations = Prisma.validator<Prisma.CertificateRequest
       },
     },
     payments: {
-      where: {
-        isActive: true,
+      orderBy: {
+        createdAt: "desc",  // Get payments in reverse chronological order
       },
+      take: 1,  // Take only the most recent payment
       select: {
         id: true,
         paymentStatus: true,
         amount: true,
         paymentDate: true,
+        isActive: true,  // Include isActive status for reference
       },
     },
   },

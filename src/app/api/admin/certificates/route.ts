@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getSession from "@/lib/auth/getSession";
+import { adminCertificateWithRelations } from "@/types/types";
 
 export async function GET(req: NextRequest) {
   try {
@@ -58,26 +59,7 @@ export async function GET(req: NextRequest) {
       orderBy: {
         requestDate: "desc",
       },
-      include: {
-        resident: {
-          select: {
-            firstName: true,
-            lastName: true,
-            bahayToroSystemId: true,
-          },
-        },
-        payments: {
-          where: {
-            isActive: true,
-          },
-          select: {
-            id: true,
-            paymentStatus: true,
-            amount: true,
-            paymentDate: true,
-          },
-        },
-      },
+      ...adminCertificateWithRelations,
     });
 
     // Get total count for pagination

@@ -1,6 +1,7 @@
 import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
 import CertificateAdmin from "./_components/CertificateAdmin";
+import { adminCertificateWithRelations } from "@/types/types";
 
 async function CertificatesPage() {
   // Initial data fetch for SSR
@@ -9,26 +10,7 @@ async function CertificatesPage() {
     orderBy: {
       requestDate: "desc",
     },
-    include: {
-      resident: {
-        select: {
-          firstName: true,
-          lastName: true,
-          bahayToroSystemId: true,
-        },
-      },
-      payments: {
-        where: {
-          isActive: true,
-        },
-        select: {
-          id: true,
-          paymentStatus: true,
-          amount: true,
-          paymentDate: true,
-        },
-      },
-    },
+    ...adminCertificateWithRelations,
   });
 
   // Count total certificates for pagination
