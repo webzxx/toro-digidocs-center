@@ -17,9 +17,6 @@ async function CertificatesPage({ user }: WithAuthProps) {
             orderBy: {
               createdAt: "desc",
             },
-            where: {
-              isActive: true,
-            },
             take: 1,
           },
         },
