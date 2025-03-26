@@ -40,9 +40,9 @@ export default function ResidentFormFields({
   isAdmin = false,
 }: ResidentFormFieldsProps) {
   return (
-    <div className="grid gap-4 py-4 pr-4 max-h-[60vh] overflow-y-auto">
+    <div className="grid gap-4 pb-4 pr-4 max-h-[60vh] overflow-y-auto">
       {/* Personal Information */}
-      <h3 className="font-semibold mt-2">Personal Information</h3>
+      <h3 className="font-semibold">Personal Information</h3>
       <div className="grid grid-cols-4 items-center gap-4">
         <Label htmlFor="firstName" className="text-right">
           First Name
