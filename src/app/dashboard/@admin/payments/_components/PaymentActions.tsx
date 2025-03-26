@@ -198,7 +198,7 @@ export default function PaymentActions({
             <FileText className="size-4" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh]">
           <DialogHeader>
             <h2 className="text-xl font-semibold">Payment Receipt</h2>
             <DialogDescription>
@@ -206,40 +206,97 @@ export default function PaymentActions({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-6">
-            {payment.receiptNumber ? (
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">Receipt Number</h3>
-                <p className="font-mono text-base">{payment.receiptNumber}</p>
-              </div>
-            ) : (
-              <p className="text-amber-600">No receipt number available</p>
-            )}
-            
-            {payment.proofOfPaymentPath ? (
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">Proof of Payment</h3>
-                <div className="border rounded-md p-2 mt-2">
-                  <Image 
-                    src={payment.proofOfPaymentPath} 
-                    alt="Proof of payment" 
-                    width={500} 
-                    height={300} 
-                    className="object-contain"
-                  />
+          <ScrollArea className="h-[calc(80vh-180px)]">
+            <div className="space-y-6 pr-4">
+              {payment.receiptNumber ? (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Receipt Number</h3>
+                  <p className="font-mono text-base">{payment.receiptNumber}</p>
                 </div>
-              </div>
-            ) : (
-              <p className="text-amber-600">No payment proof available</p>
-            )}
-          </div>
+              ) : (
+                <p className="text-amber-600">No receipt number available</p>
+              )}
+              
+              {payment.proofOfPaymentPath ? (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Proof of Payment</h3>
+                  <div className="border rounded-md p-2 mt-2 overflow-hidden">
+                    {payment.proofOfPaymentPath.toLowerCase().endsWith(".pdf") ? (
+                      <div className="flex flex-col items-center justify-center p-4 gap-2">
+                        <FileText className="h-12 w-12 text-blue-500" />
+                        <p className="text-sm text-gray-600">PDF Document</p>
+                        <a 
+                          href={payment.proofOfPaymentPath} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600 transition-colors"
+                        >
+                          View PDF
+                        </a>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <div className="max-h-[400px] overflow-hidden">
+                          <Image 
+                            src={payment.proofOfPaymentPath} 
+                            alt="Proof of payment" 
+                            width={500} 
+                            height={300} 
+                            className="w-full h-auto object-contain" 
+                          />
+                        </div>
+                        <a 
+                          href={payment.proofOfPaymentPath} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs hover:bg-black/90 transition-colors"
+                        >
+                          Open Full Size
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-amber-600">No payment proof available</p>
+              )}
+              
+              {payment.paymentMethod && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Method</h3>
+                  <p className="text-base">{payment.paymentMethod.replace(/_/g, " ")}</p>
+                </div>
+              )}
+              
+              {payment.paymentDate && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Date</h3>
+                  <p className="text-base">{formatDate(payment.paymentDate)}</p>
+                </div>
+              )}
+              
+              {payment.notes && (
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 mb-1">Notes</h3>
+                  <p className="text-base">{payment.notes}</p>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
           
-          <DialogFooter>
+          <DialogFooter className="mt-4">
             <DialogClose asChild>
               <Button variant="outline">Close</Button>
             </DialogClose>
             {(payment.receiptNumber || payment.proofOfPaymentPath) && (
-              <Button onClick={() => window.print()}>Print Receipt</Button>
+              <a 
+                href={payment.proofOfPaymentPath} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              >
+                Download
+              </a>
             )}
           </DialogFooter>
         </DialogContent>
