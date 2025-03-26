@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     const where: any = {};
     
     if (status && status !== "ALL") {
-      where.status = status;
+      where.paymentStatus = status;
     }
 
     if (search) {
