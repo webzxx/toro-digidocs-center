@@ -9,13 +9,15 @@ interface PaymentDetailsProps {
   showAmounts?: boolean;
   showHeader?: boolean;
   showStatus?: boolean;
+  showPaymentMethod?: boolean;
 }
 
 export function PaymentDetails({ 
   payment, 
   showAmounts = false, 
   showHeader = false, 
-  showStatus = false, 
+  showStatus = false,
+  showPaymentMethod = false,
 }: PaymentDetailsProps) {
   const resident = payment.certificateRequest.resident;
   const metadata = payment.metadata as any;
@@ -67,6 +69,13 @@ export function PaymentDetails({
         <h3 className="text-sm font-medium text-gray-500 mb-1">Recipient</h3>
         <p className="text-base">{resident.firstName} {resident.lastName}</p>
       </div>
+      
+      {showPaymentMethod && (
+        <div>
+          <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Method</h3>
+          <p className="text-base">{payment.paymentMethod.replaceAll("_", " ")}</p>
+        </div>
+      )}
       
       {showAmounts && (
         <>
