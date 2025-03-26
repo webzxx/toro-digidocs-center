@@ -17,12 +17,6 @@ export function PaymentActions({ variant }: PaymentActionsProps) {
     window.print();
   };
 
-  // const handleRetry = () => {
-  //   if (window.opener) {
-  //     
-  //   }
-  // };
-
   if (variant === "failure") {
     return (
       <div className="flex flex-col items-center gap-4">
@@ -45,7 +39,7 @@ export function PaymentActions({ variant }: PaymentActionsProps) {
             Print Receipt
           </Button>
           <Button onClick={handleReturn}>
-            Close This Page
+            Return to Home
           </Button>
         </div>
         <p className="text-sm text-muted-foreground mt-2">You can also simply close this tab</p>

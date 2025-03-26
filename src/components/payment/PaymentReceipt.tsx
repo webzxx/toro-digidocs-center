@@ -21,9 +21,9 @@ export function PaymentReceipt({ payment }: { payment: any }) {
         <CardContent className="p-6 pt-0">
           <PaymentDetails 
             payment={payment} 
-            showAmounts={true} 
-            showHeader={true} 
-            showStatus={true} 
+            showAmounts
+            showHeader
+            showStatus
           />
         </CardContent>
         

@@ -141,7 +141,7 @@ async function PaymentStatusPage({
             </div>
             
             <div className="border rounded-lg p-6 bg-white mb-6">
-              <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} />
+              <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} showStatus />
             </div>
             
             <div className="flex justify-center">
@@ -166,7 +166,7 @@ async function PaymentStatusPage({
             </div>
             
             <div className="border rounded-lg p-6 bg-white mb-6">
-              <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} />
+              <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} showStatus />
             </div>
             
             <div className="flex justify-center">
