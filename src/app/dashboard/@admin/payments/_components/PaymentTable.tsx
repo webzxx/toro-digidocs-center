@@ -3,6 +3,7 @@ import { CertificateRequest, Payment, Resident } from "@prisma/client";
 import { formatCurrency, formatDateShort } from "@/lib/utils";
 import { getPaymentStatusBadge } from "@/components/utils/badges";
 import PaymentActions from "./PaymentActions";
+import { CertificateWithDetails } from "./ManualPaymentButton";
 
 type PaymentWithDetails = Payment & {
   certificateRequest?: CertificateRequest & {
@@ -14,11 +15,12 @@ type PaymentWithDetails = Payment & {
 
 interface PaymentTableProps {
   payments: PaymentWithDetails[];
+  certificates: CertificateWithDetails[];
   isLoading?: boolean;
   refetch?: () => void;
 }
 
-export default function PaymentTable({ payments, isLoading, refetch }: PaymentTableProps) {  
+export default function PaymentTable({ payments, certificates, isLoading, refetch }: PaymentTableProps) {  
   return (
     <Table>
       <TableHeader>
@@ -91,6 +93,7 @@ export default function PaymentTable({ payments, isLoading, refetch }: PaymentTa
                 <PaymentActions 
                   payment={payment} 
                   refetch={refetch}
+                  certificates={certificates}
                 />
               </TableCell>
             </TableRow>

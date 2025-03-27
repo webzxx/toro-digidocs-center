@@ -184,7 +184,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
           <>
             <div className="relative w-full overflow-x-auto">
               {isFetching && <LoaderComponent/>}
-              <PaymentTable payments={payments} isLoading={isFetching} refetch={refetch} />
+              <PaymentTable payments={payments} certificates={certificates} isLoading={isFetching} refetch={refetch} />
             </div>
             <div className="flex items-center justify-between p-4 border-t">
               <div className="text-sm text-muted-foreground">

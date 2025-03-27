@@ -13,6 +13,7 @@ import {
   Eye,
   Check,
   X,
+  Edit2,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
@@ -24,6 +25,11 @@ import Image from "next/image";
 import { approvePayment, rejectPayment } from "../actions";
 import { PaymentDetails } from "@/components/payment/PaymentDetails";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import ManualPaymentForm from "./ManualPaymentForm";
+import { ManualPaymentInput } from "@/types/types";
+import { updatePayment } from "@/app/actions/payment";
+import { format } from "date-fns";
+import { CertificateWithDetails } from "./ManualPaymentButton";
 
 type PaymentWithDetails = Payment & {
   certificateRequest?: CertificateRequest & {
@@ -36,14 +42,18 @@ type PaymentWithDetails = Payment & {
 interface PaymentActionsProps {
   payment: PaymentWithDetails;
   refetch?: () => void;
+  certificates: CertificateWithDetails[];
 }
 
 export default function PaymentActions({
   payment,
   refetch,
+  certificates,
 }: PaymentActionsProps) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
   // Handle payment approval
@@ -92,6 +102,59 @@ export default function PaymentActions({
     }
   };
 
+  // Handle payment edit
+  const handleUpdatePayment = async (values: ManualPaymentInput, file: File | null) => {
+    setLoading(true);
+    try {
+      // Create a FormData object to handle the file upload
+      const files = new FormData();
+      
+      // Add the proof of payment file to FormData if it exists
+      if (file) {
+        files.append("proofOfPayment", file);
+      }
+      
+      // Create a copy of values without the proofOfPayment property
+      const { proofOfPayment, ...dataWithoutFile } = values;
+      
+      const result = await updatePayment(payment.id, dataWithoutFile, files);
+      
+      if (result.success) {
+        toast({
+          title: "Payment updated",
+          description: "The payment has been successfully updated",
+        });
+        setIsEditOpen(false);
+        if (refetch) refetch();
+      } else if (result.fieldErrors) {
+        // Handle field validation errors
+        Object.entries(result.fieldErrors).forEach(([field, errors]) => {
+          if (errors && errors.length > 0) {
+            toast({
+              title: `Error in ${field}`,
+              description: errors[0],
+              variant: "destructive",
+            });
+          }
+        });
+      } else if (result.serverError) {
+        toast({
+          title: "Error",
+          description: result.serverError,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update payment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Format JSON for display
   const formatJson = (json: any) => {
     if (!json) return "No metadata available";
@@ -128,6 +191,21 @@ export default function PaymentActions({
     default:
       return null;
     }
+  };
+
+  // Prepare payment data for the edit form
+  const getInitialEditData = () => {
+    return {
+      id: payment.id,
+      certificateRequestId: payment.certificateRequestId,
+      amount: payment.amount.toString(),
+      paymentMethod: payment.paymentMethod,
+      paymentStatus: payment.paymentStatus,
+      paymentDate: format(new Date(payment.paymentDate || payment.createdAt), "yyyy-MM-dd"),
+      notes: payment.notes || "",
+      receiptNumber: payment.receiptNumber || "",
+      proofOfPaymentPath: payment.proofOfPaymentPath,
+    };
   };
 
   return (
@@ -290,7 +368,7 @@ export default function PaymentActions({
             </DialogClose>
             {(payment.receiptNumber || payment.proofOfPaymentPath) && (
               <a 
-                href={payment.proofOfPaymentPath} 
+                href={payment.proofOfPaymentPath ?? ""} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
@@ -298,6 +376,46 @@ export default function PaymentActions({
                 Download
               </a>
             )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Payment */}
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="icon">
+            <Edit2 className="size-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-h-[90vh] flex flex-col p-0 sm:max-w-[600px]">
+          <div className="px-6 pt-6">
+            <DialogHeader>
+              <h2 className="text-xl font-semibold">Edit Payment</h2>
+              <DialogDescription>
+                Edit payment {payment.transactionReference || "N/A"}
+              </DialogDescription>
+            </DialogHeader>
+          </div>
+          
+          <div className="overflow-y-auto px-6 flex-1">
+            <ManualPaymentForm
+              certificates={certificates}
+              initialData={getInitialEditData()}
+              onSubmit={handleUpdatePayment}
+              loading={loading}
+              formId="edit-payment-form"
+              resetFileOnSubmit={false}
+            />
+          </div>
+
+          <DialogFooter className="border-t px-6 py-4 mt-auto">
+            <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)} className="mr-2">
+              Cancel
+            </Button>
+            <Button type="submit" form="edit-payment-form" disabled={loading}>
+              {loading && <span className="mr-2 h-4 w-4 animate-spin">⟳</span>}
+              Save Changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
