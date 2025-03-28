@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const status = searchParams.get("status");
+    const method = searchParams.get("method");
     const search = searchParams.get("search");
 
     // Build where clause
@@ -23,6 +24,10 @@ export async function GET(req: NextRequest) {
     
     if (status && status !== "ALL") {
       where.paymentStatus = status;
+    }
+
+    if (method && method !== "ALL") {
+      where.paymentMethod = method;
     }
 
     if (search) {
