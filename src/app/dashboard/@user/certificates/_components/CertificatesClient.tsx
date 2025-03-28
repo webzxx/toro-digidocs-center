@@ -202,14 +202,7 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
                     )}
                     {certificate.status === "AWAITING_PAYMENT" && !isCertificatePaid(certificate) && (
                       <div className="mt-2">
-                        <PaymentButton 
-                          certificateId={certificate.id} 
-                          referenceNumber={certificate.referenceNumber} 
-                          onPaymentComplete={() => {
-                            // Force a refresh of the page to show updated status
-                            window.location.reload();
-                          }}
-                        />
+                        <PaymentButton certificateId={certificate.id} />
                       </div>
                     )}
                   </div>

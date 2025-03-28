@@ -17,11 +17,9 @@ import { initiatePayment, cancelPayment } from "@/app/actions/payment";
 
 interface PaymentButtonProps {
   certificateId: number;
-  referenceNumber: string;
-  onPaymentComplete?: () => void;
 };
 
-export default function PaymentButton({ certificateId, referenceNumber, onPaymentComplete }: PaymentButtonProps) {
+export default function PaymentButton({ certificateId }: PaymentButtonProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -223,10 +221,10 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
       description: "Your certificate has been successfully paid.",
     });
 
-    // Trigger the onPaymentComplete callback
-    if (onPaymentComplete) {
-      onPaymentComplete();
-    }
+    // Delay page reload to allow toast to be visible
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500); // 1.5 second delay
   };
 
   const clearPolling = () => {
@@ -271,6 +269,11 @@ export default function PaymentButton({ certificateId, referenceNumber, onPaymen
         title: "Payment Cancelled",
         description: result.message || "Your payment has been cancelled successfully.",
       });
+
+      // Delay page reload to allow toast to be visible
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500); // 1.5 second delay
       
     } catch (error) {
       console.error("Payment cancellation error:", error);
