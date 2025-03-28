@@ -15,6 +15,8 @@ import {
   X,
   Edit2,
   Loader2,
+  Trash,
+  MoreHorizontal,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
@@ -23,7 +25,7 @@ import { CertificateRequest, Payment, PaymentStatus, Resident } from "@prisma/cl
 import { DialogClose } from "@radix-ui/react-dialog";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
-import { approvePayment, rejectPayment } from "../actions";
+import { approvePayment, deletePayment, rejectPayment } from "../actions";
 import { PaymentDetails } from "@/components/payment/PaymentDetails";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ManualPaymentForm from "./ManualPaymentForm";
@@ -31,6 +33,16 @@ import { ManualPaymentInput } from "@/types/types";
 import { updatePayment } from "@/app/actions/payment";
 import { format } from "date-fns";
 import { CertificateWithDetails } from "./ManualPaymentButton";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type PaymentWithDetails = Payment & {
   certificateRequest?: CertificateRequest & {
@@ -54,7 +66,10 @@ export default function PaymentActions({
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const queryClient = useQueryClient();
 
   // Handle payment approval
@@ -156,6 +171,36 @@ export default function PaymentActions({
     }
   };
 
+  // Handle payment deletion
+  const handleDeletePayment = async () => {
+    if (deleteConfirmation !== payment.transactionReference) return;
+    
+    setDeleting(true);
+    try {
+      await deletePayment(payment.id);
+      
+      // Invalidate queries and refetch
+      queryClient.invalidateQueries({ queryKey: ["payments"] });
+      queryClient.invalidateQueries({ queryKey: ["certificate-requests-for-payment"] });
+      if (refetch) refetch();
+      
+      toast({
+        title: "Payment deleted",
+        description: `Payment ${payment.transactionReference} has been permanently deleted.`,
+      });
+      setIsDeleteOpen(false);
+    } catch (error) {
+      console.error("Error deleting payment:", error);
+      toast({
+        title: "Delete failed",
+        description: "There was a problem deleting the payment.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   // Format JSON for display
   const formatJson = (json: any) => {
     if (!json) return "No metadata available";
@@ -163,34 +208,6 @@ export default function PaymentActions({
       return JSON.stringify(json, null, 2);
     } catch (e) {
       return "Invalid JSON metadata";
-    }
-  };
-
-  const renderActions = () => {
-    switch (payment.paymentStatus) {
-    case PaymentStatus.PENDING:
-      return (
-        <>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={handleApprovePayment} 
-            className="text-green-600 hover:text-green-700 hover:bg-green-50"
-          >
-            <Check className="size-4" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={handleRejectPayment}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-          >
-            <X className="size-4" />
-          </Button>
-        </>
-      );
-    default:
-      return null;
     }
   };
 
@@ -209,15 +226,142 @@ export default function PaymentActions({
     };
   };
 
+  // Reset dialog state when closed
+  const handleDetailsClose = (open: boolean) => {
+    setIsDetailsOpen(open);
+    if (!open) {
+      // Add slight delay to avoid UI flickering
+      setTimeout(() => {
+        document.body.style.pointerEvents = ""; // Reset pointer events
+      }, 100);
+    }
+  };
+
+  const handleReceiptClose = (open: boolean) => {
+    setIsReceiptOpen(open);
+    if (!open) {
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+  };
+
+  const handleEditClose = (open: boolean) => {
+    setIsEditOpen(open);
+    if (!open) {
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+  };
+
+  const handleDeleteClose = (open: boolean) => {
+    setIsDeleteOpen(open);
+    if (!open) {
+      setDeleteConfirmation(""); // Reset confirmation input
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+  };
+
+  // Manual button click handlers with cleanup
+  const handleDetailsCloseButtonClick = () => {
+    setIsDetailsOpen(false);
+    document.body.style.pointerEvents = ""; // Reset immediately
+    // Also add a small delay for extra safety
+    setTimeout(() => {
+      document.body.style.pointerEvents = "";
+    }, 100);
+  };
+
+  const handleReceiptCloseButtonClick = () => {
+    setIsReceiptOpen(false);
+    document.body.style.pointerEvents = "";
+    setTimeout(() => {
+      document.body.style.pointerEvents = "";
+    }, 100);
+  };
+
+  const handleEditCloseButtonClick = () => {
+    setIsEditOpen(false);
+    document.body.style.pointerEvents = "";
+    setTimeout(() => {
+      document.body.style.pointerEvents = "";
+    }, 100);
+  };
+
+  const handleDeleteCloseButtonClick = () => {
+    setIsDeleteOpen(false);
+    setDeleteConfirmation("");
+    document.body.style.pointerEvents = "";
+    setTimeout(() => {
+      document.body.style.pointerEvents = "";
+    }, 100);
+  };
+
   return (
-    <div className="flex items-center justify-end gap-2">
-      {/* View Payment Details */}
-      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="icon">
-            <Eye className="size-4" />
+    <div className="flex items-center justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="focus-visible:ring-0 focus-visible:ring-offset-0">
+            <MoreHorizontal className="h-5 w-5" />
           </Button>
-        </DialogTrigger>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[200px]">
+          <DropdownMenuLabel>Payment Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          
+          {/* View Details Action */}
+          <DropdownMenuItem onClick={() => setIsDetailsOpen(true)}>
+            <Eye className="mr-2 h-4 w-4" /> View Details
+          </DropdownMenuItem>
+          
+          {/* View Receipt Action */}
+          <DropdownMenuItem onClick={() => setIsReceiptOpen(true)}>
+            <FileText className="mr-2 h-4 w-4" /> View Receipt
+          </DropdownMenuItem>
+          
+          {/* Edit Action */}
+          <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+            <Edit2 className="mr-2 h-4 w-4" /> Edit Payment
+          </DropdownMenuItem>
+          
+          <DropdownMenuSeparator />
+          
+          {/* Status-specific actions */}
+          {payment.paymentStatus === PaymentStatus.PENDING && (
+            <>
+              <DropdownMenuItem 
+                onClick={handleApprovePayment}
+                className="text-green-600 hover:text-green-700 hover:bg-green-50 focus:text-green-700 focus:bg-green-50"
+              >
+                <Check className="mr-2 h-4 w-4" /> Approve
+              </DropdownMenuItem>
+              
+              <DropdownMenuItem 
+                onClick={handleRejectPayment}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50 focus:text-red-700 focus:bg-red-50"
+              >
+                <X className="mr-2 h-4 w-4" /> Reject
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator />
+            </>
+          )}
+          
+          {/* Delete Action */}
+          <DropdownMenuItem 
+            onClick={() => setIsDeleteOpen(true)}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50 focus:text-red-700 focus:bg-red-50"
+          >
+            <Trash className="mr-2 h-4 w-4" /> Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* View Payment Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={handleDetailsClose}>
         <DialogContent className="sm:max-w-[600px] max-h-[80vh]">
           <DialogHeader>
             <h2 className="text-xl font-semibold">Payment Details</h2>
@@ -263,20 +407,15 @@ export default function PaymentActions({
           </ScrollArea>
           
           <DialogFooter className="mt-4">
-            <DialogClose asChild>
-              <Button variant="outline">Close</Button>
-            </DialogClose>
+            <Button variant="outline" onClick={handleDetailsCloseButtonClick}>
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* View Receipt */}
-      <Dialog open={isReceiptOpen} onOpenChange={setIsReceiptOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="icon" disabled={payment.paymentStatus !== PaymentStatus.SUCCEEDED && payment.paymentStatus !== PaymentStatus.VERIFIED}>
-            <FileText className="size-4" />
-          </Button>
-        </DialogTrigger>
+      {/* View Receipt Dialog */}
+      <Dialog open={isReceiptOpen} onOpenChange={handleReceiptClose}>
         <DialogContent className="sm:max-w-[600px] max-h-[80vh]">
           <DialogHeader>
             <h2 className="text-xl font-semibold">Payment Receipt</h2>
@@ -364,9 +503,9 @@ export default function PaymentActions({
           </ScrollArea>
           
           <DialogFooter className="mt-4">
-            <DialogClose asChild>
-              <Button variant="outline">Close</Button>
-            </DialogClose>
+            <Button variant="outline" onClick={handleReceiptCloseButtonClick}>
+              Close
+            </Button>
             {(payment.receiptNumber || payment.proofOfPaymentPath) && (
               <a 
                 href={payment.proofOfPaymentPath ?? ""} 
@@ -381,13 +520,8 @@ export default function PaymentActions({
         </DialogContent>
       </Dialog>
 
-      {/* Edit Payment */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="icon">
-            <Edit2 className="size-4" />
-          </Button>
-        </DialogTrigger>
+      {/* Edit Payment Dialog */}
+      <Dialog open={isEditOpen} onOpenChange={handleEditClose}>
         <DialogContent className="max-h-[90vh] flex flex-col p-0 sm:max-w-[600px]">
           <div className="px-6 pt-6">
             <DialogHeader>
@@ -410,7 +544,7 @@ export default function PaymentActions({
           </div>
 
           <DialogFooter className="border-t px-6 py-4 mt-auto">
-            <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)} className="mr-2">
+            <Button type="button" variant="outline" onClick={handleEditCloseButtonClick} className="mr-2">
               Cancel
             </Button>
             <Button type="submit" form="edit-payment-form" disabled={loading}>
@@ -421,8 +555,47 @@ export default function PaymentActions({
         </DialogContent>
       </Dialog>
 
-      {/* Status-specific actions */}
-      {renderActions()}
+      {/* Delete Payment Dialog */}
+      <Dialog open={isDeleteOpen} onOpenChange={handleDeleteClose}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <h2 className="text-xl font-semibold">Delete Payment</h2>
+            <DialogDescription>
+              <span className="text-red-600 font-bold">This action cannot be undone!</span> This will 
+              <span className="text-red-600 font-bold"> permanently delete</span> the payment with 
+              transaction reference <b>{payment.transactionReference}</b> and any associated files. 
+              Please review carefully before proceeding.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="confirmDelete" className="text-right">
+                Confirm reference
+              </Label>
+              <Input
+                id="confirmDelete"
+                placeholder="Type transaction reference to confirm"
+                className="col-span-3"
+                value={deleteConfirmation}
+                onChange={(e) => setDeleteConfirmation(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={handleDeleteCloseButtonClick}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeletePayment}
+              disabled={deleteConfirmation !== payment.transactionReference || deleting}
+            >
+              {deleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Delete Payment
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

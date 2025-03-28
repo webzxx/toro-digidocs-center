@@ -71,11 +71,6 @@ export async function createManualPayment(
     // Get the certificate request to verify it exists
     const certificateRequest = await db.certificateRequest.findUnique({
       where: { id: values.certificateRequestId },
-      include: {
-        payments: {
-          where: { isActive: true },
-        },
-      },
     });
 
     if (!certificateRequest) {
@@ -113,7 +108,7 @@ export async function createManualPayment(
 
     // Start a transaction for database operations
     const result = await db.$transaction(async (prisma) => {
-      // Create a new payment
+      // Create a new payment (manual payments should have isActive=false since they don't use checkoutUrl)
       const payment = await prisma.payment.create({
         data: {
           transactionReference,
@@ -125,42 +120,31 @@ export async function createManualPayment(
           notes: values.notes || null,
           proofOfPaymentPath,
           receiptNumber: values.receiptNumber || null,
-          isActive: true,
+          isActive: false, // Manual payments don't need isActive flag
         },
       });
 
-      // Set previous active payments to inactive
-      if (certificateRequest.payments.length > 0) {
-        await prisma.payment.updateMany({
-          where: {
-            certificateRequestId: values.certificateRequestId,
-            id: { not: payment.id },
-            isActive: true,
-          },
-          data: {
-            isActive: false,
-          },
-        });
-      }
+      // Get the latest payment for this certificate (including the one we just created)
+      const latestPayment = await prisma.payment.findFirst({
+        where: {
+          certificateRequestId: values.certificateRequestId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
 
-      // Update certificate status based on payment status
+      // Update certificate status based on the latest payment's status
+      // Since we just created the payment, it should be the latest
       if (
-        values.paymentStatus === "SUCCEEDED" ||
-        values.paymentStatus === "VERIFIED"
+        payment.id === latestPayment?.id &&
+        (values.paymentStatus === "SUCCEEDED" || values.paymentStatus === "VERIFIED")
       ) {
         // If payment is successful, move certificate to processing status
         await prisma.certificateRequest.update({
           where: { id: values.certificateRequestId },
           data: {
             status: "PROCESSING",
-          },
-        });
-      } else if (values.paymentStatus === "PENDING") {
-        // Ensure certificate is in AWAITING_PAYMENT status if payment is pending
-        await prisma.certificateRequest.update({
-          where: { id: values.certificateRequestId },
-          data: {
-            status: "AWAITING_PAYMENT",
           },
         });
       }
@@ -475,6 +459,10 @@ export async function updatePayment(
     // Get the existing payment to check for changes
     const existingPayment = await db.payment.findUnique({
       where: { id: paymentId },
+      include: {
+        // Include certificate request to access its details
+        certificateRequest: true,
+      },
     });
 
     if (!existingPayment) {
@@ -535,29 +523,56 @@ export async function updatePayment(
           notes: values.notes || null,
           proofOfPaymentPath,
           receiptNumber: values.receiptNumber || null,
+          // Don't change isActive flag since it's only for tracking Maya checkout URL
         },
       });
 
-      // Update certificate status based on payment status
-      if (
-        values.paymentStatus === "SUCCEEDED" ||
-        values.paymentStatus === "VERIFIED"
-      ) {
-        // If payment is successful, move certificate to processing status
-        await prisma.certificateRequest.update({
-          where: { id: values.certificateRequestId },
-          data: {
-            status: "PROCESSING",
-          },
-        });
-      } else if (values.paymentStatus === "PENDING") {
-        // Ensure certificate is in AWAITING_PAYMENT status if payment is pending
-        await prisma.certificateRequest.update({
-          where: { id: values.certificateRequestId },
-          data: {
-            status: "AWAITING_PAYMENT",
-          },
-        });
+      // Find the latest payment for this certificate by createdAt timestamp
+      const latestPayment = await prisma.payment.findFirst({
+        where: {
+          certificateRequestId: values.certificateRequestId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      // Only update certificate status if this is the latest payment by creation date
+      if (latestPayment && payment.id === latestPayment.id) {
+        // Update certificate status based on latest payment's status
+        if (
+          values.paymentStatus === "SUCCEEDED" ||
+          values.paymentStatus === "VERIFIED"
+        ) {
+          // If payment is successful, move certificate to processing status
+          await prisma.certificateRequest.update({
+            where: { id: values.certificateRequestId },
+            data: {
+              status: "PROCESSING",
+            },
+          });
+        } else if (values.paymentStatus === "PENDING") {
+          // Ensure certificate is in AWAITING_PAYMENT status if payment is pending
+          await prisma.certificateRequest.update({
+            where: { id: values.certificateRequestId },
+            data: {
+              status: "AWAITING_PAYMENT",
+            },
+          });
+        } else if (
+          values.paymentStatus === "CANCELLED" ||
+          values.paymentStatus === "REJECTED" ||
+          // values.paymentStatus === "FAILED" ||
+          values.paymentStatus === "VOIDED"
+        ) {
+          // For failed/rejected payments, put certificate back to AWAITING_PAYMENT
+          await prisma.certificateRequest.update({
+            where: { id: values.certificateRequestId },
+            data: {
+              status: "AWAITING_PAYMENT",
+            },
+          });
+        }
       }
 
       return payment;
