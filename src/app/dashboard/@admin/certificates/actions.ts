@@ -15,6 +15,7 @@ export async function updateCertificateRequest(id: number, data: any) {
     data,
   });
   revalidatePath("/dashboard/certificates");
+  revalidatePath("/dashboard/payments");
 }
 
 export async function deleteCertificateRequest(id: number) {
@@ -27,4 +28,5 @@ export async function deleteCertificateRequest(id: number) {
     where: { id },
   });
   revalidatePath("/dashboard/certificates");
+  revalidatePath("/dashboard/payments");
 }

@@ -14,6 +14,7 @@ import {
   Check,
   X,
   Edit2,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
@@ -413,7 +414,7 @@ export default function PaymentActions({
               Cancel
             </Button>
             <Button type="submit" form="edit-payment-form" disabled={loading}>
-              {loading && <span className="mr-2 h-4 w-4 animate-spin">⟳</span>}
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Save Changes
             </Button>
           </DialogFooter>

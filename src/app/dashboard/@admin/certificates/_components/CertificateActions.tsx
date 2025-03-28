@@ -75,6 +75,7 @@ export default function CertificateActions({
         remarks: editedRemarks,
       });
       queryClient.invalidateQueries({ queryKey: ["certificates"] });
+      queryClient.invalidateQueries({ queryKey: ["certificate-requests-for-payment"] });
       refetch();
       toast({
         title: "Certificate updated",
@@ -93,6 +94,7 @@ export default function CertificateActions({
     try {
       await deleteCertificateRequest(certificateId);
       queryClient.invalidateQueries({ queryKey: ["certificates"] });
+      queryClient.invalidateQueries({ queryKey: ["certificate-requests-for-payment"] });
       refetch();
       toast({
         title: "Certificate deleted",

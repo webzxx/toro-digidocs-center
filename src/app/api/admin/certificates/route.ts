@@ -68,8 +68,6 @@ export async function GET(req: NextRequest) {
     // Calculate total pages
     const totalPages = Math.ceil(total / limit);
 
-    console.log("Certificates", certificates);
-
     return NextResponse.json({
       certificates,
       page,
