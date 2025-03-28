@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { getPaymentStatusBadge } from "@/components/utils";
 
 type CertificateWithDetails = CertificateRequest & {
   resident: Pick<Resident, "firstName" | "lastName" | "bahayToroSystemId">;
@@ -218,7 +219,7 @@ export default function ManualPaymentForm({
                   <SelectContent>
                     {Object.values(PaymentStatus).map((status) => (
                       <SelectItem key={status} value={status}>
-                        {status.replace(/_/g, " ")}
+                        {getPaymentStatusBadge(status)}
                       </SelectItem>
                     ))}
                   </SelectContent>
