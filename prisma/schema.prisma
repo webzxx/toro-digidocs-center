@@ -16,6 +16,7 @@ model User {
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   residents           Resident[]
+  appointments        Appointment[]
 }
 
 model Resident {
@@ -40,8 +41,7 @@ model Resident {
   emergencyContact    EmergencyContact?
   proofOfIdentity     ProofOfIdentity?
   user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([id, email])
+  appointments        Appointment[]
 }
 
 model EmergencyContact {
@@ -90,7 +90,8 @@ model CertificateRequest {
   requestDate     DateTime          @default(now())
   status          CertificateStatus @default(PENDING)
   resident        Resident          @relation("UserRequests", fields: [residentId], references: [id], onDelete: Cascade)
-  payments        Payment[]         // Changed from Payment? to Payment[]
+  payments        Payment[]
+  appointments    Appointment[]
 }
 
 model Payment {
@@ -202,4 +203,36 @@ enum CertificateStatus {
   COMPLETED            // Certificate delivered/collected
   REJECTED             // Request denied
   CANCELLED            // User cancelled the request
+}
+
+model Appointment {
+  id                Int                 @id @default(autoincrement())
+  referenceNumber   String              @unique @default(dbgenerated("concat('APPT-', to_char(nextval('appointment_number_seq'::regclass), 'FM00000'::text))"))
+  userId            Int                 // Direct link to user
+  residentId        Int?                // Made optional
+  appointmentType   AppointmentType
+  status            AppointmentStatus   @default(SCHEDULED)
+  scheduledDateTime DateTime
+  duration          Int                 @default(30)  // Duration in minutes
+  notes             String?             // Can store basic subpoena info here temporarily
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resident          Resident?           @relation(fields: [residentId], references: [id], onDelete: SetNull)
+  certificateRequestId Int?             // Optional link to certificate request for pickup appointments
+  certificateRequest CertificateRequest? @relation(fields: [certificateRequestId], references: [id])
+}
+
+enum AppointmentType {
+  DOCUMENT_PICKUP
+  SUBPOENA_MEETING
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+  NO_SHOW
 }
