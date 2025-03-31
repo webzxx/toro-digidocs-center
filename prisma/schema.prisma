@@ -211,8 +211,10 @@ model Appointment {
   userId            Int                 // Direct link to user
   residentId        Int?                // Made optional
   appointmentType   AppointmentType
-  status            AppointmentStatus   @default(SCHEDULED)
-  scheduledDateTime DateTime
+  status            AppointmentStatus   @default(REQUESTED) // Default is now REQUESTED instead of SCHEDULED
+  scheduledDateTime DateTime?           // Made optional as it will be set by admin when approving
+  preferredDate     DateTime            // User's preferred date
+  preferredTimeSlot TimeSlot            // User's preferred time slot
   duration          Int                 @default(30)  // Duration in minutes
   notes             String?             // Can store basic subpoena info here temporarily
   createdAt         DateTime            @default(now())
@@ -223,16 +225,22 @@ model Appointment {
   certificateRequest CertificateRequest? @relation(fields: [certificateRequestId], references: [id])
 }
 
+enum TimeSlot {
+  MORNING     // 8:00 AM - 12:00 PM
+  AFTERNOON   // 1:00 PM - 5:00 PM
+}
+
 enum AppointmentType {
   DOCUMENT_PICKUP
   SUBPOENA_MEETING
 }
 
 enum AppointmentStatus {
-  SCHEDULED
-  CONFIRMED
-  COMPLETED
-  CANCELLED
-  RESCHEDULED
-  NO_SHOW
+  REQUESTED      // Initial state when user requests an appointment
+  SCHEDULED      // Admin has reviewed and scheduled the appointment
+  CONFIRMED      // Appointment is confirmed by both parties
+  COMPLETED      // Appointment has taken place
+  CANCELLED      // Appointment was cancelled
+  RESCHEDULED    // Appointment was rescheduled
+  NO_SHOW        // Client didn't show up
 }
