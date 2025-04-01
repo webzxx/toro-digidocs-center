@@ -231,6 +231,26 @@ const manualPaymentSchema = z.object({
 
 export type ManualPaymentInput = z.infer<typeof manualPaymentSchema>;
 
+// Appointment Request schema
+const appointmentRequestSchema = z.object({
+  appointmentType: z.enum([
+    "DOCUMENT_PICKUP",
+    "SUBPOENA_MEETING",
+  ]),
+  preferredDate: z.string().refine((date) => {
+    const parsedDate = new Date(date);
+    return !isNaN(parsedDate.getTime());
+  }, {
+    message: "Invalid date format",
+  }),
+  preferredTimeSlot: z.enum(["MORNING", "AFTERNOON"]),
+  notes: z.string().optional(),
+  residentId: z.number().optional(),
+  certificateRequestId: z.number().optional(),
+});
+
+export type AppointmentRequestInput = z.infer<typeof appointmentRequestSchema>;
+
 export type PersonalInfoInput = z.infer<typeof personalInfoSchema>;
 export type AddressInput = z.infer<typeof addressSchema>;
 export type CertificateInput = z.infer<typeof certificateSchema>;
@@ -271,6 +291,7 @@ export {
   completeCertificateFormSchema,
   completeCertificateFormSchemaWithoutFiles,
   manualPaymentSchema,
+  appointmentRequestSchema,
 };
 
 const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
