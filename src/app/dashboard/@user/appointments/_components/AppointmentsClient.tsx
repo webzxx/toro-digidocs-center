@@ -64,8 +64,14 @@ export default function AppointmentsClient({
       return appointment.status === "REQUESTED";
     }
     
-    // For appointments without scheduledDateTime that aren't REQUESTED, skip them in other filters
-    if (!appointment.scheduledDateTime && appointment.status !== "REQUESTED") {
+    // Special case for CANCELLED appointments - they should always show in "past" and "all" filters
+    if (appointment.status === "CANCELLED") {
+      return filter === "all" || filter === "past";
+    }
+    
+    // For appointments without scheduledDateTime that aren't REQUESTED or CANCELLED, skip them
+    if (!appointment.scheduledDateTime && 
+        appointment.status !== "REQUESTED") {
       return false;
     }
     
@@ -79,11 +85,10 @@ export default function AppointmentsClient({
     
     switch (filter) {
     case "upcoming":
-      return appointmentDate >= now && 
-          (appointment.status !== "CANCELLED" && appointment.status !== "COMPLETED");
+      return appointmentDate >= now && appointment.status !== "COMPLETED";
     case "past":
       return appointmentDate < now || 
-          appointment.status === "CANCELLED" || appointment.status === "COMPLETED";
+          appointment.status === "COMPLETED";
     default: // "all"
       return true;
     }

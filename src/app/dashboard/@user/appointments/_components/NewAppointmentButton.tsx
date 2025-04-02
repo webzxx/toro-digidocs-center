@@ -30,7 +30,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
-import { AppointmentRequestInput, createAppointmentRequest } from "../../appointments/actions";
+import { createAppointmentRequest } from "../../appointments/actions";
+import { AppointmentRequestInput } from "@/types/types";
 import { AppointmentType, TimeSlot } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
@@ -90,7 +91,7 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
         if (result.fieldErrors) {
           Object.keys(result.fieldErrors).forEach((key) => {
             form.setError(key as any, {
-              message: result.fieldErrors[key]?.join(", "),
+              message: result.fieldErrors[key as keyof typeof result.fieldErrors]?.join(", "),
             });
           });
           
