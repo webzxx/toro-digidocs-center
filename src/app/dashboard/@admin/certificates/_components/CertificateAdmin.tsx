@@ -173,7 +173,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
             </div>
           </>
         ) : (
-          <div className="relative flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm py-20">
+          <div className="relative flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm py-20 m-6">
             {isFetching && <LoaderComponent/>}
             <div className="flex flex-col items-center text-center">
               <h3 className="text-2xl font-bold tracking-tight">No Certificate Requests</h3>
