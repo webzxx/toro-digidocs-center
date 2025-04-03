@@ -88,12 +88,15 @@ export default function ManualPaymentButton({ certificates, onSuccess }: ManualP
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Manual Payment
+        <Button 
+          className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="hidden min-[590px]:block min-[680px]:hidden">Add</span>
+          <span className="sr-only min-[680px]:not-sr-only">Add Manual Payment</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] flex flex-col p-0">
+      <DialogContent className="max-h-[90vh] max-w-[95%] sm:max-w-[600px] flex flex-col p-0">
         <div className="px-6 pt-6">
           <DialogHeader>
             <DialogTitle>Add Manual Payment</DialogTitle>
@@ -112,8 +115,13 @@ export default function ManualPaymentButton({ certificates, onSuccess }: ManualP
           />
         </div>
 
-        <DialogFooter className="border-t px-6 py-4 mt-auto">
-          <Button type="submit" form={formId} disabled={loading} className="w-full">
+        <DialogFooter className="border-t px-6 py-4 mt-auto sm:flex-row flex-col gap-2">
+          <Button 
+            type="submit" 
+            form={formId} 
+            disabled={loading} 
+            className="w-full sm:w-auto"
+          >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Save Payment
           </Button>

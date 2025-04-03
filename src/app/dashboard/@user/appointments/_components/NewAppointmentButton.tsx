@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { 
   Dialog, 
@@ -9,6 +9,7 @@ import {
   DialogFooter, 
   DialogHeader, 
   DialogTitle, 
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { 
   Form, 
@@ -139,172 +140,178 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
   }
 
   return (
-    <>
-      <Button onClick={() => setOpen(true)}>
-        <PlusCircle className="mr-2 h-4 w-4" />
-        Request Appointment
-      </Button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button 
+          className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto"
+        >
+          <PlusCircle className="h-4 w-4" />
+          <span className="hidden min-[590px]:block min-[680px]:hidden">New</span>
+          <span className="sr-only min-[680px]:not-sr-only">Request Appointment</span>
+        </Button>
+      </DialogTrigger>
       
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Request New Appointment</DialogTitle>
-            <DialogDescription>
-              Provide your preferred date and time for your appointment. 
-              An administrator will review and confirm your schedule.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="appointmentType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Appointment Type</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select appointment type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={AppointmentType.DOCUMENT_PICKUP}>Document Pickup</SelectItem>
-                        <SelectItem value={AppointmentType.SUBPOENA_MEETING}>Subpoena Meeting</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      {field.value === AppointmentType.DOCUMENT_PICKUP
-                        ? "Request a time to pick up your requested documents" 
-                        : "Request a meeting for subpoena related matters"}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="preferredDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Preferred Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => {
-                            // Disable past dates and weekends
-                            const today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            const day = date.getDay();
-                            return date < today || day === 0 || day === 6;
-                          }}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>
-                      Mon-Fri, future dates only
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="preferredTimeSlot"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Preferred Time</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your preferred time" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={TimeSlot.MORNING}>Morning (8:00 AM - 12:00 PM)</SelectItem>
-                        <SelectItem value={TimeSlot.AFTERNOON}>Afternoon (1:00 PM - 5:00 PM)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      Select your preferred time of day
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Additional Notes</FormLabel>
+      <DialogContent className="sm:max-w-[500px] max-w-[95%] w-full">
+        <DialogHeader>
+          <DialogTitle>Request New Appointment</DialogTitle>
+          <DialogDescription>
+            Provide your preferred date and time for your appointment. 
+            An administrator will review and confirm your schedule.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="appointmentType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Appointment Type</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <Textarea
-                        placeholder="Any special requests or information..."
-                        className="resize-none"
-                        {...field}
-                      />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select appointment type" />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormDescription>
-                      Optional - provide any relevant details about your appointment request
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <DialogFooter>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => setOpen(false)}
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit Request"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </>
+                    <SelectContent>
+                      <SelectItem value={AppointmentType.DOCUMENT_PICKUP}>Document Pickup</SelectItem>
+                      <SelectItem value={AppointmentType.SUBPOENA_MEETING}>Subpoena Meeting</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    {field.value === AppointmentType.DOCUMENT_PICKUP
+                      ? "Request a time to pick up your requested documents" 
+                      : "Request a meeting for subpoena related matters"}
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="preferredDate"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Preferred Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => {
+                          // Disable past dates and weekends
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          const day = date.getDay();
+                          return date < today || day === 0 || day === 6;
+                        }}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Mon-Fri, future dates only
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="preferredTimeSlot"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Preferred Time</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your preferred time" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value={TimeSlot.MORNING}>Morning (8:00 AM - 12:00 PM)</SelectItem>
+                      <SelectItem value={TimeSlot.AFTERNOON}>Afternoon (1:00 PM - 5:00 PM)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Select your preferred time of day
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Additional Notes</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Any special requests or information..."
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Optional - provide any relevant details about your appointment request
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <DialogFooter className="sm:flex-row flex-col gap-2 w-full">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setOpen(false)}
+                disabled={isSubmitting}
+                className="sm:w-auto w-full"
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit"
+                disabled={isSubmitting}
+                className="sm:w-auto w-full"
+              >
+                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isSubmitting ? "Submitting..." : "Submit Request"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

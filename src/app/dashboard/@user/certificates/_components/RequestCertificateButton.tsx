@@ -1,5 +1,6 @@
 "use client";
 
+import { FileText, FileUp } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -74,7 +75,14 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={handleRequestClick}>Request Certificate</Button>
+        <Button 
+          onClick={handleRequestClick}
+          className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto"
+        >
+          <FileUp className="h-4 w-4" />
+          <span className="hidden min-[590px]:block min-[680px]:hidden">Request</span>
+          <span className="sr-only min-[680px]:not-sr-only">Request Certificate</span>
+        </Button>
       </DialogTrigger>
       {residents.length > 0 ? (
         <DialogContent className="max-h-[80vh] flex flex-col p-0">
