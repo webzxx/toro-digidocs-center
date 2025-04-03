@@ -15,7 +15,7 @@ async function UsersPage() {
   const totalCount = await db.user.count();
 
   return (
-    <main className="flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full">
+    <main className="flex flex-col gap-2 min-h-[90vh] w-full">
       <UserAdmin initialUsers={JSON.stringify(users)} initialTotal={totalCount} />
     </main>
   );

@@ -17,7 +17,7 @@ async function CertificatesPage() {
   const totalCount = await db.certificateRequest.count();
 
   return (
-    <main className="flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full">
+    <main className="flex flex-col gap-2 min-h-[90vh] w-full">
       <CertificateAdmin initialCertificates={JSON.stringify(certificates)} initialTotal={totalCount} />
     </main>
   );

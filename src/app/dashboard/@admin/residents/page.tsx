@@ -20,7 +20,7 @@ async function ResidentsPage() {
   const totalCount = await db.resident.count();
 
   return (
-    <main className="flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full">
+    <main className="flex flex-col gap-2 min-h-[90vh] w-full">
       <ResidentAdmin initialResidents={JSON.stringify(residents)} initialTotal={totalCount} />
     </main>
   );

@@ -22,7 +22,7 @@ async function ResidentsPage({ user }: WithAuthProps) {
   }) as ResidentWithTypes[];
 
   return (
-    <main className='flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full'>
+    <main className='flex flex-col gap-2 min-h-[90vh] w-full'>
       <ResidentsClient userResidents={userResidents} />
     </main>
   );

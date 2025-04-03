@@ -23,7 +23,7 @@ async function AppointmentsPage({ user }: WithAuthProps) {
   const serializedAppointments = JSON.parse(JSON.stringify(userAppointments));
 
   return (
-    <main className='flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full'>
+    <main className='flex flex-col gap-2 min-h-[90vh] w-full'>
       <AppointmentsClient 
         appointments={serializedAppointments} 
         userId={userId} 

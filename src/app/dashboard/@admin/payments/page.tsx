@@ -54,7 +54,7 @@ async function PaymentsPage() {
   const serializedCertificates = JSON.parse(JSON.stringify(certificatesAwaitingPayment));
   
   return (
-    <main className="flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full">
+    <main className="flex flex-col gap-2 min-h-[90vh] w-full">
       <PaymentAdmin 
         initialPayments={serializedPayments} 
         initialTotal={totalCount}

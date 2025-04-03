@@ -27,7 +27,7 @@ async function CertificatesPage({ user }: WithAuthProps) {
   const serializedResidents = JSON.parse(JSON.stringify(residents));
 
   return (
-    <main className='flex flex-col gap-2 lg:gap-2 min-h-[90vh] w-full'>
+    <main className='flex flex-col gap-2 min-h-[90vh] w-full'>
       <CertificatesClient residents={serializedResidents} />
     </main>
   );
