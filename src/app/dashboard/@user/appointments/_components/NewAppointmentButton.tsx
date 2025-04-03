@@ -143,11 +143,11 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto"
+          className="gap-2 p-0 w-10 min-[500px]:px-4 min-[500px]:py-2 min-[500px]:w-auto"
         >
           <PlusCircle className="h-4 w-4" />
-          <span className="hidden min-[590px]:block min-[680px]:hidden">New</span>
-          <span className="sr-only min-[680px]:not-sr-only">Request Appointment</span>
+          <span className="hidden min-[500px]:block min-[630px]:hidden">New</span>
+          <span className="sr-only min-[630px]:not-sr-only">Request Appointment</span>
         </Button>
       </DialogTrigger>
       

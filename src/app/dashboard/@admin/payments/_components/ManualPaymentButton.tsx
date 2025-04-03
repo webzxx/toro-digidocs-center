@@ -89,11 +89,11 @@ export default function ManualPaymentButton({ certificates, onSuccess }: ManualP
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto"
+          className="gap-2 p-0 w-10 min-[530px]:px-4 min-[530px]:py-2 min-[530px]:w-auto"
         >
           <Plus className="h-4 w-4" />
-          <span className="hidden min-[590px]:block min-[680px]:hidden">Add</span>
-          <span className="sr-only min-[680px]:not-sr-only">Add Manual Payment</span>
+          <span className="hidden min-[530px]:block min-[640px]:hidden">Add</span>
+          <span className="sr-only min-[640px]:not-sr-only">Add Manual Payment</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] max-w-[95%] sm:max-w-[600px] flex flex-col p-0">
