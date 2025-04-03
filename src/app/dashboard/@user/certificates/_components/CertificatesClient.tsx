@@ -69,12 +69,12 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
       <CardHeader className="px-7 flex flex-row items-center justify-between border-b pb-4">
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">My Certificates</CardTitle>
-          <CardDescription>Manage your certificate requests</CardDescription>
+          <CardDescription>Request and manage your document certificates</CardDescription>
         </div>
         <RequestCertificateButton residents={residents} />
       </CardHeader>
       
-      {residents.length > 0 && (
+      {residents.length > 0 ? (
         <>
           {residents.length > 1 ? (
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -102,6 +102,17 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
             <CertificateList resident={residents[0]} />
           )}
         </>
+      ) : (
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center text-center py-10 border border-dashed rounded-lg">
+            <FileText className="h-12 w-12 text-muted-foreground mb-3" />
+            <h3 className="text-lg font-medium">No certificates found</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Request your first certificate to see it here
+            </p>
+            <RequestCertificateButton residents={residents} />
+          </div>
+        </CardContent>
       )}
       
       <CardFooter className="border-t p-4 flex justify-between text-sm text-muted-foreground">
@@ -214,9 +225,9 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
       ) : (
         <div className="flex flex-col items-center justify-center text-center py-10 border border-dashed rounded-lg">
           <FileText className="h-12 w-12 text-muted-foreground mb-3" />
-          <h3 className="text-lg font-medium">No certificates yet</h3>
+          <h3 className="text-lg font-medium">No certificates for this resident</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Request your first certificate to see it here
+            This resident has no certificate records yet
           </p>
         </div>
       )}
