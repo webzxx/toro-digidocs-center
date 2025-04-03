@@ -198,7 +198,7 @@ export default function AppointmentsClient({
         <NewAppointmentButton userId={userId} />
       </CardHeader>
       
-      <div className="px-6 py-3 border-b flex items-center justify-between">
+      <div className="px-6 py-3 border-b flex sm:items-center justify-between sm:flex-row flex-col items-start gap-2 sm:gap-0">
         <div className="flex items-center space-x-2">
           <Button 
             variant={filter === "all" ? "default" : "outline"} 
