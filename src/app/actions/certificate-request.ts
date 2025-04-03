@@ -81,18 +81,23 @@ export async function createCertificateRequest(
       proofOfIdentity.signature.split(",")[1],
       "base64",
     );
+    
+    // Use session user's email if personalInfo.email is null or undefined
+    // Convert to undefined if null to match the expected type for generateFile
+    const emailForFiles = personalInfo.email || session.user.email || undefined;
+    
     const signatureFile = generateFile(
       new File([signatureBuffer], "signpadimg.png", { type: "image/png" }),
       "signature",
-      personalInfo.email,
+      emailForFiles,
     );
     const [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature] = 
       await utApi.uploadFiles([
-        generateFile(proofOfIdentity.photoId[0], "id1", personalInfo.email),
-        generateFile(proofOfIdentity.photoId[1], "id2", personalInfo.email),
-        generateFile(proofOfIdentity.photoHoldingId[0], "holding1", personalInfo.email),
-        generateFile(proofOfIdentity.photoHoldingId[1], "holding2", personalInfo.email),
-        generateFile(signatureFile, "signature", personalInfo.email),
+        generateFile(proofOfIdentity.photoId[0], "id1", emailForFiles),
+        generateFile(proofOfIdentity.photoId[1], "id2", emailForFiles),
+        generateFile(proofOfIdentity.photoHoldingId[0], "holding1", emailForFiles),
+        generateFile(proofOfIdentity.photoHoldingId[1], "holding2", emailForFiles),
+        generateFile(signatureFile, "signature", emailForFiles),
       ]);
     uploadedFiles = [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature];
 
@@ -120,7 +125,7 @@ export async function createCertificateRequest(
           lastName: personalInfo.lastName,
           gender: personalInfo.gender,
           birthDate: new Date(personalInfo.birthDate),
-          email: personalInfo.email,
+          email: personalInfo.email || session.user.email,
           contact: personalInfo.contact,
           religion: personalInfo.religion,
           status: personalInfo.status,
