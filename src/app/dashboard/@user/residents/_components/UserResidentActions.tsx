@@ -220,7 +220,7 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
                     Please type <span className="font-medium">{resident.bahayToroSystemId}</span> to confirm deletion.
                   </p>
                   <Input
-                    placeholder={`Type ${resident.bahayToroSystemId} to confirm`}
+                    placeholder="Type the ID to confirm"
                     value={deleteConfirmation}
                     onChange={(e) => setDeleteConfirmation(e.target.value)}
                   />
