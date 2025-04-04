@@ -23,8 +23,10 @@ import { UserPlus } from "lucide-react";
 import React, { useState } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { createUser } from "@/app/dashboard/@admin/users/actions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function CreateUserButton() {
+  const queryClient = useQueryClient();
   const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -64,6 +66,7 @@ export default function CreateUserButton() {
 
     try {
       await createUser({ username, email, password, role });
+      queryClient.invalidateQueries({ queryKey: ["users"] });
       // Reset form
       setUsername("");
       setEmail("");
