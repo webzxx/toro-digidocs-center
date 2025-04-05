@@ -1,5 +1,17 @@
 // types.ts
-import { Prisma, PaymentMethod, PaymentStatus } from "@prisma/client";
+import { 
+  Prisma, 
+  PaymentMethod, 
+  PaymentStatus, 
+  Gender, 
+  Religion, 
+  CivilStatus,
+  Sector,
+  ResidencyType,
+  CertificateType,
+  AppointmentType,
+  TimeSlot,
+} from "@prisma/client";
 import { z } from "zod";
 
 // Helper function to create a date schema with a custom error message
@@ -14,42 +26,16 @@ const personalInfoSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   middleName: z.string().optional(),
   lastName: z.string().min(1, "Last name is required"),
-  gender: z.enum(["MALE", "FEMALE", "LGBTQ"]),
+  gender: z.nativeEnum(Gender),
   birthDate: dateSchema("Invalid birth date"),
   email: z.union([z.literal(""), z.string().email()]),
   contact: z
     .string()
     .min(1, "Contact is required")
     .regex(/^\d+$/, "Contact must be a valid number"),
-  religion: z
-    .enum([
-      "CATHOLIC",
-      "IGLESIA_NI_CRISTO",
-      "AGLIPAY",
-      "BAPTIST",
-      "DATING_DAAN",
-      "ISLAM",
-      "JEHOVAHS_WITNESSES",
-      "OTHERS",
-    ])
-    .optional(),
-  status: z.enum([
-    "SINGLE",
-    "MARRIED",
-    "WIDOW",
-    "LEGALLY_SEPARATED",
-    "LIVING_IN",
-    "SEPARATED",
-    "DIVORCED",
-  ]),
-  sector: z
-    .enum([
-      "SOLO_PARENT",
-      "PWD",
-      "SENIOR_CITIZEN",
-      "INDIGENT_INDIGENOUS_PEOPLE",
-    ])
-    .optional(),
+  religion: z.nativeEnum(Religion).optional(),
+  status: z.nativeEnum(CivilStatus),
+  sector: z.nativeEnum(Sector).optional(),
   emergencyContactName: z.string().min(1, "Emergency contact name is required"),
   emergencyRelationship: z
     .string()
@@ -65,7 +51,7 @@ const personalInfoSchema = z.object({
 
 // Step 2: Address
 const addressSchema = z.object({
-  residency: z.enum(["HOME_OWNER", "TENANT", "HELPER", "CONSTRUCTION_WORKER"], {
+  residency: z.nativeEnum(ResidencyType, {
     required_error: "Residency is required",
   }),
   yearsInBahayToro: z.preprocess(
@@ -84,25 +70,15 @@ const addressSchema = z.object({
 // Step 3: Important Information
 const certificateSchema = z
   .object({
-    certificateType: z.enum([
-      "BARANGAY_CLEARANCE",
-      "BARANGAY_ID",
-      "SOLO_PARENT",
-      "COHABITATION",
-      "GOOD_MORAL",
-      "NO_INCOME",
-      "FIRST_TIME_JOB_SEEKER",
-      "RESIDENCY",
-      "TRANSFER_OF_RESIDENCY",
-      "LIVING_STILL",
-      "BIRTH_FACT",
-    ]),
+    certificateType: z.nativeEnum(CertificateType),
     purpose: z.string().min(1, "Purpose is required"),
   })
   .and(
     z.discriminatedUnion("certificateType", [
       z.object({
-        certificateType: z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"]),
+        certificateType: z.nativeEnum(CertificateType, {
+          required_error: "Certificate type is required",
+        }).pipe(z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"])),
       }),
       z.object({
         certificateType: z.literal("GOOD_MORAL"),
@@ -233,17 +209,23 @@ export type ManualPaymentInput = z.infer<typeof manualPaymentSchema>;
 
 // Appointment Request schema
 const appointmentRequestSchema = z.object({
-  appointmentType: z.enum([
-    "DOCUMENT_PICKUP",
-    "SUBPOENA_MEETING",
-  ]),
-  preferredDate: z.string().refine((date) => {
-    const parsedDate = new Date(date);
-    return !isNaN(parsedDate.getTime());
-  }, {
-    message: "Invalid date format",
+  appointmentType: z.nativeEnum(AppointmentType, {
+    required_error: "Appointment type is required",
   }),
-  preferredTimeSlot: z.enum(["MORNING", "AFTERNOON"]),
+  preferredDate: z.union([
+    z.date({
+      required_error: "A preferred date is required",
+    }),
+    z.string().refine((date) => {
+      const parsedDate = new Date(date);
+      return !isNaN(parsedDate.getTime());
+    }, {
+      message: "Invalid date format",
+    }),
+  ]),
+  preferredTimeSlot: z.nativeEnum(TimeSlot, {
+    required_error: "Please select your preferred time slot",
+  }),
   notes: z.string().optional(),
   residentId: z.number().optional(),
   certificateRequestId: z.number().optional(),
