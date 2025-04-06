@@ -1,8 +1,8 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { CertificateType, Gender, CivilStatus, Sector, PaymentStatus } from "@prisma/client";
+import { CertificateType, Gender, CivilStatus, Sector, PaymentStatus, AppointmentStatus, AppointmentType } from "@prisma/client";
 import { cn } from "@/lib/utils";
-import { getCertificateStatusIcon, getPaymentStatusIcon } from "./icons";
+import { getCertificateStatusIcon, getPaymentStatusIcon, getAppointmentStatusIcon } from "./icons";
 
 /**
  * Returns a styled badge for certificate status
@@ -188,6 +188,69 @@ export const getPaymentStatusBadge = (status: PaymentStatus) => {
     >
       {getPaymentStatusIcon(status)}
       {statusNames[status] || status?.replace(/_/g, " ")}
+    </Badge>
+  );
+};
+
+/**
+ * Returns a styled badge for appointment status
+ */
+export const getAppointmentStatusBadge = (status: AppointmentStatus) => {
+  const statusStyles = {
+    REQUESTED: "bg-purple-100 hover:bg-purple-100 text-purple-800 border-purple-200",
+    SCHEDULED: "bg-blue-100 hover:bg-blue-100 text-blue-800 border-blue-200",
+    CONFIRMED: "bg-green-100 hover:bg-green-100 text-green-800 border-green-200",
+    COMPLETED: "bg-emerald-100 hover:bg-emerald-100 text-emerald-800 border-emerald-200",
+    CANCELLED: "bg-gray-100 hover:bg-gray-100 text-gray-800 border-gray-200",
+    RESCHEDULED: "bg-amber-100 hover:bg-amber-100 text-amber-800 border-amber-200",
+    NO_SHOW: "bg-slate-100 hover:bg-slate-100 text-slate-800 border-slate-200",
+  };
+
+  const statusNames = {
+    REQUESTED: "Requested",
+    SCHEDULED: "Scheduled",
+    CONFIRMED: "Confirmed",
+    COMPLETED: "Completed",
+    CANCELLED: "Cancelled",
+    RESCHEDULED: "Rescheduled",
+    NO_SHOW: "No Show",
+  };
+
+  return (
+    <Badge variant="outline" 
+      className={cn(
+        "inline-flex w-fit items-center gap-1 py-1 font-normal text-xs border", 
+        statusStyles[status] || "bg-gray-100 text-gray-800",
+      )}
+    >
+      {getAppointmentStatusIcon(status)}
+      {statusNames[status] || status?.replace(/_/g, " ")}
+    </Badge>
+  );
+};
+
+/**
+ * Returns a styled badge for appointment type
+ */
+export const getAppointmentTypeBadge = (type: AppointmentType) => {
+  const typeStyles = {
+    DOCUMENT_PICKUP: "bg-blue-100 hover:bg-blue-100 text-blue-800 border-blue-200",
+    SUBPOENA_MEETING: "bg-amber-100 hover:bg-amber-100 text-amber-800 border-amber-200",
+  };
+
+  const typeNames = {
+    DOCUMENT_PICKUP: "Document Pickup",
+    SUBPOENA_MEETING: "Subpoena Meeting",
+  };
+
+  return (
+    <Badge variant="outline" 
+      className={cn(
+        "inline-flex w-fit items-center gap-1 py-1 font-normal text-xs border", 
+        typeStyles[type] || "bg-gray-100 text-gray-800",
+      )}
+    >
+      {typeNames[type] || type?.replace(/_/g, " ")}
     </Badge>
   );
 };

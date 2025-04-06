@@ -3,9 +3,7 @@ import {
   CalendarClock, 
   FileText, 
   Clock, 
-  AlertCircle, 
-  CheckCircle,
-  TruckIcon,
+  AlertCircle,
   XCircle,
   BanIcon,
   Hourglass,
@@ -14,15 +12,19 @@ import {
   PackageCheck,
   Truck,
   Check,
-  X,
   Ban,
   FileClock,
   FileWarning,
   FileX,
   MailCheck,
   CheckCircle2,
+  CalendarPlus,
+  Calendar,
+  CalendarCheck,
+  CalendarX,
+  CalendarOff,
 } from "lucide-react";
-import { PaymentStatus } from "@prisma/client";
+import { PaymentStatus, AppointmentStatus } from "@prisma/client";
 
 /**
  * Returns an icon component based on the certificate status
@@ -79,5 +81,31 @@ export const getPaymentStatusIcon = (status: PaymentStatus) => {
     return <FileX {...iconProps} />;
   default:
     return <AlertCircle {...iconProps} />;
+  }
+};
+
+/**
+ * Returns an icon for appointment status
+ */
+export const getAppointmentStatusIcon = (status: AppointmentStatus) => {
+  const iconProps = { className: "size-3.5 flex-shrink-0" };
+  
+  switch (status) {
+  case "REQUESTED":
+    return <CalendarPlus {...iconProps} />;
+  case "SCHEDULED":
+    return <Calendar {...iconProps} />;
+  case "CONFIRMED":
+    return <CalendarCheck {...iconProps} />;
+  case "COMPLETED":
+    return <Check {...iconProps} />;
+  case "CANCELLED":
+    return <CalendarX {...iconProps} />;
+  case "RESCHEDULED":
+    return <CalendarClock {...iconProps} />;
+  case "NO_SHOW":
+    return <CalendarOff {...iconProps} />;
+  default:
+    return <Clock {...iconProps} />;
   }
 };

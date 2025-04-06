@@ -315,3 +315,29 @@ export const adminCertificateWithRelations = Prisma.validator<Prisma.Certificate
 });
 
 export type AdminCertificate = Prisma.CertificateRequestGetPayload<typeof adminCertificateWithRelations>;
+
+// Define Prisma type for appointments with relations
+export const adminAppointmentWithRelations = Prisma.validator<Prisma.AppointmentDefaultArgs>()({
+  include: {
+    user: {
+      select: {
+        username: true,
+        email: true,
+      },
+    },
+    resident: {
+      select: {
+        firstName: true,
+        lastName: true,
+        bahayToroSystemId: true,
+      },
+    },
+    certificateRequest: {
+      select: {
+        referenceNumber: true,
+      },
+    },
+  },
+});
+
+export type AdminAppointment = Prisma.AppointmentGetPayload<typeof adminAppointmentWithRelations>;
