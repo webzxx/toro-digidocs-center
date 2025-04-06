@@ -113,14 +113,14 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/bookings",
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/appointments",
                     })}
-                    href="/dashboard/bookings"
+                    href="/dashboard/appointments"
                   >
                     <div className="text-primary dark:text-white">
                       <Calendar className="h-5 w-5" />
                     </div>
-                  Bookings
+                  Appointments
                   </Link>
                 </>
               ) : (
@@ -271,15 +271,15 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
                   <Link
                     className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
-                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/bookings",
+                      "flex items-center gap-3 rounded-lg bg-blue-50 px-4 py-3 text-blue-700 font-medium transition-all hover:bg-blue-50 dark:bg-blue-900/20 dark:text-blue-100 dark:hover:bg-blue-900/30": pathname === "/dashboard/appointments",
                     })}
-                    href="/dashboard/bookings"
+                    href="/dashboard/appointments"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <div className="text-primary dark:text-white">
                       <Calendar className="h-5 w-5" />
                     </div>
-                  Bookings
+                  Appointments
                   </Link>
                 </>
               ) : (
