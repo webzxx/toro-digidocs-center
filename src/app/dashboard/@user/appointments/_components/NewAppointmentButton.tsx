@@ -32,23 +32,28 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { createAppointmentRequest } from "../../appointments/actions";
-import { AppointmentRequestInput } from "@/types/types";
+import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/types";
 import { AppointmentType, TimeSlot } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
-// Form validation schema
+// Use the centralized schema but restrict it to the fields needed for the form
+type AppointmentFormValues = {
+  appointmentType: AppointmentType;
+  preferredDate: Date;
+  preferredTimeSlot: TimeSlot;
+  notes?: string;
+};
+
+// Create a form-specific schema by picking the relevant parts from the centralized schema
 const appointmentFormSchema = z.object({
-  appointmentType: z.enum([AppointmentType.DOCUMENT_PICKUP, AppointmentType.SUBPOENA_MEETING]),
+  appointmentType: appointmentRequestSchema.shape.appointmentType,
+  // Only use the Date part from the union schema
   preferredDate: z.date({
     required_error: "A preferred date is required",
   }),
-  preferredTimeSlot: z.enum([TimeSlot.MORNING, TimeSlot.AFTERNOON], {
-    required_error: "Please select your preferred time slot",
-  }),
-  notes: z.string().optional(),
-});
-
-type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
+  preferredTimeSlot: appointmentRequestSchema.shape.preferredTimeSlot,
+  notes: appointmentRequestSchema.shape.notes,
+}) as z.ZodType<AppointmentFormValues>;
 
 interface NewAppointmentButtonProps {
   userId: number;
