@@ -10,8 +10,15 @@ import {
   DialogFooter,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -20,67 +27,56 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserPlus } from "lucide-react";
-import React, { useState } from "react";
-import { DialogClose } from "@radix-ui/react-dialog";
+import { useState } from "react";
 import { createUser } from "@/app/dashboard/@admin/users/actions";
 import { useQueryClient } from "@tanstack/react-query";
+import { CreateUserValues, createUserSchema } from "@/types/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 export default function CreateUserButton() {
   const queryClient = useQueryClient();
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [role, setRole] = useState<string>("USER");
-  const [error, setError] = useState<string>("");
+  const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
-  const handleRoleChange = (selected: string) => {
-    setRole(selected);
-  };
-
-  const handleCreateUser = async () => {
-    if (!username || !email || !password) {
-      setError("All fields are required");
-      return;
-    }
-
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
-    }
-
+  
+  // Initialize form with Zod validation
+  const form = useForm<CreateUserValues>({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      role: "USER",
+    },
+  });
+  
+  const handleCreateUser = async (values: CreateUserValues) => {
     setIsLoading(true);
-    setError("");
-
+    
     try {
-      await createUser({ username, email, password, role });
+      await createUser(values);
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      // Reset form
-      setUsername("");
-      setEmail("");
-      setPassword("");
-      setRole("USER");
+      
+      // Close dialog and reset form
+      setOpen(false);
+      form.reset({
+        username: "",
+        email: "",
+        password: "",
+        role: "USER",
+      });
     } catch (error: any) {
-      setError(error.message || "Failed to create user");
+      // Handle specific error types if API returns structured errors
+      form.setError("root", { 
+        message: error.message || "Failed to create user", 
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2">
           <UserPlus className="size-4" />
@@ -92,74 +88,111 @@ export default function CreateUserButton() {
           <DialogTitle>Create New User</DialogTitle>
           <DialogDescription>Add a new user to the system</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {error && (
-            <div className="text-sm font-medium text-destructive">{error}</div>
-          )}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              id="username"
-              value={username}
-              onChange={handleUsernameChange}
-              className="col-span-3"
-              placeholder="Enter username"
+        
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleCreateUser)} className="space-y-4 py-4">
+            {form.formState.errors.root && (
+              <div className="text-sm font-medium text-destructive">
+                {form.formState.errors.root.message}
+              </div>
+            )}
+            
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input 
+                      {...field}
+                      placeholder="Enter username" 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="email" className="text-right">
-              Email
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              className="col-span-3"
-              placeholder="Enter email"
+            
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input 
+                      {...field}
+                      type="email"
+                      placeholder="Enter email" 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="password" className="text-right">
-              Password
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="col-span-3"
-              placeholder="Enter password"
+            
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input 
+                      {...field}
+                      type="password"
+                      placeholder="Enter password" 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="role" className="text-right">
-              Role
-            </Label>
-            <Select onValueChange={handleRoleChange} defaultValue="USER">
-              <SelectTrigger className="w-[180px]" id="role">
-                <SelectValue placeholder="Select a role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ADMIN">ADMIN</SelectItem>
-                <SelectItem value="USER">USER</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button
-              type="submit"
-              onClick={handleCreateUser}
-              disabled={isLoading}
-            >
-              {isLoading ? "Creating..." : "Create User"}
-            </Button>
-          </DialogClose>
-        </DialogFooter>
+            
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="ADMIN">ADMIN</SelectItem>
+                      <SelectItem value="USER">USER</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating..." : "Create User"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
