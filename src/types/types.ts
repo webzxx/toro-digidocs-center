@@ -75,10 +75,13 @@ const certificateSchema = z
   })
   .and(
     z.discriminatedUnion("certificateType", [
+      // z.object({
+      //   certificateType: z.nativeEnum(CertificateType, {
+      //     required_error: "Certificate type is required",
+      //   }).pipe(z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"])),
+      // }),
       z.object({
-        certificateType: z.nativeEnum(CertificateType, {
-          required_error: "Certificate type is required",
-        }).pipe(z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"])),
+        certificateType: z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"]),
       }),
       z.object({
         certificateType: z.literal("GOOD_MORAL"),
