@@ -47,7 +47,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useQueryClient } from "@tanstack/react-query";
 import { 
   approveAppointment,
-  confirmAppointment,
   completeAppointment,
   cancelAppointment,
   markNoShow,
@@ -101,7 +100,7 @@ export default function AppointmentActions({
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{
-    action: "confirm" | "complete" | "noshow" | "delete";
+    action: "complete" | "noshow" | "delete";
     title: string;
     description: string;
   } | null>(null);
@@ -154,6 +153,13 @@ export default function AppointmentActions({
         });
         
         setIsScheduleDialogOpen(false);
+        
+        // Ensure pointer-events are reset after successful action
+        document.body.style.pointerEvents = "";
+        setTimeout(() => {
+          document.body.style.pointerEvents = "";
+        }, 100);
+        
         queryClient.invalidateQueries({ queryKey: ["appointments"] });
         onActionComplete();
       } else {
@@ -184,6 +190,13 @@ export default function AppointmentActions({
         });
         
         setIsCancelDialogOpen(false);
+        
+        // Ensure pointer-events are reset after successful action
+        document.body.style.pointerEvents = "";
+        setTimeout(() => {
+          document.body.style.pointerEvents = "";
+        }, 100);
+        
         queryClient.invalidateQueries({ queryKey: ["appointments"] });
         onActionComplete();
       } else {
@@ -210,9 +223,6 @@ export default function AppointmentActions({
       let result;
       
       switch (confirmAction.action) {
-      case "confirm":
-        result = await confirmAppointment(appointment.id);
-        break;
       case "complete":
         result = await completeAppointment(appointment.id);
         break;
@@ -230,15 +240,20 @@ export default function AppointmentActions({
           description: `Appointment ${
             confirmAction.action === "delete" 
               ? "deleted" 
-              : confirmAction.action === "confirm" 
-                ? "confirmed" 
-                : confirmAction.action === "complete" 
-                  ? "marked as completed" 
-                  : "marked as no-show"
+              : confirmAction.action === "complete" 
+                ? "marked as completed" 
+                : "marked as no-show"
           } successfully`,
         });
         
         setIsConfirmDialogOpen(false);
+        
+        // Ensure pointer-events are reset after successful action
+        document.body.style.pointerEvents = "";
+        setTimeout(() => {
+          document.body.style.pointerEvents = "";
+        }, 100);
+        
         queryClient.invalidateQueries({ queryKey: ["appointments"] });
         onActionComplete();
       } else {
@@ -257,15 +272,11 @@ export default function AppointmentActions({
   };
 
   // Open confirm dialog with appropriate action
-  const openConfirmDialog = (action: "confirm" | "complete" | "noshow" | "delete") => {
+  const openConfirmDialog = (action: "complete" | "noshow" | "delete") => {
     let title = "";
     let description = "";
     
     switch (action) {
-    case "confirm":
-      title = "Confirm Appointment";
-      description = "Are you sure you want to confirm this appointment? This means the appointment has been accepted by both parties.";
-      break;
     case "complete":
       title = "Complete Appointment";
       description = "Mark this appointment as completed? This indicates the appointment took place successfully.";
@@ -341,11 +352,10 @@ export default function AppointmentActions({
 
   // Determine available actions based on current status
   const canSchedule = ([AppointmentStatus.REQUESTED, AppointmentStatus.RESCHEDULED] as AppointmentStatus[]).includes(appointment.status);
-  const canConfirm = appointment.status === AppointmentStatus.SCHEDULED;
-  const canComplete = appointment.status === AppointmentStatus.CONFIRMED;
-  const canNoShow = appointment.status === AppointmentStatus.CONFIRMED;
-  const canCancel = ([AppointmentStatus.SCHEDULED, AppointmentStatus.CONFIRMED] as AppointmentStatus[]).includes(appointment.status);
-  const canReschedule = ([AppointmentStatus.SCHEDULED, AppointmentStatus.CONFIRMED] as AppointmentStatus[]).includes(appointment.status);
+  const canComplete = appointment.status === AppointmentStatus.SCHEDULED;
+  const canNoShow = appointment.status === AppointmentStatus.SCHEDULED;
+  const canCancel = ([AppointmentStatus.SCHEDULED] as AppointmentStatus[]).includes(appointment.status);
+  const canReschedule = ([AppointmentStatus.SCHEDULED] as AppointmentStatus[]).includes(appointment.status);
   const canDelete = appointment.status !== AppointmentStatus.COMPLETED;
   
   return (
@@ -368,12 +378,6 @@ export default function AppointmentActions({
             <DropdownMenuItem onClick={() => setIsScheduleDialogOpen(true)}>
               <CalendarIcon className="mr-2 h-4 w-4" />
               Reschedule
-            </DropdownMenuItem>
-          )}
-          {canConfirm && (
-            <DropdownMenuItem onClick={() => openConfirmDialog("confirm")}>
-              <CheckCircle className="mr-2 h-4 w-4" />
-              Confirm
             </DropdownMenuItem>
           )}
           {canComplete && (
