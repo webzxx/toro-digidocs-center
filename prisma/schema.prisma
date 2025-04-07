@@ -238,7 +238,6 @@ enum AppointmentType {
 enum AppointmentStatus {
   REQUESTED      // Initial state when user requests an appointment
   SCHEDULED      // Admin has reviewed and scheduled the appointment
-  CONFIRMED      // Appointment is confirmed by both parties
   COMPLETED      // Appointment has taken place
   CANCELLED      // Appointment was cancelled
   RESCHEDULED    // Appointment was rescheduled
