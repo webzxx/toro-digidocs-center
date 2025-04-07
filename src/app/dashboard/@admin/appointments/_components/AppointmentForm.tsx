@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/types";
 import { AppointmentStatus, AppointmentType, TimeSlot } from "@prisma/client";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2, Plus } from "lucide-react";
+import { CalendarIcon, Loader2, Plus, Check, ChevronsUpDown, Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -42,6 +42,8 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { createAppointment } from "../actions";
+import { useRouter } from "next/navigation";
 
 interface AppointmentFormProps {
   initialData?: Partial<AppointmentRequestInput>;
@@ -51,8 +53,16 @@ interface AppointmentFormProps {
 export default function AppointmentForm({ initialData, onSuccess }: AppointmentFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [residentSearchOpen, setResidentSearchOpen] = useState(false);
+  const [certificateSearchOpen, setCertificateSearchOpen] = useState(false);
+  const [filteredResidents, setFilteredResidents] = useState<any[]>([]);
+  const [residentSearchValue, setResidentSearchValue] = useState("");
+  const [certificateSearchValue, setCertificateSearchValue] = useState("");
+  const [filteredCertificates, setFilteredCertificates] = useState<any[]>([]);
+  
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const router = useRouter();
   
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -78,46 +88,114 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
       if (!response.ok) throw new Error("Failed to fetch certificates");
       return response.json();
     },
-    enabled: open && form.watch("appointmentType") === "DOCUMENT_PICKUP",
+    enabled: open,
   });
   
   // Fetch residents if needed
   const { data: residents } = useQuery({
     queryKey: ["residents-for-appointment"],
     queryFn: async () => {
-      const response = await fetch("/api/admin/residents?limit=100");
+      const response = await fetch("/api/admin/residents?limit=1000");
       if (!response.ok) throw new Error("Failed to fetch residents");
       return response.json();
     },
     enabled: open,
   });
   
-  // Handle form submission
+  // Filter residents based on search input
+  useEffect(() => {
+    if (open && residents?.residents) {
+      const searchLower = residentSearchValue.toLowerCase();
+      const filtered = residents.residents.filter((resident: any) => 
+        resident.firstName.toLowerCase().includes(searchLower) ||
+        resident.lastName.toLowerCase().includes(searchLower) ||
+        resident.bahayToroSystemId.toLowerCase().includes(searchLower) ||
+        `${resident.firstName} ${resident.lastName}`.toLowerCase().includes(searchLower),
+      ).slice(0, 20); // Limit to 20 results for better performance
+      
+      setFilteredResidents(filtered);
+    }
+  }, [residentSearchValue, residents, open]);
+
+  // Filter certificates based on search input
+  useEffect(() => {
+    if (open && certificates?.certificates) {
+      const searchLower = certificateSearchValue.toLowerCase();
+      const filtered = certificates.certificates.filter((cert: any) => 
+        cert.referenceNumber.toLowerCase().includes(searchLower) ||
+        cert.resident.firstName.toLowerCase().includes(searchLower) ||
+        cert.resident.lastName.toLowerCase().includes(searchLower) ||
+        cert.resident.bahayToroSystemId.toLowerCase().includes(searchLower) ||
+        `${cert.resident.firstName} ${cert.resident.lastName}`.toLowerCase().includes(searchLower),
+      ).slice(0, 20); // Limit to 20 results for better performance
+      
+      setFilteredCertificates(filtered);
+    }
+  }, [certificateSearchValue, certificates, open]);
+  
+  // Handle form submission using server action
   const onSubmit = async (values: AppointmentRequestInput) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/admin/appointments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Failed to create appointment");
+      // Validate that a resident is selected for admin-created appointments
+      if (!values.residentId) {
+        form.setError("residentId", {
+          message: "Please select a resident for this appointment",
+        });
+        
+        toast({
+          title: "Error in form submission",
+          description: "A resident must be selected when creating an appointment",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
       }
       
-      toast({
-        title: "Success",
-        description: "Appointment created successfully",
+      // Submit to server action
+      const result = await createAppointment({
+        ...values,
+        // Don't pass userId - the server action will retrieve the resident's userId
       });
       
-      // Invalidate relevant queries
-      queryClient.invalidateQueries({ queryKey: ["appointments"] });
-      
-      form.reset();
-      setOpen(false);
-      if (onSuccess) onSuccess();
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: "Appointment created successfully",
+        });
+        
+        // Invalidate relevant queries
+        queryClient.invalidateQueries({ queryKey: ["appointments"] });
+        
+        form.reset();
+        setOpen(false);
+        if (onSuccess) onSuccess();
+        router.refresh();
+      } else {
+        // Handle validation or server errors
+        if (result.fieldErrors) {
+          Object.keys(result.fieldErrors).forEach((key) => {
+            form.setError(key as any, {
+              message: result.fieldErrors[key as keyof typeof result.fieldErrors]?.join(", "),
+            });
+          });
+          
+          toast({
+            title: "Error in form submission",
+            description: "Please check the form for errors and try again.",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        if (result.serverError) {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: result.serverError,
+          });
+        }
+      }
     } catch (error) {
       console.error("Error creating appointment:", error);
       toast({
@@ -129,9 +207,31 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
       setLoading(false);
     }
   };
+
+  // Reset dialog state and pointer events when closed
+  const handleDialogOpenChange = (open: boolean) => {
+    setOpen(open);
+    if (!open) {
+      // Reset search states
+      setResidentSearchOpen(false);
+      setCertificateSearchOpen(false);
+      setResidentSearchValue("");
+      setCertificateSearchValue("");
+    }
+  };
+  
+  // Find selected certificate details
+  const selectedCertificate = certificates?.certificates?.find(
+    (cert: any) => cert.id === form.watch("certificateRequestId"),
+  );
+  
+  // Find selected resident details
+  const selectedResident = residents?.residents?.find(
+    (resident: any) => resident.id === form.watch("residentId"),
+  );
   
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
@@ -183,29 +283,68 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                 control={form.control}
                 name="certificateRequestId"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel>Certificate for Pickup</FormLabel>
-                    <Select
-                      onValueChange={(value) => field.onChange(Number(value))}
-                      value={field.value?.toString()}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select certificate" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {certificates?.certificates?.map((cert: any) => (
-                          <SelectItem key={cert.id} value={cert.id.toString()}>
-                            {cert.referenceNumber} - {cert.resident.firstName} {cert.resident.lastName}
-                          </SelectItem>
-                        )) || (
-                          <SelectItem value="loading" disabled>
-                            Loading certificates...
-                          </SelectItem>
+                    <div className="relative w-full">
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-full justify-between",
+                          !field.value && "text-muted-foreground",
                         )}
-                      </SelectContent>
-                    </Select>
+                        onClick={() => setCertificateSearchOpen(!certificateSearchOpen)}
+                        type="button"
+                      >
+                        {field.value && selectedCertificate
+                          ? `${selectedCertificate.referenceNumber} - ${selectedCertificate.resident.firstName} ${selectedCertificate.resident.lastName}`
+                          : "Select certificate"
+                        }
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                      {certificateSearchOpen && (
+                        <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                          <div className="flex items-center border-b px-3 relative">
+                            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                            <input
+                              className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                              placeholder="Search certificates..."
+                              value={certificateSearchValue}
+                              onChange={(e) => setCertificateSearchValue(e.target.value)}
+                            />
+                          </div>
+                          <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
+                            {filteredCertificates?.length === 0 ? (
+                              <div className="py-6 text-center text-sm">No certificates found</div>
+                            ) : (
+                              <div className="overflow-hidden p-1 text-foreground">
+                                {filteredCertificates?.map((cert: any) => (
+                                  <div
+                                    key={cert.id}
+                                    onClick={() => {
+                                      field.onChange(Number(cert.id));
+                                      setCertificateSearchOpen(false);
+                                    }}
+                                    className={cn(
+                                      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                                      field.value === cert.id ? "bg-accent text-accent-foreground" : "",
+                                    )}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        field.value === cert.id ? "opacity-100" : "opacity-0",
+                                      )}
+                                    />
+                                    {cert.referenceNumber} - {cert.resident.firstName} {cert.resident.lastName} ({cert.resident.bahayToroSystemId})
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -216,30 +355,72 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
               control={form.control}
               name="residentId"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Resident (Optional)</FormLabel>
-                  <Select
-                    onValueChange={(value) => field.onChange(Number(value))}
-                    value={field.value?.toString()}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select resident" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="">None</SelectItem>
-                      {residents?.residents?.map((resident: any) => (
-                        <SelectItem key={resident.id} value={resident.id.toString()}>
-                          {resident.firstName} {resident.lastName} ({resident.bahayToroSystemId})
-                        </SelectItem>
-                      )) || (
-                        <SelectItem value="loading" disabled>
-                          Loading residents...
-                        </SelectItem>
+                <FormItem className="flex flex-col">
+                  <FormLabel>Resident <span className="text-red-500">*</span></FormLabel>
+                  <div className="relative w-full">
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-between",
+                        !field.value && "text-muted-foreground",
                       )}
-                    </SelectContent>
-                  </Select>
+                      onClick={() => setResidentSearchOpen(!residentSearchOpen)}
+                      type="button"
+                    >
+                      {field.value && selectedResident
+                        ? `${selectedResident.firstName} ${selectedResident.lastName} (${selectedResident.bahayToroSystemId})`
+                        : "Select resident"
+                      }
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                    {residentSearchOpen && (
+                      <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                        <div className="flex items-center border-b px-3 relative">
+                          <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                          <input
+                            className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Search residents..."
+                            value={residentSearchValue}
+                            onChange={(e) => setResidentSearchValue(e.target.value)}
+                          />
+                        </div>
+                        <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
+                          {filteredResidents?.length === 0 ? (
+                            <div className="py-6 text-center text-sm">
+                              {residentSearchValue.length > 0 
+                                ? "No residents found." 
+                                : "Type to search for residents."}
+                            </div>
+                          ) : (
+                            <div className="overflow-hidden p-1 text-foreground">
+                              {filteredResidents?.map((resident: any) => (
+                                <div
+                                  key={resident.id}
+                                  onClick={() => {
+                                    field.onChange(resident.id);
+                                    setResidentSearchOpen(false);
+                                  }}
+                                  className={cn(
+                                    "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                                    field.value === resident.id ? "bg-accent text-accent-foreground" : "",
+                                  )}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      field.value === resident.id ? "opacity-100" : "opacity-0",
+                                    )}
+                                  />
+                                  {resident.firstName} {resident.lastName} ({resident.bahayToroSystemId})
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
@@ -250,7 +431,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                 control={form.control}
                 name="preferredDate"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem className="">
                     <FormLabel>Preferred Date</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>

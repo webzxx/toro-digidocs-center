@@ -1,5 +1,5 @@
 // Create a shared payment form that can be used for both create and edit operations
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CertificateRequest, PaymentMethod, PaymentStatus, Resident } from "@prisma/client";
@@ -23,8 +23,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { ManualPaymentInput, manualPaymentSchema } from "@/types/types";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, Loader2, Upload } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon, Upload, Check, ChevronsUpDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -57,6 +56,29 @@ export default function ManualPaymentForm({
     initialData?.proofOfPaymentPath || null,
   );
   const isEditing = !!initialData?.id;
+  const [certificateSearchOpen, setCertificateSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredCertificates, setFilteredCertificates] = useState<CertificateWithDetails[]>(certificates);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+
+  useEffect(() => {
+    if (searchValue) {
+      setFilteredCertificates(
+        certificates.filter(cert => {
+          const refNumber = cert.referenceNumber.toLowerCase();
+          const fullName = `${cert.resident.firstName} ${cert.resident.lastName}`.toLowerCase();
+          const bahayToroId = cert.resident.bahayToroSystemId.toLowerCase();
+          const search = searchValue.toLowerCase();
+          
+          return refNumber.includes(search) || 
+                 fullName.includes(search) || 
+                 bahayToroId.includes(search);
+        }),
+      );
+    } else {
+      setFilteredCertificates(certificates);
+    }
+  }, [certificates, searchValue]);
 
   const form = useForm<ManualPaymentInput>({
     resolver: zodResolver(manualPaymentSchema),
@@ -128,6 +150,11 @@ export default function ManualPaymentForm({
     }
   };
 
+  // Find selected certificate details
+  const selectedCertificate = certificates.find(
+    cert => cert.id === form.watch("certificateRequestId"),
+  );
+
   return (
     <Form {...form}>
       <form id={formId} onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
@@ -135,26 +162,73 @@ export default function ManualPaymentForm({
           control={form.control}
           name="certificateRequestId"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Certificate Request</FormLabel>
-              <Select
-                onValueChange={(value) => field.onChange(parseInt(value))}
-                value={field.value?.toString()}
-                disabled={isEditing}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a certificate request" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {certificates.map((cert) => (
-                    <SelectItem key={cert.id} value={cert.id.toString()}>
-                      {cert.referenceNumber} - {cert.resident.firstName} {cert.resident.lastName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="relative w-full">
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className={cn(
+                    "w-full justify-between",
+                    !field.value && "text-muted-foreground",
+                  )}
+                  onClick={() => setCertificateSearchOpen(!certificateSearchOpen)}
+                  disabled={isEditing}
+                  type="button"
+                >
+                  {field.value ? (
+                    selectedCertificate ? 
+                      `${selectedCertificate.referenceNumber} - ${selectedCertificate.resident.firstName} ${selectedCertificate.resident.lastName}` : 
+                      "Select a certificate request"
+                  ) : (
+                    "Select a certificate request"
+                  )}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+                {certificateSearchOpen && (
+                  <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                    <div className="flex items-center border-b px-3 relative">
+                      <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                      <input
+                        className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Search certificates..."
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                      />
+                    </div>
+                    <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
+                      {filteredCertificates?.length === 0 ? (
+                        <div className="py-6 text-center text-sm">No certificate requests found</div>
+                      ) : (
+                        <div className="overflow-hidden p-1 text-foreground">
+                          {filteredCertificates?.map((cert) => (
+                            <div
+                              key={cert.id}
+                              onClick={() => {
+                                field.onChange(cert.id);
+                                setCertificateSearchOpen(false);
+                                setSearchValue("");
+                              }}
+                              className={cn(
+                                "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                                field.value === cert.id ? "bg-accent text-accent-foreground" : "",
+                              )}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  field.value === cert.id ? "opacity-100" : "opacity-0",
+                                )}
+                              />
+                              {cert.referenceNumber} - {cert.resident.firstName} {cert.resident.lastName} ({cert.resident.bahayToroSystemId})
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -235,34 +309,38 @@ export default function ManualPaymentForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Payment Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-full pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value ? (
-                        format(new Date(field.value), "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value ? new Date(field.value) : undefined}
-                    onSelect={(date) => field.onChange(date ? format(date, "yyyy-MM-dd") : "")}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+              <div className="relative w-full">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-between pl-3 text-left font-normal",
+                    !field.value && "text-muted-foreground",
+                  )}
+                  onClick={() => setCalendarOpen(!calendarOpen)}
+                  type="button"
+                >
+                  {field.value ? (
+                    format(new Date(field.value), "PPP")
+                  ) : (
+                    <span>Pick a date</span>
+                  )}
+                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+                {calendarOpen && (
+                  <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                    <Calendar
+                      mode="single"
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={(date) => {
+                        field.onChange(date ? format(date, "yyyy-MM-dd") : "");
+                        setCalendarOpen(false);
+                      }}
+                      initialFocus
+                      className="rounded-md border"
+                    />
+                  </div>
+                )}
+              </div>
               <FormMessage />
             </FormItem>
           )}
