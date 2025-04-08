@@ -1,5 +1,5 @@
 // Create a shared payment form that can be used for both create and edit operations
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CertificateRequest, PaymentMethod, PaymentStatus, Resident } from "@prisma/client";
@@ -60,6 +60,10 @@ export default function ManualPaymentForm({
   const [searchValue, setSearchValue] = useState("");
   const [filteredCertificates, setFilteredCertificates] = useState<CertificateWithDetails[]>(certificates);
   const [calendarOpen, setCalendarOpen] = useState(false);
+  
+  // Add refs for detecting outside clicks
+  const certificateDropdownRef = useRef<HTMLDivElement>(null);
+  const calendarDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (searchValue) {
@@ -79,6 +83,33 @@ export default function ManualPaymentForm({
       setFilteredCertificates(certificates);
     }
   }, [certificates, searchValue]);
+  
+  // Handle outside click for dropdowns
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // Close certificate dropdown when clicking outside
+      if (certificateSearchOpen && 
+          certificateDropdownRef.current && 
+          !certificateDropdownRef.current.contains(event.target as Node)) {
+        setCertificateSearchOpen(false);
+      }
+      
+      // Close calendar dropdown when clicking outside
+      if (calendarOpen &&
+          calendarDropdownRef.current &&
+          !calendarDropdownRef.current.contains(event.target as Node)) {
+        setCalendarOpen(false);
+      }
+    }
+    
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [certificateSearchOpen, calendarOpen]);
 
   const form = useForm<ManualPaymentInput>({
     resolver: zodResolver(manualPaymentSchema),
@@ -164,7 +195,7 @@ export default function ManualPaymentForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Certificate Request</FormLabel>
-              <div className="relative w-full">
+              <div className="relative w-full" ref={certificateDropdownRef}>
                 <Button
                   variant="outline"
                   role="combobox"
@@ -309,7 +340,7 @@ export default function ManualPaymentForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Payment Date</FormLabel>
-              <div className="relative w-full">
+              <div className="relative w-full" ref={calendarDropdownRef}>
                 <Button
                   variant="outline"
                   className={cn(

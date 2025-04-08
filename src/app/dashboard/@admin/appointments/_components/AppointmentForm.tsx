@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/types";
@@ -59,6 +59,10 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
   const [residentSearchValue, setResidentSearchValue] = useState("");
   const [certificateSearchValue, setCertificateSearchValue] = useState("");
   const [filteredCertificates, setFilteredCertificates] = useState<any[]>([]);
+  
+  // Add refs for detecting outside clicks
+  const residentDropdownRef = useRef<HTMLDivElement>(null);
+  const certificateDropdownRef = useRef<HTMLDivElement>(null);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -220,6 +224,33 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
     }
   };
   
+  // Handle outside click for dropdowns
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // Close resident dropdown when clicking outside
+      if (residentSearchOpen && 
+          residentDropdownRef.current && 
+          !residentDropdownRef.current.contains(event.target as Node)) {
+        setResidentSearchOpen(false);
+      }
+      
+      // Close certificate dropdown when clicking outside
+      if (certificateSearchOpen &&
+          certificateDropdownRef.current &&
+          !certificateDropdownRef.current.contains(event.target as Node)) {
+        setCertificateSearchOpen(false);
+      }
+    }
+    
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [residentSearchOpen, certificateSearchOpen]);
+
   // Find selected certificate details
   const selectedCertificate = certificates?.certificates?.find(
     (cert: any) => cert.id === form.watch("certificateRequestId"),
@@ -285,7 +316,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>Certificate for Pickup</FormLabel>
-                    <div className="relative w-full">
+                    <div className="relative w-full" ref={certificateDropdownRef}>
                       <Button
                         variant="outline"
                         role="combobox"
@@ -357,7 +388,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Resident <span className="text-red-500">*</span></FormLabel>
-                  <div className="relative w-full">
+                  <div className="relative w-full" ref={residentDropdownRef}>
                     <Button
                       variant="outline"
                       role="combobox"
