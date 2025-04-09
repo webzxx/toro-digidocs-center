@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/accordion";
 import { formatDate } from "@/lib/utils";
 import { useState } from "react";
-import NewAppointmentButton from "./NewAppointmentButton";
+import NewAppointmentButton, { Resident as ResidentType } from "./NewAppointmentButton";
 import { useRouter } from "next/navigation";
 import { cancelAppointment } from "../../appointments/actions";
 import { useToast } from "@/components/ui/use-toast";
@@ -42,11 +42,13 @@ type AppointmentWithRelations = Appointment & {
 
 type AppointmentsClientProps = {
   appointments: AppointmentWithRelations[];
+  residents: ResidentType[];
   userId: number;
 };
 
 export default function AppointmentsClient({ 
   appointments, 
+  residents,
   userId, 
 }: AppointmentsClientProps) {
   const [filter, setFilter] = useState<"all" | "upcoming" | "past" | "pending">("all");
@@ -195,7 +197,7 @@ export default function AppointmentsClient({
           <CardTitle className="text-2xl font-bold text-green-primary">My Appointments</CardTitle>
           <CardDescription>Request and manage your appointments</CardDescription>
         </div>
-        <NewAppointmentButton userId={userId} />
+        <NewAppointmentButton userId={userId} residents={residents} />
       </CardHeader>
       
       <div className="px-6 py-3 border-b flex sm:items-center justify-between sm:flex-row flex-col items-start gap-2 sm:gap-0">

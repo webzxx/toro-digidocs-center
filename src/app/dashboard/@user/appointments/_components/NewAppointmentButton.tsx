@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { PlusCircle, Loader2, Check, ChevronsUpDown, Search } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { 
   Dialog, 
   DialogContent, 
@@ -21,7 +21,6 @@ import {
   FormMessage, 
 } from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -42,6 +41,7 @@ type AppointmentFormValues = {
   preferredDate: Date;
   preferredTimeSlot: TimeSlot;
   notes?: string;
+  residentId?: number;
 };
 
 // Create a form-specific schema by picking the relevant parts from the centralized schema
@@ -53,15 +53,35 @@ const appointmentFormSchema = z.object({
   }),
   preferredTimeSlot: appointmentRequestSchema.shape.preferredTimeSlot,
   notes: appointmentRequestSchema.shape.notes,
+  residentId: z.number().optional(),
 }) as z.ZodType<AppointmentFormValues>;
+
+export type Resident = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  bahayToroSystemId?: string;
+};
 
 interface NewAppointmentButtonProps {
   userId: number;
+  residents: Resident[];
 }
 
-export default function NewAppointmentButton({ userId }: NewAppointmentButtonProps) {
+export default function NewAppointmentButton({ userId, residents }: NewAppointmentButtonProps) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [residentSearchOpen, setResidentSearchOpen] = useState(false);
+  const [filteredResidents, setFilteredResidents] = useState<Resident[]>([]);
+  const [residentSearchValue, setResidentSearchValue] = useState("");
+  
+  // State to control calendar visibility
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  
+  // Add ref for detecting outside clicks
+  const residentDropdownRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
+  
   const { toast } = useToast();
   const router = useRouter();
 
@@ -77,6 +97,50 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
     defaultValues,
   });
 
+  // Filter residents based on search input
+  useEffect(() => {
+    if (open && residents?.length > 0) {
+      const searchLower = residentSearchValue.toLowerCase();
+      
+      // Regular filtering
+      const filtered = residents.filter((resident) => 
+        resident.firstName.toLowerCase().includes(searchLower) ||
+        resident.lastName.toLowerCase().includes(searchLower) ||
+        (resident.bahayToroSystemId && resident.bahayToroSystemId.toLowerCase().includes(searchLower)) ||
+        `${resident.firstName} ${resident.lastName}`.toLowerCase().includes(searchLower),
+      ).slice(0, 20); // Limit to 20 results for better performance
+      
+      setFilteredResidents(filtered);
+    }
+  }, [residentSearchValue, residents, open]);
+  
+  // Handle outside click for dropdowns
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // Close resident dropdown when clicking outside
+      if (residentSearchOpen && 
+          residentDropdownRef.current && 
+          !residentDropdownRef.current.contains(event.target as Node)) {
+        setResidentSearchOpen(false);
+      }
+      
+      // Close calendar when clicking outside
+      if (calendarOpen && 
+          calendarRef.current && 
+          !calendarRef.current.contains(event.target as Node)) {
+        setCalendarOpen(false);
+      }
+    }
+    
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [residentSearchOpen, calendarOpen]);
+
   async function onSubmit(data: AppointmentFormValues) {
     try {
       setIsSubmitting(true);
@@ -87,6 +151,7 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
         preferredDate: data.preferredDate.toISOString().split("T")[0], // Just the date part
         preferredTimeSlot: data.preferredTimeSlot,
         notes: data.notes,
+        residentId: data.residentId,
       };
       
       // Submit to the server action
@@ -144,8 +209,20 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
     }
   }
 
+  // Find selected resident details
+  const selectedResident = residents?.find(
+    (resident) => resident.id === form.watch("residentId"),
+  );
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      setOpen(isOpen);
+      if (!isOpen) {
+        // Reset all internal state when dialog closes
+        setCalendarOpen(false);
+        setResidentSearchOpen(false);
+      }
+    }}>
       <DialogTrigger asChild>
         <Button 
           className="gap-2 p-0 w-10 min-[500px]:px-4 min-[500px]:py-2 min-[500px]:w-auto"
@@ -176,6 +253,11 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
+                    onOpenChange={() => {
+                      // Close other open dropdowns when opening this one
+                      setCalendarOpen(false);
+                      setResidentSearchOpen(false);
+                    }}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -199,45 +281,138 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
             
             <FormField
               control={form.control}
+              name="residentId"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Resident (Optional)</FormLabel>
+                  <div className="relative w-full" ref={residentDropdownRef}>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-full justify-between",
+                        !field.value && "text-muted-foreground",
+                      )}
+                      onClick={() => {
+                        setResidentSearchOpen(!residentSearchOpen);
+                        setCalendarOpen(false); // Close calendar if open
+                      }}
+                      type="button"
+                    >
+                      {field.value && selectedResident
+                        ? `${selectedResident.firstName} ${selectedResident.lastName}${selectedResident.bahayToroSystemId ? ` (${selectedResident.bahayToroSystemId})` : ""}`
+                        : "Select a resident (optional)"
+                      }
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                    {residentSearchOpen && (
+                      <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                        <div className="flex items-center border-b px-3 relative">
+                          <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                          <input
+                            className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Search residents..."
+                            value={residentSearchValue}
+                            onChange={(e) => setResidentSearchValue(e.target.value)}
+                          />
+                        </div>
+                        <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
+                          {filteredResidents?.length === 0 ? (
+                            <div className="py-6 text-center text-sm">
+                              {residentSearchValue.length > 0 
+                                ? "No residents found." 
+                                : residents?.length === 0 
+                                  ? "No residents available." 
+                                  : "Type to search for residents."}
+                            </div>
+                          ) : (
+                            <div className="overflow-hidden p-1 text-foreground">
+                              {filteredResidents?.map((resident) => (
+                                <div
+                                  key={resident.id}
+                                  onClick={() => {
+                                    field.onChange(resident.id);
+                                    setResidentSearchOpen(false);
+                                  }}
+                                  className={cn(
+                                    "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+                                    field.value === resident.id ? "bg-accent text-accent-foreground" : "",
+                                  )}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      field.value === resident.id ? "opacity-100" : "opacity-0",
+                                    )}
+                                  />
+                                  {resident.firstName} {resident.lastName}
+                                  {resident.bahayToroSystemId && <span className="text-muted-foreground ml-1">({resident.bahayToroSystemId})</span>}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <FormDescription>
+                    Optional - select a specific resident for this appointment
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
               name="preferredDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Preferred Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => {
-                          // Disable past dates and weekends
-                          const today = new Date();
-                          today.setHours(0, 0, 0, 0);
-                          const day = date.getDay();
-                          return date < today || day === 0 || day === 6;
-                        }}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="relative" ref={calendarRef}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !field.value && "text-muted-foreground",
+                      )}
+                      onClick={() => {
+                        setCalendarOpen(!calendarOpen);
+                        setResidentSearchOpen(false); // Close resident dropdown if open
+                      }}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                    
+                    {calendarOpen && (
+                      <div className="absolute top-[calc(100%+4px)] left-0 z-50">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={(date) => {
+                            if (date) {
+                              field.onChange(date);
+                              setCalendarOpen(false);
+                            }
+                          }}
+                          disabled={(date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            const day = date.getDay();
+                            return date < today || day === 0 || day === 6;
+                          }}
+                          initialFocus
+                          className="rounded-md border bg-white shadow-md"
+                        />
+                      </div>
+                    )}
+                  </div>
                   <FormDescription>
                     Mon-Fri, future dates only
                   </FormDescription>
@@ -255,6 +430,11 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
+                    onOpenChange={() => {
+                      // Close other open dropdowns when opening this one
+                      setCalendarOpen(false);
+                      setResidentSearchOpen(false);
+                    }}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -285,6 +465,11 @@ export default function NewAppointmentButton({ userId }: NewAppointmentButtonPro
                       placeholder="Any special requests or information..."
                       className="resize-none"
                       {...field}
+                      onClick={() => {
+                        // Close open dropdowns when clicking in textarea
+                        setCalendarOpen(false);
+                        setResidentSearchOpen(false);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>

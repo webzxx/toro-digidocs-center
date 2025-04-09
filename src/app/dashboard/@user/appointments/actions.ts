@@ -32,8 +32,7 @@ export async function createAppointmentRequest(
       preferredDate, 
       preferredTimeSlot, 
       notes, 
-      residentId, 
-      certificateRequestId, 
+      residentId,
     } = validatedData.data;
 
     // Ensure the user exists in the database
@@ -52,6 +51,26 @@ export async function createAppointmentRequest(
       };
     }
 
+    // If a residentId is provided, verify that this resident belongs to the user
+    if (residentId) {
+      const resident = await db.resident.findUnique({
+        where: { 
+          id: residentId,
+          userId: user.id,
+        },
+        select: { id: true },
+      });
+
+      if (!resident) {
+        return {
+          success: false,
+          fieldErrors: {
+            residentId: ["The selected resident is not valid or does not belong to you"],
+          },
+        };
+      }
+    }
+
     // Create appointment request
     const appointment = await db.appointment.create({
       data: {
@@ -61,7 +80,6 @@ export async function createAppointmentRequest(
         preferredTimeSlot,
         notes,
         residentId: residentId || null,
-        certificateRequestId: certificateRequestId || null,
         // These fields will be set by admin later
         scheduledDateTime: null,
         status: "REQUESTED", // Default is REQUESTED from schema
