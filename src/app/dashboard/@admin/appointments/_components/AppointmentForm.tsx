@@ -54,15 +54,11 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [residentSearchOpen, setResidentSearchOpen] = useState(false);
-  const [certificateSearchOpen, setCertificateSearchOpen] = useState(false);
   const [filteredResidents, setFilteredResidents] = useState<any[]>([]);
   const [residentSearchValue, setResidentSearchValue] = useState("");
-  const [certificateSearchValue, setCertificateSearchValue] = useState("");
-  const [filteredCertificates, setFilteredCertificates] = useState<any[]>([]);
   
-  // Add refs for detecting outside clicks
+  // Add ref for detecting outside clicks
   const residentDropdownRef = useRef<HTMLDivElement>(null);
-  const certificateDropdownRef = useRef<HTMLDivElement>(null);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -80,19 +76,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
       preferredTimeSlot: initialData?.preferredTimeSlot || TimeSlot.MORNING,
       notes: initialData?.notes || "",
       residentId: initialData?.residentId,
-      certificateRequestId: initialData?.certificateRequestId,
     },
-  });
-  
-  // Fetch certificates that are ready for pickup if needed
-  const { data: certificates } = useQuery({
-    queryKey: ["certificates-ready-for-pickup"],
-    queryFn: async () => {
-      const response = await fetch("/api/admin/certificates?status=READY_FOR_PICKUP&limit=100");
-      if (!response.ok) throw new Error("Failed to fetch certificates");
-      return response.json();
-    },
-    enabled: open,
   });
   
   // Fetch residents if needed
@@ -110,6 +94,8 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
   useEffect(() => {
     if (open && residents?.residents) {
       const searchLower = residentSearchValue.toLowerCase();
+      
+      // Regular filtering
       const filtered = residents.residents.filter((resident: any) => 
         resident.firstName.toLowerCase().includes(searchLower) ||
         resident.lastName.toLowerCase().includes(searchLower) ||
@@ -120,22 +106,6 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
       setFilteredResidents(filtered);
     }
   }, [residentSearchValue, residents, open]);
-
-  // Filter certificates based on search input
-  useEffect(() => {
-    if (open && certificates?.certificates) {
-      const searchLower = certificateSearchValue.toLowerCase();
-      const filtered = certificates.certificates.filter((cert: any) => 
-        cert.referenceNumber.toLowerCase().includes(searchLower) ||
-        cert.resident.firstName.toLowerCase().includes(searchLower) ||
-        cert.resident.lastName.toLowerCase().includes(searchLower) ||
-        cert.resident.bahayToroSystemId.toLowerCase().includes(searchLower) ||
-        `${cert.resident.firstName} ${cert.resident.lastName}`.toLowerCase().includes(searchLower),
-      ).slice(0, 20); // Limit to 20 results for better performance
-      
-      setFilteredCertificates(filtered);
-    }
-  }, [certificateSearchValue, certificates, open]);
   
   // Handle form submission using server action
   const onSubmit = async (values: AppointmentRequestInput) => {
@@ -218,9 +188,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
     if (!open) {
       // Reset search states
       setResidentSearchOpen(false);
-      setCertificateSearchOpen(false);
       setResidentSearchValue("");
-      setCertificateSearchValue("");
     }
   };
   
@@ -233,13 +201,6 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
           !residentDropdownRef.current.contains(event.target as Node)) {
         setResidentSearchOpen(false);
       }
-      
-      // Close certificate dropdown when clicking outside
-      if (certificateSearchOpen &&
-          certificateDropdownRef.current &&
-          !certificateDropdownRef.current.contains(event.target as Node)) {
-        setCertificateSearchOpen(false);
-      }
     }
     
     // Add event listener
@@ -249,13 +210,8 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [residentSearchOpen, certificateSearchOpen]);
+  }, [residentSearchOpen]);
 
-  // Find selected certificate details
-  const selectedCertificate = certificates?.certificates?.find(
-    (cert: any) => cert.id === form.watch("certificateRequestId"),
-  );
-  
   // Find selected resident details
   const selectedResident = residents?.residents?.find(
     (resident: any) => resident.id === form.watch("residentId"),
@@ -308,79 +264,6 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                 </FormItem>
               )}
             />
-            
-            {form.watch("appointmentType") === "DOCUMENT_PICKUP" && (
-              <FormField
-                control={form.control}
-                name="certificateRequestId"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Certificate for Pickup</FormLabel>
-                    <div className="relative w-full" ref={certificateDropdownRef}>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-full justify-between",
-                          !field.value && "text-muted-foreground",
-                        )}
-                        onClick={() => setCertificateSearchOpen(!certificateSearchOpen)}
-                        type="button"
-                      >
-                        {field.value && selectedCertificate
-                          ? `${selectedCertificate.referenceNumber} - ${selectedCertificate.resident.firstName} ${selectedCertificate.resident.lastName}`
-                          : "Select certificate"
-                        }
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                      {certificateSearchOpen && (
-                        <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
-                          <div className="flex items-center border-b px-3 relative">
-                            <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-                            <input
-                              className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-                              placeholder="Search certificates..."
-                              value={certificateSearchValue}
-                              onChange={(e) => setCertificateSearchValue(e.target.value)}
-                            />
-                          </div>
-                          <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
-                            {filteredCertificates?.length === 0 ? (
-                              <div className="py-6 text-center text-sm">No certificates found</div>
-                            ) : (
-                              <div className="overflow-hidden p-1 text-foreground">
-                                {filteredCertificates?.map((cert: any) => (
-                                  <div
-                                    key={cert.id}
-                                    onClick={() => {
-                                      field.onChange(Number(cert.id));
-                                      setCertificateSearchOpen(false);
-                                    }}
-                                    className={cn(
-                                      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-                                      field.value === cert.id ? "bg-accent text-accent-foreground" : "",
-                                    )}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        field.value === cert.id ? "opacity-100" : "opacity-0",
-                                      )}
-                                    />
-                                    {cert.referenceNumber} - {cert.resident.firstName} {cert.resident.lastName} ({cert.resident.bahayToroSystemId})
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
             
             <FormField
               control={form.control}

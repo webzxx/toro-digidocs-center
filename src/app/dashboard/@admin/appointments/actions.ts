@@ -66,7 +66,6 @@ export async function createAppointment(data: AppointmentRequestInput) {
       data: {
         userId: resident.userId, // Use the resident's userId instead of defaulting to admin
         residentId: validatedData.residentId,
-        certificateRequestId: validatedData.certificateRequestId,
         appointmentType: validatedData.appointmentType,
         status: initialStatus,
         scheduledDateTime: scheduledDateTime,
@@ -86,11 +85,6 @@ export async function createAppointment(data: AppointmentRequestInput) {
             firstName: true,
             lastName: true,
             bahayToroSystemId: true,
-          },
-        },
-        certificateRequest: {
-          select: {
-            referenceNumber: true,
           },
         },
       },
@@ -143,23 +137,6 @@ export async function completeAppointment(appointmentId: number) {
         status: AppointmentStatus.COMPLETED,
       },
     });
-    
-    // If this is a DOCUMENT_PICKUP appointment with a certificate request,
-    // also mark the certificate as COMPLETED
-    const appointment = await db.appointment.findUnique({
-      where: { id: appointmentId },
-      include: { certificateRequest: true },
-    });
-    
-    if (
-      appointment?.certificateRequest?.id &&
-      appointment.appointmentType === "DOCUMENT_PICKUP"
-    ) {
-      await db.certificateRequest.update({
-        where: { id: appointment.certificateRequest.id },
-        data: { status: "COMPLETED" },
-      });
-    }
     
     revalidatePath("/dashboard/appointments");
     return { success: true };

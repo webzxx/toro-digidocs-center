@@ -231,7 +231,6 @@ const appointmentRequestSchema = z.object({
   }),
   notes: z.string().optional(),
   residentId: z.number().optional(),
-  certificateRequestId: z.number().optional(),
 });
 
 export type AppointmentRequestInput = z.infer<typeof appointmentRequestSchema>;
