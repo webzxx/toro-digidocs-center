@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import AppointmentAdmin from "./_components/AppointmentAdmin";
+import { adminAppointmentWithRelations } from "@/types/types";
 
 async function AppointmentsPage() {
   // Initial data fetch for SSR - limited to first page only
@@ -8,21 +9,7 @@ async function AppointmentsPage() {
     orderBy: {
       createdAt: "desc",
     },
-    include: {
-      user: {
-        select: {
-          username: true,
-          email: true,
-        },
-      },
-      resident: {
-        select: {
-          firstName: true,
-          lastName: true,
-          bahayToroSystemId: true,
-        },
-      },
-    },
+    ...adminAppointmentWithRelations,
   });
   
   // Count total appointments for pagination

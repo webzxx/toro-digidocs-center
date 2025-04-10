@@ -331,11 +331,6 @@ export const adminAppointmentWithRelations = Prisma.validator<Prisma.Appointment
         bahayToroSystemId: true,
       },
     },
-    certificateRequest: {
-      select: {
-        referenceNumber: true,
-      },
-    },
   },
 });
 

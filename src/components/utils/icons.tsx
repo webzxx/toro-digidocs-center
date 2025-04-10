@@ -95,8 +95,6 @@ export const getAppointmentStatusIcon = (status: AppointmentStatus) => {
     return <CalendarPlus {...iconProps} />;
   case "SCHEDULED":
     return <Calendar {...iconProps} />;
-  case "CONFIRMED":
-    return <CalendarCheck {...iconProps} />;
   case "COMPLETED":
     return <Check {...iconProps} />;
   case "CANCELLED":
