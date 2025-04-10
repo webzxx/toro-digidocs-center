@@ -198,12 +198,41 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
                       <div>{formatDateTime(certificate.requestDate)}</div>
                     </div>
                     {certificate.payments.length > 0 && (
-                      <div className="grid grid-cols-2 gap-1">
-                        <div className="text-muted-foreground">Payment Status:</div>
-                        <div className="flex items-center">
-                          {getPaymentStatusBadge(certificate.payments[0].paymentStatus)}
+                      <>
+                        <div className="grid grid-cols-2 gap-1">
+                          <div className="text-muted-foreground">Transaction Ref:</div>
+                          <div className="font-mono">{certificate.payments[0].transactionReference}</div>
                         </div>
-                      </div>
+                        <div className="grid grid-cols-2 gap-1">
+                          <div className="text-muted-foreground">Payment Status:</div>
+                          <div className="flex items-center">
+                            {getPaymentStatusBadge(certificate.payments[0].paymentStatus)}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-1">
+                          <div className="text-muted-foreground">Payment Method:</div>
+                          <div>
+                            {certificate.payments[0].paymentMethod ? 
+                              certificate.payments[0].paymentMethod.replace(/_/g, " ") : 
+                              "Not specified"}
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-1">
+                          <div className="text-muted-foreground">Amount:</div>
+                          <div>₱{Number(certificate.payments[0].amount).toFixed(2) || "0.00"}</div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-1">
+                          <div className="text-muted-foreground">Date Paid:</div>
+                          <div>
+                            {certificate.payments[0].paymentDate ? 
+                              formatDateTime(certificate.payments[0].paymentDate) : 
+                              (certificate.payments[0].paymentStatus === "SUCCEEDED" || 
+                               certificate.payments[0].paymentStatus === "VERIFIED" ? 
+                                formatDateTime(certificate.payments[0].updatedAt) : 
+                                "Not paid yet")}
+                          </div>
+                        </div>
+                      </>
                     )}
                     {certificate.remarks && (
                       <div className="grid grid-cols-2 gap-1">

@@ -17,6 +17,16 @@ async function CertificatesPage({ user }: WithAuthProps) {
               createdAt: "desc",
             },
             take: 1,
+            // Include all payment details we need to display
+            select: {
+              transactionReference: true,
+              amount: true,
+              paymentStatus: true,
+              paymentMethod: true,
+              createdAt: true,
+              updatedAt: true,
+              paymentDate: true,
+            },
           },
         },
       },
