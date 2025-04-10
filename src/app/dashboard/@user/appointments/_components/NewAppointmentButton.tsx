@@ -77,6 +77,8 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
   
   // State to control calendar visibility
   const [calendarOpen, setCalendarOpen] = useState(false);
+  // State to control select dropdown visibility
+  const [selectsOpen, setSelectsOpen] = useState(false);
   
   // Add ref for detecting outside clicks
   const residentDropdownRef = useRef<HTMLDivElement>(null);
@@ -96,6 +98,20 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
     resolver: zodResolver(appointmentFormSchema),
     defaultValues,
   });
+
+  // Reset document body pointer events when any dropdown closes
+  useEffect(() => {
+    if (!open || (!residentSearchOpen && !calendarOpen && !selectsOpen)) {
+      // Add slight delay to ensure animations complete
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+    
+    return () => {
+      document.body.style.pointerEvents = "";
+    };
+  }, [open, residentSearchOpen, calendarOpen, selectsOpen]);
 
   // Filter residents based on search input
   useEffect(() => {
@@ -212,6 +228,7 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
         // Reset all internal state when dialog closes
         setCalendarOpen(false);
         setResidentSearchOpen(false);
+        setSelectsOpen(false);
       }
     }}>
       <DialogTrigger asChild>
@@ -244,10 +261,11 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
-                    onOpenChange={() => {
+                    onOpenChange={(open) => {
                       // Close other open dropdowns when opening this one
                       setCalendarOpen(false);
                       setResidentSearchOpen(false);
+                      setSelectsOpen(open);
                     }}
                   >
                     <FormControl>
@@ -382,7 +400,7 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                     </Button>
                     
                     {calendarOpen && (
-                      <div className="absolute left-0 top-[calc(100%+4px)] z-50">
+                      <div className="absolute left-0 top-full z-50 mt-1">
                         <Calendar
                           mode="single"
                           selected={field.value}
@@ -421,10 +439,11 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
-                    onOpenChange={() => {
+                    onOpenChange={(open) => {
                       // Close other open dropdowns when opening this one
                       setCalendarOpen(false);
                       setResidentSearchOpen(false);
+                      setSelectsOpen(open);
                     }}
                   >
                     <FormControl>

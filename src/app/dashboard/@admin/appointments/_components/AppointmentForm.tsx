@@ -57,6 +57,8 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
   const [residentSearchOpen, setResidentSearchOpen] = useState(false);
   const [filteredResidents, setFilteredResidents] = useState<ResidentForAppointment[]>([]);
   const [residentSearchValue, setResidentSearchValue] = useState("");
+  const [selectsOpen, setSelectsOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   
   // Add ref for detecting outside clicks
   const residentDropdownRef = useRef<HTMLDivElement>(null);
@@ -79,6 +81,20 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
       residentId: initialData?.residentId,
     },
   });
+
+  // Reset document body pointer events when dialog, calendar, or select closes
+  useEffect(() => {
+    if (!open || (!residentSearchOpen && !selectsOpen && !calendarOpen)) {
+      // Add slight delay to ensure animations complete
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+    
+    return () => {
+      document.body.style.pointerEvents = "";
+    };
+  }, [open, residentSearchOpen, selectsOpen, calendarOpen]);
   
   // Filter residents based on search input
   useEffect(() => {
@@ -179,6 +195,8 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
       // Reset search states
       setResidentSearchOpen(false);
       setResidentSearchValue("");
+      setSelectsOpen(false);
+      setCalendarOpen(false);
     }
   };
   
@@ -238,6 +256,7 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     value={field.value}
+                    onOpenChange={setSelectsOpen}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -340,7 +359,7 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
                 render={({ field }) => (
                   <FormItem className="">
                     <FormLabel>Preferred Date</FormLabel>
-                    <Popover>
+                    <Popover onOpenChange={setCalendarOpen}>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button
@@ -387,6 +406,7 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      onOpenChange={setSelectsOpen}
                     >
                       <FormControl>
                         <SelectTrigger>

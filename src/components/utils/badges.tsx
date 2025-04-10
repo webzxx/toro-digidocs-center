@@ -1,13 +1,13 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { CertificateType, Gender, CivilStatus, Sector, PaymentStatus, AppointmentStatus, AppointmentType } from "@prisma/client";
+import { CertificateType, Gender, CivilStatus, Sector, PaymentStatus, AppointmentStatus, AppointmentType, CertificateStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { getCertificateStatusIcon, getPaymentStatusIcon, getAppointmentStatusIcon } from "./icons";
 
 /**
  * Returns a styled badge for certificate status
  */
-export const getCertificateStatusBadge = (status: string) => {
+export const getCertificateStatusBadge = (status: CertificateStatus) => {
   const statusStyles = {
     PENDING: "bg-yellow-100 hover:bg-yellow-100 text-yellow-800 border-yellow-200",
     UNDER_REVIEW: "bg-blue-100 hover:bg-blue-100 text-blue-800 border-blue-200",

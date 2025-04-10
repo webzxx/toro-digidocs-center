@@ -1,7 +1,7 @@
 "use client";
 
-import { FileText, FileUp } from "lucide-react";
-import { useState } from "react";
+import { FileUp } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
   const [open, setOpen] = useState(false);
   const [selectedResident, setSelectedResident] = useState("");
   const [residentError, setResidentError] = useState(false);
+  const [selectOpen, setSelectOpen] = useState(false);
   
   const form = useForm<CertificateInput>({
     resolver: zodResolver(certificateSchema),
@@ -35,6 +36,20 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
       purpose: "",
     },
   });
+
+  // Reset document body pointer events when dialog or select closes
+  useEffect(() => {
+    if (!open || !selectOpen) {
+      // Add slight delay to ensure animations complete
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+    
+    return () => {
+      document.body.style.pointerEvents = "";
+    };
+  }, [open, selectOpen]);
 
   const certificateType = form.watch("certificateType");
 
@@ -107,6 +122,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                         setResidentError(false);
                       }}
                       value={selectedResident}
+                      onOpenChange={setSelectOpen}
                     >
                       <SelectTrigger className={residentError ? "border-red-500" : ""}>
                         <SelectValue placeholder="Select resident" />
@@ -132,7 +148,11 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Certificate Type <span className="font-bold text-red-600">*</span></FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        value={field.value}
+                        onOpenChange={setSelectOpen}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select certificate type" />

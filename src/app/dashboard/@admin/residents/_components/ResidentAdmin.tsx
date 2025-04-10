@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import ResidentTable from "./ResidentTable";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
+import { getCivilStatusBadge, getGenderBadge, getSectorBadge } from "@/components/utils";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -116,7 +117,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
               <SelectContent>
                 <SelectItem value="ALL">All Genders</SelectItem>
                 {Object.keys(Gender).map((key) => (
-                  <SelectItem key={key} value={key}>{key}</SelectItem>
+                  <SelectItem key={key} value={key}>{getGenderBadge(key as Gender)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -130,7 +131,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
               <SelectContent>
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.keys(CivilStatus).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
+                  <SelectItem key={key} value={key}>{getCivilStatusBadge(key as CivilStatus)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -144,7 +145,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
               <SelectContent>
                 <SelectItem value="ALL">All Sectors</SelectItem>
                 {Object.keys(Sector).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
+                  <SelectItem key={key} value={key}>{getSectorBadge(key as Sector)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

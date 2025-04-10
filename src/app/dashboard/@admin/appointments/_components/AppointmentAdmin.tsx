@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import AppointmentTable from "./AppointmentTable";
 import AppointmentForm from "./AppointmentForm";
 import { ResidentForAppointment } from "@/types/types";
+import { getAppointmentStatusBadge } from "@/components/utils";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -186,7 +187,7 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
               <SelectContent>
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.keys(AppointmentStatus).map((key) => (
-                  <SelectItem key={key} value={key}>{key.replace(/_/g, " ")}</SelectItem>
+                  <SelectItem key={key} value={key}>{getAppointmentStatusBadge(key as AppointmentStatus)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

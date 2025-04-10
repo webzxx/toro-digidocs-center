@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createUser } from "@/app/dashboard/@admin/users/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { CreateUserValues, createUserSchema } from "@/types/auth";
@@ -38,7 +38,8 @@ export default function CreateUserButton() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+  const [selectOpen, setSelectOpen] = useState(false);
+
   // Initialize form with Zod validation
   const form = useForm<CreateUserValues>({
     resolver: zodResolver(createUserSchema),
@@ -49,14 +50,28 @@ export default function CreateUserButton() {
       role: "USER",
     },
   });
-  
+
+  // Reset document body pointer events when dialog or select closes
+  useEffect(() => {
+    if (!open || !selectOpen) {
+      // Add slight delay to ensure animations complete
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+
+    return () => {
+      document.body.style.pointerEvents = "";
+    };
+  }, [open, selectOpen]);
+
   const handleCreateUser = async (values: CreateUserValues) => {
     setIsLoading(true);
-    
+
     try {
       await createUser(values);
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      
+
       // Close dialog and reset form
       setOpen(false);
       form.reset({
@@ -67,8 +82,8 @@ export default function CreateUserButton() {
       });
     } catch (error: any) {
       // Handle specific error types if API returns structured errors
-      form.setError("root", { 
-        message: error.message || "Failed to create user", 
+      form.setError("root", {
+        message: error.message || "Failed to create user",
       });
     } finally {
       setIsLoading(false);
@@ -88,15 +103,18 @@ export default function CreateUserButton() {
           <DialogTitle>Create New User</DialogTitle>
           <DialogDescription>Add a new user to the system</DialogDescription>
         </DialogHeader>
-        
+
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleCreateUser)} className="space-y-4 py-4">
+          <form
+            onSubmit={form.handleSubmit(handleCreateUser)}
+            className="space-y-4 py-4"
+          >
             {form.formState.errors.root && (
               <div className="text-sm font-medium text-destructive">
                 {form.formState.errors.root.message}
               </div>
             )}
-            
+
             <FormField
               control={form.control}
               name="username"
@@ -104,16 +122,13 @@ export default function CreateUserButton() {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input 
-                      {...field}
-                      placeholder="Enter username" 
-                    />
+                    <Input {...field} placeholder="Enter username" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="email"
@@ -121,17 +136,13 @@ export default function CreateUserButton() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input 
-                      {...field}
-                      type="email"
-                      placeholder="Enter email" 
-                    />
+                    <Input {...field} type="email" placeholder="Enter email" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="password"
@@ -139,26 +150,27 @@ export default function CreateUserButton() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input 
+                    <Input
                       {...field}
                       type="password"
-                      placeholder="Enter password" 
+                      placeholder="Enter password"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="role"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
+                  <Select
+                    onValueChange={field.onChange}
                     defaultValue={field.value}
+                    onOpenChange={setSelectOpen}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -174,7 +186,7 @@ export default function CreateUserButton() {
                 </FormItem>
               )}
             />
-            
+
             <DialogFooter>
               <Button
                 type="button"
@@ -184,10 +196,7 @@ export default function CreateUserButton() {
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                disabled={isLoading}
-              >
+              <Button type="submit" disabled={isLoading}>
                 {isLoading ? "Creating..." : "Create User"}
               </Button>
             </DialogFooter>

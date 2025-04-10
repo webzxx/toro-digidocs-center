@@ -105,7 +105,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
               <SelectContent>
                 <SelectItem value="ALL">All Statuses</SelectItem>
                 {Object.keys(CertificateStatus).map((key) => (
-                  <SelectItem key={key} value={key}>{getCertificateStatusBadge(key)}</SelectItem>
+                  <SelectItem key={key} value={key}>{getCertificateStatusBadge(key as CertificateStatus)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

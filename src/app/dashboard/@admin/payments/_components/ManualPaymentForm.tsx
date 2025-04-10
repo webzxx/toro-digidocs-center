@@ -60,51 +60,72 @@ export default function ManualPaymentForm({
   const [searchValue, setSearchValue] = useState("");
   const [filteredCertificates, setFilteredCertificates] = useState<CertificateWithDetails[]>(certificates);
   const [calendarOpen, setCalendarOpen] = useState(false);
-  
+  const [selectsOpen, setSelectsOpen] = useState(false);
+
   // Add refs for detecting outside clicks
   const certificateDropdownRef = useRef<HTMLDivElement>(null);
   const calendarDropdownRef = useRef<HTMLDivElement>(null);
 
+  // Reset document body pointer events when dialog, calendar, or select closes
+  useEffect(() => {
+    if (!certificateSearchOpen && !calendarOpen && !selectsOpen) {
+      // Add slight delay to ensure animations complete
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+
+    return () => {
+      document.body.style.pointerEvents = "";
+    };
+  }, [certificateSearchOpen, calendarOpen, selectsOpen]);
+
   useEffect(() => {
     if (searchValue) {
       setFilteredCertificates(
-        certificates.filter(cert => {
+        certificates.filter((cert) => {
           const refNumber = cert.referenceNumber.toLowerCase();
           const fullName = `${cert.resident.firstName} ${cert.resident.lastName}`.toLowerCase();
           const bahayToroId = cert.resident.bahayToroSystemId.toLowerCase();
           const search = searchValue.toLowerCase();
-          
-          return refNumber.includes(search) || 
-                 fullName.includes(search) || 
-                 bahayToroId.includes(search);
+
+          return (
+            refNumber.includes(search) ||
+            fullName.includes(search) ||
+            bahayToroId.includes(search)
+          );
         }),
       );
     } else {
       setFilteredCertificates(certificates);
     }
   }, [certificates, searchValue]);
-  
+
   // Handle outside click for dropdowns
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       // Close certificate dropdown when clicking outside
-      if (certificateSearchOpen && 
-          certificateDropdownRef.current && 
-          !certificateDropdownRef.current.contains(event.target as Node)) {
+      if (
+        certificateSearchOpen &&
+        certificateDropdownRef.current &&
+        !certificateDropdownRef.current.contains(event.target as Node)
+      ) {
         setCertificateSearchOpen(false);
       }
-      
+
       // Close calendar dropdown when clicking outside
-      if (calendarOpen &&
-          calendarDropdownRef.current &&
-          !calendarDropdownRef.current.contains(event.target as Node)) {
+      if (
+        calendarOpen &&
+        calendarDropdownRef.current &&
+        !calendarDropdownRef.current.contains(event.target as Node)
+      ) {
         setCalendarOpen(false);
       }
     }
-    
+
     // Add event listener
     document.addEventListener("mousedown", handleClickOutside);
-    
+
     // Cleanup
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -127,7 +148,7 @@ export default function ManualPaymentForm({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      
+
       // Validate file size (5MB max)
       if (selectedFile.size > 5 * 1024 * 1024) {
         toast({
@@ -150,7 +171,7 @@ export default function ManualPaymentForm({
       }
 
       setFile(selectedFile);
-      
+
       // Create preview URL (only for images)
       if (selectedFile.type.startsWith("image/")) {
         const previewUrl = URL.createObjectURL(selectedFile);
@@ -158,7 +179,7 @@ export default function ManualPaymentForm({
       } else {
         setFilePreview(null);
       }
-      
+
       // Update form
       form.setValue("proofOfPayment", selectedFile);
     }
@@ -183,7 +204,7 @@ export default function ManualPaymentForm({
 
   // Find selected certificate details
   const selectedCertificate = certificates.find(
-    cert => cert.id === form.watch("certificateRequestId"),
+    (cert) => cert.id === form.watch("certificateRequestId"),
   );
 
   return (
@@ -208,16 +229,16 @@ export default function ManualPaymentForm({
                   type="button"
                 >
                   {field.value ? (
-                    selectedCertificate ? 
-                      `${selectedCertificate.referenceNumber} - ${selectedCertificate.resident.firstName} ${selectedCertificate.resident.lastName}` : 
-                      "Select a certificate request"
+                    selectedCertificate
+                      ? `${selectedCertificate.referenceNumber} - ${selectedCertificate.resident.firstName} ${selectedCertificate.resident.lastName}`
+                      : "Select a certificate request"
                   ) : (
                     "Select a certificate request"
                   )}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
                 {certificateSearchOpen && (
-                  <div className="absolute top-full z-[60] mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                  <div className="absolute top-full z-50 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
                     <div className="relative flex items-center border-b px-3">
                       <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                       <input
@@ -264,7 +285,7 @@ export default function ManualPaymentForm({
             </FormItem>
           )}
         />
-      
+
         <FormField
           control={form.control}
           name="amount"
@@ -272,12 +293,7 @@ export default function ManualPaymentForm({
             <FormItem>
               <FormLabel>Amount (PHP)</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="text"
-                  placeholder="0.00"
-                  inputMode="decimal"
-                />
+                <Input {...field} type="text" placeholder="0.00" inputMode="decimal" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -290,7 +306,7 @@ export default function ManualPaymentForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Payment Method</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select onValueChange={field.onChange} value={field.value} onOpenChange={setSelectsOpen}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select payment method" />
@@ -308,14 +324,14 @@ export default function ManualPaymentForm({
               </FormItem>
             )}
           />
-      
+
           <FormField
             control={form.control}
             name="paymentStatus"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Payment Status</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select onValueChange={field.onChange} value={field.value} onOpenChange={setSelectsOpen}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
@@ -340,7 +356,7 @@ export default function ManualPaymentForm({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Payment Date</FormLabel>
-              <div className="relative w-full" ref={calendarDropdownRef}>
+              <div className="relative" ref={calendarDropdownRef}>
                 <Button
                   variant="outline"
                   className={cn(
@@ -358,7 +374,7 @@ export default function ManualPaymentForm({
                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
                 {calendarOpen && (
-                  <div className="absolute top-full z-[60] mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                  <div className="absolute top-full z-50 mt-1">
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
@@ -367,7 +383,7 @@ export default function ManualPaymentForm({
                         setCalendarOpen(false);
                       }}
                       initialFocus
-                      className="rounded-md border"
+                      className="rounded-md border bg-white shadow-md"
                     />
                   </div>
                 )}
@@ -383,10 +399,7 @@ export default function ManualPaymentForm({
             <FormItem>
               <FormLabel>Receipt Number (Optional)</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  placeholder="Receipt number"
-                />
+                <Input {...field} placeholder="Receipt number" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -414,7 +427,7 @@ export default function ManualPaymentForm({
                         onClick={removeFile}
                         className="w-1/4"
                       >
-                          Remove
+                        Remove
                       </Button>
                     )}
                   </div>
@@ -438,13 +451,17 @@ export default function ManualPaymentForm({
                         fill
                         className="object-contain"
                       />
-                      <span className="absolute right-1 top-1 rounded bg-black/70 px-2 py-1 text-xs text-white">Current File</span>
+                      <span className="absolute right-1 top-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
+                        Current File
+                      </span>
                     </div>
                   )}
                   {file && !file.type.startsWith("image/") && (
                     <div className="mt-2 flex h-20 items-center justify-center rounded-md border bg-muted text-muted-foreground">
                       <Upload className="mr-2 h-5 w-5" />
-                      <span>{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
+                      <span>
+                        {file.name} ({(file.size / 1024).toFixed(1)} KB)
+                      </span>
                     </div>
                   )}
                   {!file && initialData?.proofOfPaymentPath?.toLowerCase().endsWith(".pdf") && (
