@@ -217,8 +217,8 @@ export default function ManualPaymentForm({
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
                 {certificateSearchOpen && (
-                  <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
-                    <div className="flex items-center border-b px-3 relative">
+                  <div className="absolute top-full z-[60] mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                    <div className="relative flex items-center border-b px-3">
                       <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                       <input
                         className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
@@ -283,7 +283,7 @@ export default function ManualPaymentForm({
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             control={form.control}
             name="paymentMethod"
@@ -358,7 +358,7 @@ export default function ManualPaymentForm({
                   <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                 </Button>
                 {calendarOpen && (
-                  <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                  <div className="absolute top-full z-[60] mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
                     <Calendar
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
@@ -420,7 +420,7 @@ export default function ManualPaymentForm({
                   </div>
                   {/* Show new file preview */}
                   {file && file.type.startsWith("image/") && (
-                    <div className="relative h-40 mt-2 border rounded-md overflow-hidden">
+                    <div className="relative mt-2 h-40 overflow-hidden rounded-md border">
                       <Image
                         src={URL.createObjectURL(file)}
                         alt="Proof of payment preview"
@@ -431,24 +431,24 @@ export default function ManualPaymentForm({
                   )}
                   {/* Show existing file preview if editing */}
                   {!file && filePreview && initialData?.proofOfPaymentPath && (
-                    <div className="relative h-40 mt-2 border rounded-md overflow-hidden">
+                    <div className="relative mt-2 h-40 overflow-hidden rounded-md border">
                       <Image
                         src={initialData.proofOfPaymentPath}
                         alt="Proof of payment preview"
                         fill
                         className="object-contain"
                       />
-                      <span className="absolute top-1 right-1 bg-black/70 text-white px-2 py-1 rounded text-xs">Current File</span>
+                      <span className="absolute right-1 top-1 rounded bg-black/70 px-2 py-1 text-xs text-white">Current File</span>
                     </div>
                   )}
                   {file && !file.type.startsWith("image/") && (
-                    <div className="flex items-center justify-center h-20 mt-2 border rounded-md bg-muted text-muted-foreground">
+                    <div className="mt-2 flex h-20 items-center justify-center rounded-md border bg-muted text-muted-foreground">
                       <Upload className="mr-2 h-5 w-5" />
                       <span>{file.name} ({(file.size / 1024).toFixed(1)} KB)</span>
                     </div>
                   )}
                   {!file && initialData?.proofOfPaymentPath?.toLowerCase().endsWith(".pdf") && (
-                    <div className="flex items-center justify-center h-20 mt-2 border rounded-md bg-muted text-muted-foreground">
+                    <div className="mt-2 flex h-20 items-center justify-center rounded-md border bg-muted text-muted-foreground">
                       <Upload className="mr-2 h-5 w-5" />
                       <span>Current file: PDF Document</span>
                     </div>

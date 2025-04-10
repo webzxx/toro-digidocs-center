@@ -117,8 +117,8 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="@container flex flex-col items-start justify-between pb-4 border-b space-y-4">  
-        <div className="w-full flex flex-row justify-between items-center">
+      <CardHeader className="flex flex-col items-start justify-between space-y-4 border-b pb-4 @container">  
+        <div className="flex w-full flex-row items-center justify-between">
           <div>
             <CardTitle className="text-2xl font-bold text-green-primary">Payments</CardTitle>
             <CardDescription>Manage all payments for certificate requests</CardDescription>
@@ -128,17 +128,17 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
             onSuccess={handlePaymentSuccess}
           />
         </div>
-        <div className="@lg:flex-row w-full flex flex-col gap-2 sm:gap-4">
+        <div className="flex w-full flex-col gap-2 @lg:flex-row sm:gap-4">
           <div className="relative w-full">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search payments by reference number or resident name..."
               value={search || ""}
               onChange={handleSearchChange}
-              className="pl-8 w-full"
+              className="w-full pl-8"
             />
           </div>
-          <div className="flex flex-col gap-2 @sm:flex-row space-y-0 @sm:space-x-2 w-full">
+          <div className="flex w-full flex-col gap-2 space-y-0 @sm:flex-row @sm:space-x-2">
             <Select value={method} onValueChange={(value) => {
               setMethod(value);
               setPage(1);
@@ -173,11 +173,11 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
       </CardHeader>
       <CardContent className="p-0">
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
           </div>
         ) : isError ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <p className="text-red-500">Error loading payments. Please try again.</p>
           </div>
         ) : payments.length > 0 ? (
@@ -186,7 +186,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
               {isFetching && <LoaderComponent/>}
               <PaymentTable payments={payments} certificates={certificates} isLoading={isFetching} refetch={refetch} />
             </div>
-            <div className="flex items-center justify-between p-4 border-t">
+            <div className="flex items-center justify-between border-t p-4">
               <div className="text-sm text-muted-foreground">
                 Showing {((page - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(page * ITEMS_PER_PAGE, totalPayments)} of {totalPayments} payments
               </div>
@@ -198,9 +198,9 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
                   disabled={page === 1 || isFetching}
                   className="px-1 min-[500px]:px-3"
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" /> <span className="hidden min-[500px]:inline">Previous</span>
+                  <ChevronLeft className="mr-1 h-4 w-4" /> <span className="hidden min-[500px]:inline">Previous</span>
                 </Button>
-                <div className="text-sm text-nowrap">
+                <div className="text-nowrap text-sm">
                   <span className="hidden min-[500px]:inline">Page</span> {page} of {totalPages}
                 </div>
                 <Button 
@@ -210,17 +210,17 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
                   disabled={isFetching || page >= totalPages}
                   className="px-1 min-[500px]:px-3"
                 >
-                  <span className="hidden min-[500px]:inline">Next</span> <ChevronRight className="h-4 w-4 ml-1" />
+                  <span className="hidden min-[500px]:inline">Next</span> <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
             </div>
           </>
         ) : (
-          <div className="relative flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm py-20 m-6">
+          <div className="relative m-6 flex flex-1 items-center justify-center rounded-lg border border-dashed py-20 shadow-sm">
             {isFetching && <LoaderComponent/>}
             <div className="flex flex-col items-center text-center">
               <h3 className="text-2xl font-bold tracking-tight">No Payments</h3>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="mb-3 text-sm text-muted-foreground">
                 No payments match your current filter criteria.
               </p>
             </div>
@@ -233,7 +233,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
 
 function LoaderComponent() {
   return (
-    <div className="absolute inset-0 bg-white/60 flex justify-center items-center pt-10 z-10">
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 pt-10">
       <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
     </div>
   );

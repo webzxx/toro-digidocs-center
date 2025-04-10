@@ -66,7 +66,7 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="px-7 flex flex-row items-center justify-between border-b pb-4">
+      <CardHeader className="flex flex-row items-center justify-between border-b px-7 pb-4">
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">My Certificates</CardTitle>
           <CardDescription>Request and manage your document certificates</CardDescription>
@@ -93,7 +93,7 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
               </div>
               
               {residents.map(resident => (
-                <TabsContent key={resident.bahayToroSystemId} value={resident.bahayToroSystemId} className="px-0 py-0 mt-0">
+                <TabsContent key={resident.bahayToroSystemId} value={resident.bahayToroSystemId} className="mt-0 px-0 py-0">
                   <CertificateList resident={resident} />
                 </TabsContent>
               ))}
@@ -104,10 +104,10 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
         </>
       ) : (
         <CardContent className="p-6">
-          <div className="flex flex-col items-center justify-center text-center py-10 border border-dashed rounded-lg">
-            <FileText className="h-12 w-12 text-muted-foreground mb-3" />
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-10 text-center">
+            <FileText className="mb-3 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-medium">No certificates found</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="mb-4 text-sm text-muted-foreground">
               Request your first certificate to see it here
             </p>
             <RequestCertificateButton residents={residents} />
@@ -115,7 +115,7 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
         </CardContent>
       )}
       
-      <CardFooter className="border-t p-4 flex justify-between text-sm text-muted-foreground">
+      <CardFooter className="flex justify-between border-t p-4 text-sm text-muted-foreground">
         <div>Total certificates: {totalCertificates}</div>
         <div className="flex gap-2">
           {Object.entries(statusCounts).map(([status, count]) => (
@@ -162,7 +162,7 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
 
   return (
     <CardContent className="p-6">
-      <div className="flex items-center gap-2 mb-4">
+      <div className="mb-4 flex items-center gap-2">
         <div className="flex-1">
           <h3 className="text-lg font-semibold">
             {resident.firstName} {resident.lastName}
@@ -175,8 +175,8 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
         <ScrollArea className="max-h-[500px] pr-4">
           <Accordion type="single" collapsible className="w-full">
             {resident.certificateRequests.map((certificate) => (
-              <AccordionItem key={certificate.id} value={certificate.id.toString()} className="border border-muted rounded-lg mb-3 overflow-hidden">
-                <AccordionTrigger className="px-4 py-3 hover:no-underline [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0">
+              <AccordionItem key={certificate.id} value={certificate.id.toString()} className="mb-3 overflow-hidden rounded-lg border border-muted">
+                <AccordionTrigger className="px-4 py-3 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0 [&>svg]:text-muted-foreground">
                   <div className="flex flex-1 items-center justify-between">
                     <div className='flex flex-col items-start text-start'>
                       <h4 className="font-medium">{certificate.certificateType.replace(/_/g, " ")}</h4>
@@ -223,10 +223,10 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
           </Accordion>
         </ScrollArea>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center py-10 border border-dashed rounded-lg">
-          <FileText className="h-12 w-12 text-muted-foreground mb-3" />
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-10 text-center">
+          <FileText className="mb-3 h-12 w-12 text-muted-foreground" />
           <h3 className="text-lg font-medium">No certificates for this resident</h3>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="mb-4 text-sm text-muted-foreground">
             This resident has no certificate records yet
           </p>
         </div>

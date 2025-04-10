@@ -293,7 +293,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" disabled={isInitializing} className="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 border-blue-300">
+          <Button variant="outline" disabled={isInitializing} className="w-full border-blue-300 bg-blue-100 text-blue-800 hover:bg-blue-200">
             {isProcessing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -322,9 +322,9 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
               onValueChange={(value) => setDeliveryMethod(value as "pickup" | "delivery")}
               className="grid gap-6 py-4"
             >
-              <div className="flex items-center space-x-2 border p-4 rounded-md">
+              <div className="flex items-center space-x-2 rounded-md border p-4">
                 <RadioGroupItem value="pickup" id="pickup" />
-                <Label htmlFor="pickup" className="flex items-center gap-3 cursor-pointer">
+                <Label htmlFor="pickup" className="flex cursor-pointer items-center gap-3">
                   <Store className="h-5 w-5" />
                   <div>
                     <p className="font-medium">Pickup at Barangay Office</p>
@@ -332,9 +332,9 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
                   </div>
                 </Label>
               </div>
-              <div className="flex items-center space-x-2 border p-4 rounded-md">
+              <div className="flex items-center space-x-2 rounded-md border p-4">
                 <RadioGroupItem value="delivery" id="delivery" />
-                <Label htmlFor="delivery" className="flex items-center gap-3 cursor-pointer">
+                <Label htmlFor="delivery" className="flex cursor-pointer items-center gap-3">
                   <Truck className="h-5 w-5" />
                   <div>
                     <p className="font-medium">Deliver to my address</p>
@@ -369,7 +369,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
                 Your payment session is still active. You can continue with your payment or cancel it.
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter className="gap-2 flex-col sm:flex-col sm:space-x-0 sm:space-y-1">
+            <DialogFooter className="flex-col gap-2 sm:flex-col sm:space-x-0 sm:space-y-1">
               <Button 
                 onClick={reopenCheckout} 
                 className="w-full"

@@ -58,11 +58,11 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
           payments.map((payment) => (
             <TableRow key={payment.id} className={getRowClassName(payment)}>
               <TableCell>
-                <div className="font-medium flex items-center gap-2">
+                <div className="flex items-center gap-2 font-medium">
                   {payment.transactionReference ? (
                     <p>{payment.transactionReference}</p>
                   ) : (
-                    <span className="text-muted-foreground italic">No reference</span>
+                    <span className="italic text-muted-foreground">No reference</span>
                   )}
                   
                   {isActiveOnlineTransaction(payment) && (
@@ -71,8 +71,8 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                         <TooltipTrigger asChild>
                           <div className="flex-shrink-0">
                             <span className="relative flex h-3 w-3">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
+                              <span className="relative inline-flex h-3 w-3 rounded-full bg-blue-500"></span>
                             </span>
                           </div>
                         </TooltipTrigger>
@@ -83,7 +83,7 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                     </TooltipProvider>
                   )}
                 </div>
-                <div className="md:hidden text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground md:hidden">
                   {payment.certificateRequest?.resident?.firstName} {payment.certificateRequest?.resident?.lastName}
                 </div>
               </TableCell>
@@ -98,7 +98,7 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                     </div>
                   </div>
                 ) : (
-                  <span className="text-muted-foreground italic">Unknown</span>
+                  <span className="italic text-muted-foreground">Unknown</span>
                 )}
               </TableCell>
               <TableCell className="hidden md:table-cell">
@@ -110,7 +110,7 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                     </div>
                   </div>
                 ) : (
-                  <span className="text-muted-foreground italic">Unknown</span>
+                  <span className="italic text-muted-foreground">Unknown</span>
                 )}
               </TableCell>
               <TableCell className="hidden sm:table-cell">

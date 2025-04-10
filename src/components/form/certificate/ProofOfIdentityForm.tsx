@@ -157,18 +157,18 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
 
 
   const renderImageGallery = (category: ImageCategory) => (
-    <div className={`grid grid-cols-2 gap-4 mt-2 ${hasAnyImage() ? "h-24 sm:h-32 md:h-64": ""}`}>
+    <div className={`mt-2 grid grid-cols-2 gap-4 ${hasAnyImage() ? "h-24 sm:h-32 md:h-64": ""}`}>
       {images[category].map((image, index) => (
-        <div key={index} className="relative group">
+        <div key={index} className="group relative">
           <Image
             src={image.preview}
             alt={`Uploaded ${category} ${index + 1}`}
-            className="w-full h-32 object-cover rounded-md border-dotted border-2 border-gray-800"
+            className="h-32 w-full rounded-md border-2 border-dotted border-gray-800 object-cover"
             fill
           />
           <button
             onClick={() => removeImage(category, index)}
-            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
             aria-label={`Remove ${category} ${index + 1}`}
           >
             <X size={16} />
@@ -183,9 +183,9 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
       <Form {...form}>
         <form className="space-y-6" onSubmit={onSubmit}>
           <div>
-            <Label className="block mb-2">Please Provide Two(2) Valid ID&apos;s and Two(2) Photo of you holding the ID&apos;s.</Label>
-            <p className="text-sm text-muted-foreground mb-4">Max file size: 5MB, accepted: jpg|gif|png</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Label className="mb-2 block">Please Provide Two(2) Valid ID&apos;s and Two(2) Photo of you holding the ID&apos;s.</Label>
+            <p className="mb-4 text-sm text-muted-foreground">Max file size: 5MB, accepted: jpg|gif|png</p>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {(["photoId", "photoHoldingId"] as const).map((category) => (
                 <FormField
                   key={category}
@@ -210,7 +210,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <FormField
               control={form.control}
               name="signature"
@@ -218,7 +218,7 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
                 <FormItem>
                   <FormLabel>Signature <span className="text-sm text-muted-foreground">(Please save after completing)</span></FormLabel>
                   <FormControl>
-                    <div className="border border-gray-300 rounded-md p-2">
+                    <div className="rounded-md border border-gray-300 p-2">
                       <SignaturePad
                         ref={signaturePadRef}
                         options={{
@@ -236,9 +236,9 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
             />
             {data.signature && (
               <div className="flex flex-col">
-                <Label className='mt-[5px] mb-[5px]'>Saved Signature</Label>
+                <Label className='mb-[5px] mt-[5px]'>Saved Signature</Label>
                 <div className="relative grow">
-                  <Image src={data.signature} alt="Saved Signature" fill className="border border-gray-300 rounded-md" />
+                  <Image src={data.signature} alt="Saved Signature" fill className="rounded-md border border-gray-300" />
                 </div>
               </div>
             )}

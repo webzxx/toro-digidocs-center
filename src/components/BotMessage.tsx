@@ -17,9 +17,9 @@ export default function BotMessage({ fetchMessage } : { fetchMessage: () => Prom
   }, [fetchMessage]);
 
   return (
-    <div className="mb-3 flex me-5 justify-start items-start">
-      <Image src="/man.png" alt="Bot" width={24} height={24} className="rounded-sm mt-2 pr-1 outline" />
-      <div className="rounded-lg bg-zinc-100 text-gray-900 py-1.5 px-3 text-sm sm:leading-6">
+    <div className="mb-3 me-5 flex items-start justify-start">
+      <Image src="/man.png" alt="Bot" width={24} height={24} className="mt-2 rounded-sm pr-1 outline" />
+      <div className="rounded-lg bg-zinc-100 px-3 py-1.5 text-sm text-gray-900 sm:leading-6">
         {isLoading ? "..." : <span dangerouslySetInnerHTML={{ __html: message }} />}
       </div>
     </div>

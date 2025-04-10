@@ -237,13 +237,13 @@ function Footer({ details, resetFormData }: FooterProps) {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="mx-auto w-full max-w-md">
       <CardContent className="pt-6 text-center">
-        <CheckCircle2 className="w-16 h-16 mx-auto text-green-500 mb-4" />
-        <h2 className="text-2xl font-semibold text-green-600 mb-6">
+        <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
+        <h2 className="mb-6 text-2xl font-semibold text-green-600">
           Congrats, your request was successfully sent!
         </h2>
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm font-medium text-gray-500">REFERENCE NUMBER</p>
             <p className="text-lg font-bold">{details.referenceNumber}</p>

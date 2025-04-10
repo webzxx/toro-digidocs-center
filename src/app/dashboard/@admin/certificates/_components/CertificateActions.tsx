@@ -158,7 +158,7 @@ export default function CertificateActions({
               <Label htmlFor="remarks" className="text-right">
                 Remarks
                 {editedStatus === "REJECTED" && (
-                  <span className="text-red-500 ml-1">*</span>
+                  <span className="ml-1 text-red-500">*</span>
                 )}
               </Label>
               <Textarea
@@ -194,7 +194,7 @@ export default function CertificateActions({
           <DialogHeader>
             <h2>{referenceNumber}</h2>
             <DialogDescription>
-              <span className="text-red-600 font-bold">This action cannot be undone!</span> This will <span className="text-red-600 font-bold">permanently delete</span> the certificate request with reference number <b>{referenceNumber}</b>. Please review carefully before proceeding.
+              <span className="font-bold text-red-600">This action cannot be undone!</span> This will <span className="font-bold text-red-600">permanently delete</span> the certificate request with reference number <b>{referenceNumber}</b>. Please review carefully before proceeding.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

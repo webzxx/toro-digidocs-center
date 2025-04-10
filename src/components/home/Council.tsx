@@ -11,37 +11,37 @@ const Council = async () => {
 
   return (
     <div id="council-section" className="relative w-full py-8">
-      <div className="container mx-auto px-4 lg:px-8 min-h-screen flex flex-col">
+      <div className="container mx-auto flex min-h-screen flex-col px-4 lg:px-8">
         {/* Section Title */}
-        <div className="text-center pt-16 uppercase">
-          <h1 className="text-3xl md:text-4xl text-green-primary font-semibold">
+        <div className="pt-16 text-center uppercase">
+          <h1 className="text-3xl font-semibold text-green-primary md:text-4xl">
             Barangay Bahay Toro at a glance
           </h1>
-          <h2 className="text-lg md:text-xl mt-2">
+          <h2 className="mt-2 text-lg md:text-xl">
             Barangay Bahay Toro Officials
           </h2>
         </div>
 
         {/* Layout - Responsive */}
-        <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start pt-8 space-y-6 lg:space-y-0 lg:space-x-6">
+        <div className="flex flex-col items-center justify-center space-y-6 pt-8 lg:flex-row lg:items-start lg:space-x-6 lg:space-y-0">
           {/* Left Column (Login & Forms) */}
-          <div className="w-full lg:w-1/2 flex flex-col lg:flex-row space-y-6 lg:space-y-0 lg:space-x-6">
+          <div className="flex w-full flex-col space-y-6 lg:w-1/2 lg:flex-row lg:space-x-6 lg:space-y-0">
             {/* Members Login */}
             { !session?.user ? (
-              <div className="bg-white rounded-lg shadow-lg border border-stone-300 p-8 w-full lg:w-1/2">
-                <FaUserCircle className="text-4xl mb-6 mx-auto" size={80} />
-                <h1 className="text-xl font-semibold mb-6 text-center">
+              <div className="w-full rounded-lg border border-stone-300 bg-white p-8 shadow-lg lg:w-1/2">
+                <FaUserCircle className="mx-auto mb-6 text-4xl" size={80} />
+                <h1 className="mb-6 text-center text-xl font-semibold">
                   Members Login
                 </h1>
                 <SignInForm />
               </div>
             ) : (
-              <div className="flex flex-col items-center bg-white rounded-lg shadow-lg border border-stone-300 p-8 w-full lg:w-1/2">
-                <h1 className="text-xl font-semibold mb-6 text-center">
+              <div className="flex w-full flex-col items-center rounded-lg border border-stone-300 bg-white p-8 shadow-lg lg:w-1/2">
+                <h1 className="mb-6 text-center text-xl font-semibold">
                   Welcome, {session.user.name} ({session.user.email})
                 </h1>
                 <Link href="/dashboard">
-                  <button className="bg-green-primary text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-blue-300">
+                  <button className="rounded-md bg-green-primary px-4 py-2 text-white hover:bg-green-600 focus:border-blue-300 focus:outline-none focus:ring">
                     Go to {session.user.role === "ADMIN" ? "Dashboard" : "My Account"}
                   </button>
                 </Link>
@@ -49,9 +49,9 @@ const Council = async () => {
             )}
 
             {/* Certificate Forms */}
-            <div className="bg-white rounded-lg shadow-lg border border-stone-300 p-8 w-full lg:w-1/2">
-              <h1 className="text-xl font-semibold mb-4">Certificate Forms</h1>
-              <div className="text-start space-y-4">
+            <div className="w-full rounded-lg border border-stone-300 bg-white p-8 shadow-lg lg:w-1/2">
+              <h1 className="mb-4 text-xl font-semibold">Certificate Forms</h1>
+              <div className="space-y-4 text-start">
                 {[
                   "Barangay Clearance Form",
                   "Barangay ID Form",
@@ -72,18 +72,18 @@ const Council = async () => {
           </div>
 
           {/* Right Column (Council Members) */}
-          <div className="w-full lg:w-1/2 flex flex-col items-center">
+          <div className="flex w-full flex-col items-center lg:w-1/2">
             {/* Barangay Council Title */}
             <div className="text-center uppercase">
-              <h1 className="text-3xl md:text-4xl text-green-primary font-semibold">
+              <h1 className="text-3xl font-semibold text-green-primary md:text-4xl">
                 Barangay Council
               </h1>
-              <h2 className="text-lg md:text-xl mt-2 mb-2">Meet our Council</h2>
+              <h2 className="mb-2 mt-2 text-lg md:text-xl">Meet our Council</h2>
             </div>
 
             {/* Council Members Grid */}
-            <div className="bg-white rounded-lg shadow-lg border border-stone-300 p-6 w-full">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="w-full rounded-lg border border-stone-300 bg-white p-6 shadow-lg">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
                 {[
                   { name: "Jun Ferrer", role: "Punong Barangay" },
                   { name: "John Doe", role: "Brgy. Kagawad" },
@@ -97,7 +97,7 @@ const Council = async () => {
                 ].map((member, index) => (
                   <div
                     key={index}
-                    className="p-4 flex flex-col items-center text-center"
+                    className="flex flex-col items-center p-4 text-center"
                   >
                     <FaRegUserCircle size={50} className="mb-2" />
                     <h1 className="text-lg font-medium">{member.name}</h1>

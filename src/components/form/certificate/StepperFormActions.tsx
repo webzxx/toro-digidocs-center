@@ -17,7 +17,7 @@ export const StepperFormActions = () => {
   }
 
   return (
-    <div className="w-full flex justify-end gap-2">
+    <div className="flex w-full justify-end gap-2">
       {hasCompletedAllSteps ? (
         <Button size="sm" onClick={resetSteps}>
           Reset

@@ -19,52 +19,52 @@ async function SettingsPage({ user }: WithAuthProps) {
   }
 
   return (
-    <main className="flex flex-col gap-2 min-h-[90vh] w-full">
+    <main className="flex min-h-[90vh] w-full flex-col gap-2">
       <Card className="shadow-md">
-        <CardHeader className="px-7 flex flex-row items-center justify-between border-b pb-4">
+        <CardHeader className="flex flex-row items-center justify-between border-b px-7 pb-4">
           <div>
             <CardTitle className="text-2xl font-bold text-green-primary">Account Settings</CardTitle>
             <CardDescription>Manage your account information</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <div className="grid gap-6 max-w-2xl">
-            <div className="flex items-center gap-4 p-4 border rounded-lg bg-slate-50">
+          <div className="grid max-w-2xl gap-6">
+            <div className="flex items-center gap-4 rounded-lg border bg-slate-50 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
                 <UserIcon className="h-5 w-5 text-green-700" />
               </div>
-              <div className="space-y-1 flex-1">
-                <Label className="text-muted-foreground text-sm">Username</Label>
+              <div className="flex-1 space-y-1">
+                <Label className="text-sm text-muted-foreground">Username</Label>
                 <p className="font-medium">{fullUser.username}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4 p-4 border rounded-lg bg-slate-50">
+            <div className="flex items-center gap-4 rounded-lg border bg-slate-50 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
                 <Mail className="h-5 w-5 text-blue-700" />
               </div>
-              <div className="space-y-1 flex-1">
-                <Label className="text-muted-foreground text-sm">Email Address</Label>
+              <div className="flex-1 space-y-1">
+                <Label className="text-sm text-muted-foreground">Email Address</Label>
                 <p className="font-medium">{fullUser.email}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4 p-4 border rounded-lg bg-slate-50">
+            <div className="flex items-center gap-4 rounded-lg border bg-slate-50 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
                 <Shield className="h-5 w-5 text-purple-700" />
               </div>
-              <div className="space-y-1 flex-1">
-                <Label className="text-muted-foreground text-sm">Account Type</Label>
+              <div className="flex-1 space-y-1">
+                <Label className="text-sm text-muted-foreground">Account Type</Label>
                 <p className="font-medium">{fullUser.role}</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4 p-4 border rounded-lg bg-slate-50">
+            <div className="flex items-center gap-4 rounded-lg border bg-slate-50 p-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
                 <Calendar className="h-5 w-5 text-amber-700" />
               </div>
-              <div className="space-y-1 flex-1">
-                <Label className="text-muted-foreground text-sm">Account Created</Label>
+              <div className="flex-1 space-y-1">
+                <Label className="text-sm text-muted-foreground">Account Created</Label>
                 <p className="font-medium">{formatDateTime(fullUser.createdAt)}</p>
               </div>
             </div>

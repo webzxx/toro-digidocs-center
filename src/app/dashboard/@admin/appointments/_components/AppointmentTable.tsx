@@ -56,7 +56,7 @@ export default function AppointmentTable({ appointments, isLoading = false, refe
           appointments.map((appointment) => (
             <TableRow key={appointment.id} className={getRowClassName(appointment)}>
               <TableCell>
-                <div className="font-medium flex items-center gap-2">
+                <div className="flex items-center gap-2 font-medium">
                   {appointment.referenceNumber}
                   
                   {isPendingRequest(appointment) && (
@@ -65,8 +65,8 @@ export default function AppointmentTable({ appointments, isLoading = false, refe
                         <TooltipTrigger asChild>
                           <div className="flex-shrink-0">
                             <span className="relative flex h-3 w-3">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75"></span>
+                              <span className="relative inline-flex h-3 w-3 rounded-full bg-purple-500"></span>
                             </span>
                           </div>
                         </TooltipTrigger>
@@ -77,7 +77,7 @@ export default function AppointmentTable({ appointments, isLoading = false, refe
                     </TooltipProvider>
                   )}
                 </div>
-                <div className="md:hidden text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground md:hidden">
                   {appointment.user?.username}
                 </div>
               </TableCell>
@@ -124,7 +124,7 @@ export default function AppointmentTable({ appointments, isLoading = false, refe
               <TableCell>
                 {getAppointmentStatusBadge(appointment.status)}
                 {isPendingRequest(appointment) && (
-                  <div className="md:hidden flex items-center gap-1 mt-1">
+                  <div className="mt-1 flex items-center gap-1 md:hidden">
                     <TooltipProvider delayDuration={0}>
                       <Tooltip>
                         <TooltipTrigger asChild>

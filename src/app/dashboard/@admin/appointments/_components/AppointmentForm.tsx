@@ -211,7 +211,7 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2 p-0 w-10 min-[530px]:px-4 min-[530px]:py-2 min-[530px]:w-auto"
+          className="w-10 gap-2 p-0 min-[530px]:w-auto min-[530px]:px-4 min-[530px]:py-2"
         >
           <Plus className="h-4 w-4" />
           <span className="hidden min-[530px]:block min-[640px]:hidden">Add</span>
@@ -227,7 +227,7 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
         </DialogHeader>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-4">
             <FormField
               control={form.control}
               name="appointmentType"
@@ -282,8 +282,8 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                     {residentSearchOpen && (
-                      <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
-                        <div className="flex items-center border-b px-3 relative">
+                      <div className="absolute top-full z-[60] mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                        <div className="relative flex items-center border-b px-3">
                           <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                           <input
                             className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
@@ -333,7 +333,7 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
               )}
             />
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="preferredDate"
@@ -418,7 +418,7 @@ export default function AppointmentForm({ initialData, onSuccess, residents }: A
                     <Textarea
                       {...field}
                       placeholder="Add any additional notes about the appointment"
-                      className="resize-none min-h-[80px]"
+                      className="min-h-[80px] resize-none"
                     />
                   </FormControl>
                   <FormMessage />

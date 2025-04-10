@@ -457,7 +457,7 @@ type VerticalStepProps = StepSharedProps & {
 
 const verticalStepVariants = cva(
   [
-    "flex flex-col relative transition-all duration-200",
+    "relative flex flex-col transition-all duration-200",
     "data-[completed=true]:[&:not(:last-child)]:after:bg-primary",
     "data-[invalid=true]:[&:not(:last-child)]:after:bg-destructive",
   ],
@@ -473,7 +473,7 @@ const verticalStepVariants = cva(
           "[&:not(:last-child)]:after:bottom-[var(--step-gap)]",
           "[&:not(:last-child)]:after:transition-all [&:not(:last-child)]:after:duration-200",
         ),
-        line: "flex-1 border-t-0 mb-4",
+        line: "mb-4 flex-1 border-t-0",
       },
     },
   },
@@ -528,7 +528,7 @@ const VerticalStep = React.forwardRef<HTMLDivElement, VerticalStepProps>(
       if (!expandVerticalSteps) {
         return (
           <Collapsible open={isCurrentStep}>
-            <CollapsibleContent className="overflow-hidden data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
+            <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up overflow-hidden">
               {children}
             </CollapsibleContent>
           </Collapsible>

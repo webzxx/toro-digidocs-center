@@ -49,7 +49,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
 
   return (
     <div {...props} className={cn("border-t border-zinc-300 h-full", className)}>
-      <div className='relative mt-4 flex flex-col h-full justify-between rounded-lg border-none outline-none '>
+      <div className='relative mt-4 flex h-full flex-col justify-between rounded-lg border-none outline-none '>
         <ChatMessages messages={messages} />
         <TextareaAutosize
           rows={2}
@@ -80,7 +80,7 @@ const ChatInput: FC<ChatInputProps> = ({ className, ...props }) => {
           onChange={(e) => setInput(e.target.value)}
           autoFocus
           placeholder='Write a message...'
-          className='peer disabled:opacity-50 pr-14 resize-none block w-full border-0 bg-zinc-100 py-1.5 text-gray-900 focus:ring-0 text-sm sm:leading-6 overflow-hidden'
+          className='peer block w-full resize-none overflow-hidden border-0 bg-zinc-100 py-1.5 pr-14 text-sm text-gray-900 focus:ring-0 disabled:opacity-50 sm:leading-6'
         />
       </div>
     </div>

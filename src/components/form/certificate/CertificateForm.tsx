@@ -49,7 +49,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => 
           name="certificateType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Certificate Type <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Certificate Type <span className="font-bold text-red-600">*</span></FormLabel>
               <Select onValueChange={value => { handleCertificateChange(value); field.onChange(value);}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -71,7 +71,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => 
           name="purpose"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Purpose <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Purpose <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -93,7 +93,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ data, onChange }) => 
             name="requestOf"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Request of <span className="text-red-600 font-bold">*</span></FormLabel>
+                <FormLabel>Request of <span className="font-bold text-red-600">*</span></FormLabel>
                 <FormControl>
                   <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
                 </FormControl>

@@ -334,14 +334,14 @@ export default function PaymentActions({
             <>
               <DropdownMenuItem 
                 onClick={handleApprovePayment}
-                className="text-green-600 hover:text-green-700 hover:bg-green-50 focus:text-green-700 focus:bg-green-50"
+                className="text-green-600 hover:bg-green-50 hover:text-green-700 focus:bg-green-50 focus:text-green-700"
               >
                 <Check className="mr-2 h-4 w-4" /> Approve
               </DropdownMenuItem>
               
               <DropdownMenuItem 
                 onClick={handleRejectPayment}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50 focus:text-red-700 focus:bg-red-50"
+                className="text-red-600 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
               >
                 <X className="mr-2 h-4 w-4" /> Reject
               </DropdownMenuItem>
@@ -353,7 +353,7 @@ export default function PaymentActions({
           {/* Delete Action */}
           <DropdownMenuItem 
             onClick={() => setIsDeleteOpen(true)}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 focus:text-red-700 focus:bg-red-50"
+            className="text-red-600 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700"
           >
             <Trash className="mr-2 h-4 w-4" /> Delete
           </DropdownMenuItem>
@@ -362,7 +362,7 @@ export default function PaymentActions({
 
       {/* View Payment Details Dialog */}
       <Dialog open={isDetailsOpen} onOpenChange={handleDetailsClose}>
-        <DialogContent className="sm:max-w-[600px] max-h-[80vh]">
+        <DialogContent className="max-h-[80vh] sm:max-w-[600px]">
           <DialogHeader>
             <h2 className="text-xl font-semibold">Payment Details</h2>
             <DialogDescription>
@@ -378,29 +378,29 @@ export default function PaymentActions({
                 showStatus 
               />
               
-              <div className="space-y-4 mt-6">
-                <div className="bg-gray-100 h-1 w-full rounded-full my-6"></div>
+              <div className="mt-6 space-y-4">
+                <div className="my-6 h-1 w-full rounded-full bg-gray-100"></div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Created At</h3>
+                    <h3 className="mb-1 text-sm font-medium text-gray-500">Created At</h3>
                     <p className="text-base">{formatDateTime(payment.createdAt)}</p>
                   </div>
                   
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">Updated At</h3>
+                    <h3 className="mb-1 text-sm font-medium text-gray-500">Updated At</h3>
                     <p className="text-base">{formatDateTime(payment.updatedAt)}</p>
                   </div>
                 </div>
                 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Notes</h3>
+                  <h3 className="mb-1 text-sm font-medium text-gray-500">Notes</h3>
                   <p className="text-base">{payment.notes || "No notes available"}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Metadata</h3>
-                  <pre className="bg-gray-50 p-3 rounded-md overflow-auto text-xs max-h-40 whitespace-pre-wrap">{formatJson(payment.metadata)}</pre>
+                  <h3 className="mb-1 text-sm font-medium text-gray-500">Metadata</h3>
+                  <pre className="max-h-40 overflow-auto whitespace-pre-wrap rounded-md bg-gray-50 p-3 text-xs">{formatJson(payment.metadata)}</pre>
                 </div>
               </div>
             </div>
@@ -416,7 +416,7 @@ export default function PaymentActions({
 
       {/* View Receipt Dialog */}
       <Dialog open={isReceiptOpen} onOpenChange={handleReceiptClose}>
-        <DialogContent className="sm:max-w-[600px] max-h-[80vh]">
+        <DialogContent className="max-h-[80vh] sm:max-w-[600px]">
           <DialogHeader>
             <h2 className="text-xl font-semibold">Payment Receipt</h2>
             <DialogDescription>
@@ -428,7 +428,7 @@ export default function PaymentActions({
             <div className="space-y-6 pr-4">
               {payment.receiptNumber ? (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Receipt Number</h3>
+                  <h3 className="mb-1 text-sm font-medium text-gray-500">Receipt Number</h3>
                   <p className="font-mono text-base">{payment.receiptNumber}</p>
                 </div>
               ) : (
@@ -437,17 +437,17 @@ export default function PaymentActions({
               
               {payment.proofOfPaymentPath ? (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Proof of Payment</h3>
-                  <div className="border rounded-md p-2 mt-2 overflow-hidden">
+                  <h3 className="mb-1 text-sm font-medium text-gray-500">Proof of Payment</h3>
+                  <div className="mt-2 overflow-hidden rounded-md border p-2">
                     {payment.proofOfPaymentPath.toLowerCase().endsWith(".pdf") ? (
-                      <div className="flex flex-col items-center justify-center p-4 gap-2">
+                      <div className="flex flex-col items-center justify-center gap-2 p-4">
                         <FileText className="h-12 w-12 text-blue-500" />
                         <p className="text-sm text-gray-600">PDF Document</p>
                         <a 
                           href={payment.proofOfPaymentPath} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600 transition-colors"
+                          className="rounded-md bg-blue-500 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-600"
                         >
                           View PDF
                         </a>
@@ -460,14 +460,14 @@ export default function PaymentActions({
                             alt="Proof of payment" 
                             width={500} 
                             height={300} 
-                            className="w-full h-auto object-contain" 
+                            className="h-auto w-full object-contain" 
                           />
                         </div>
                         <a 
                           href={payment.proofOfPaymentPath} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs hover:bg-black/90 transition-colors"
+                          className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-1 text-xs text-white transition-colors hover:bg-black/90"
                         >
                           Open Full Size
                         </a>
@@ -481,21 +481,21 @@ export default function PaymentActions({
               
               {payment.paymentMethod && (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Method</h3>
+                  <h3 className="mb-1 text-sm font-medium text-gray-500">Payment Method</h3>
                   <p className="text-base">{payment.paymentMethod.replace(/_/g, " ")}</p>
                 </div>
               )}
               
               {payment.paymentDate && (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Date</h3>
+                  <h3 className="mb-1 text-sm font-medium text-gray-500">Payment Date</h3>
                   <p className="text-base">{formatDateTime(payment.paymentDate)}</p>
                 </div>
               )}
               
               {payment.notes && (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">Notes</h3>
+                  <h3 className="mb-1 text-sm font-medium text-gray-500">Notes</h3>
                   <p className="text-base">{payment.notes}</p>
                 </div>
               )}
@@ -511,7 +511,7 @@ export default function PaymentActions({
                 href={payment.proofOfPaymentPath ?? ""} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               >
                 Download
               </a>
@@ -522,7 +522,7 @@ export default function PaymentActions({
 
       {/* Edit Payment Dialog */}
       <Dialog open={isEditOpen} onOpenChange={handleEditClose}>
-        <DialogContent className="max-h-[90vh] flex flex-col p-0 sm:max-w-[600px]">
+        <DialogContent className="flex max-h-[90vh] flex-col p-0 sm:max-w-[600px]">
           <div className="px-6 pt-6">
             <DialogHeader>
               <h2 className="text-xl font-semibold">Edit Payment</h2>
@@ -532,7 +532,7 @@ export default function PaymentActions({
             </DialogHeader>
           </div>
           
-          <div className="overflow-y-auto px-6 flex-1">
+          <div className="flex-1 overflow-y-auto px-6">
             <ManualPaymentForm
               certificates={certificates}
               initialData={getInitialEditData()}
@@ -543,7 +543,7 @@ export default function PaymentActions({
             />
           </div>
 
-          <DialogFooter className="border-t px-6 py-4 mt-auto">
+          <DialogFooter className="mt-auto border-t px-6 py-4">
             <Button type="button" variant="outline" onClick={handleEditCloseButtonClick} className="mr-2">
               Cancel
             </Button>
@@ -561,8 +561,8 @@ export default function PaymentActions({
           <DialogHeader>
             <h2 className="text-xl font-semibold">Delete Payment</h2>
             <DialogDescription>
-              <span className="text-red-600 font-bold">This action cannot be undone!</span> This will 
-              <span className="text-red-600 font-bold"> permanently delete</span> the payment with 
+              <span className="font-bold text-red-600">This action cannot be undone!</span> This will 
+              <span className="font-bold text-red-600"> permanently delete</span> the payment with 
               transaction reference <b>{payment.transactionReference}</b> and any associated files. 
               Please review carefully before proceeding.
             </DialogDescription>

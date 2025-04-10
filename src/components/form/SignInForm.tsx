@@ -83,9 +83,9 @@ const SignInForm = () => {
             )}
           />
         </div>
-        <Button className="w-full mt-6" type="submit">Sign in</Button>
+        <Button className="mt-6 w-full" type="submit">Sign in</Button>
       </form>
-      <p className="text-center text-sm text-gray-600 mt-2">
+      <p className="mt-2 text-center text-sm text-gray-600">
         If you don&apos;t have an account, please &nbsp;
         <Link className="text-blue-500 hover:underline" href='/sign-up'>Sign up</Link>
       </p>

@@ -11,7 +11,7 @@ import Link from "next/link";
 export function Evals() {
   return (
     <div className="flex h-screen">
-      <nav className="w-64 flex-shrink-0 p-4 bg-gray-100">
+      <nav className="w-64 flex-shrink-0 bg-gray-100 p-4">
         <div className="flex items-center space-x-2 pb-8">
           <BuildingIcon className="h-6 w-6 text-gray-600" />
           <span className="text-2xl font-bold">Acme Inc</span>
@@ -30,7 +30,7 @@ export function Evals() {
             </a>
           </li>
           <li>
-            <a className="flex items-center space-x-2 text-gray-900 font-semibold bg-gray-200 rounded-md p-2" href="#">
+            <a className="flex items-center space-x-2 rounded-md bg-gray-200 p-2 font-semibold text-gray-900" href="#">
               <BarChartIcon className="h-5 w-5" />
               <span>AI Evaluations</span>
             </a>
@@ -49,8 +49,8 @@ export function Evals() {
           </li>
         </ul>
       </nav>
-      <div className="flex-1 flex flex-col">
-        <header className="flex items-center justify-between p-4 border-b">
+      <div className="flex flex-1 flex-col">
+        <header className="flex items-center justify-between border-b p-4">
           <h1 className="text-xl font-semibold">AI Evaluations Dashboard</h1>
           <div className="flex items-center space-x-4">
             <MicroscopeIcon className="h-5 w-5 text-gray-600" />
@@ -60,7 +60,7 @@ export function Evals() {
             </Avatar>
           </div>
         </header>
-        <main className="p-4 flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto p-4">
           <Card>
             <CardHeader>
               <CardTitle>AI Evaluations</CardTitle>

@@ -39,20 +39,20 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
             {addressString.length > 30 ? `${addressString.slice(0, 30)}...` : addressString}
           </TooltipTrigger>
           <TooltipContent className="w-80 p-0">
-            <div className="bg-white rounded-md shadow-lg p-4">
-              <h4 className="font-semibold text-lg mb-2">Address Details</h4>
+            <div className="rounded-md bg-white p-4 shadow-lg">
+              <h4 className="mb-2 text-lg font-semibold">Address Details</h4>
               <dl className="space-y-1">
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Residency Type:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{address.residencyType}</dd>
+                  <dd className="col-span-2 text-sm text-gray-900">{address.residencyType}</dd>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Years in Bahay Toro:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{address.yearsInBahayToro || "N/A"}</dd>
+                  <dd className="col-span-2 text-sm text-gray-900">{address.yearsInBahayToro || "N/A"}</dd>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Full Address:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{addressString}</dd>
+                  <dd className="col-span-2 text-sm text-gray-900">{addressString}</dd>
                 </div>
               </dl>
             </div>
@@ -74,24 +74,24 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
             {contactPreview}
           </TooltipTrigger>
           <TooltipContent className="w-80 p-0">
-            <div className="bg-white rounded-md shadow-lg p-4">
-              <h4 className="font-semibold text-lg mb-2">Emergency Contact</h4>
+            <div className="rounded-md bg-white p-4 shadow-lg">
+              <h4 className="mb-2 text-lg font-semibold">Emergency Contact</h4>
               <dl className="space-y-1">
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Name:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{contact.name}</dd>
+                  <dd className="col-span-2 text-sm text-gray-900">{contact.name}</dd>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Relationship:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{contact.relationship}</dd>
+                  <dd className="col-span-2 text-sm text-gray-900">{contact.relationship}</dd>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Contact:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{contact.contact}</dd>
+                  <dd className="col-span-2 text-sm text-gray-900">{contact.contact}</dd>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <dt className="text-sm font-medium text-gray-500">Address:</dt>
-                  <dd className="text-sm text-gray-900 col-span-2">{contact.address}</dd>
+                  <dd className="col-span-2 text-sm text-gray-900">{contact.address}</dd>
                 </div>
               </dl>
             </div>
@@ -109,28 +109,28 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
         <Tooltip>
           <TooltipTrigger className="text-left">View Proof of Identity</TooltipTrigger>
           <TooltipContent className="w-96 p-0">
-            <div className="bg-white rounded-md shadow-lg p-4">
-              <h4 className="font-semibold text-lg mb-2">Proof of Identity</h4>
+            <div className="rounded-md bg-white p-4 shadow-lg">
+              <h4 className="mb-2 text-lg font-semibold">Proof of Identity</h4>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 1</p>
+                  <p className="mb-1 text-sm font-medium text-gray-500">ID Photo 1</p>
                   <Image layout='responsive' width={200} height={150} src={proof.idPhoto1Path} alt="ID Photo 1" className="rounded" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-1">ID Photo 2</p>
+                  <p className="mb-1 text-sm font-medium text-gray-500">ID Photo 2</p>
                   <Image layout='responsive' width={200} height={150} src={proof.idPhoto2Path} alt="ID Photo 2" className="rounded" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 1</p>
+                  <p className="mb-1 text-sm font-medium text-gray-500">Holding ID Photo 1</p>
                   <Image layout='responsive' width={200} height={150} src={proof.holdingIdPhoto1Path} alt="Holding ID Photo 1" className="rounded" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-1">Holding ID Photo 2</p>
+                  <p className="mb-1 text-sm font-medium text-gray-500">Holding ID Photo 2</p>
                   <Image layout='responsive' width={200} height={150} src={proof.holdingIdPhoto2Path} alt="Holding ID Photo 2" className="rounded" />
                 </div>
               </div>
               <div className="mt-2">
-                <p className="text-sm font-medium text-gray-500 mb-1">Signature</p>
+                <p className="mb-1 text-sm font-medium text-gray-500">Signature</p>
                 <Image layout='responsive' width={200} height={150} src={proof.signaturePath} alt="Signature" className="rounded" />
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
   return (
     <ScrollArea className="max-h-[70vh] w-full">
       <Table>
-        <TableHeader className="sticky top-0 bg-white z-10">
+        <TableHeader className="sticky top-0 z-10 bg-white">
           <TableRow>
             <TableHead className="w-32">Bahay Toro ID</TableHead>
             <TableHead className="w-52">Name</TableHead>
@@ -199,7 +199,7 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={11} className="text-center py-8">
+              <TableCell colSpan={11} className="py-8 text-center">
                 No residents found.
               </TableCell>
             </TableRow>

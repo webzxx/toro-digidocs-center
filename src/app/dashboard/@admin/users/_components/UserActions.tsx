@@ -123,7 +123,7 @@ export default function UserActions({
 
   return (
     // Provide options to edit or delete user
-    <div className="flex gap-2 justify-end">
+    <div className="flex justify-end gap-2">
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="outline" size="icon">
@@ -196,7 +196,7 @@ export default function UserActions({
             <DialogHeader>
               <h2>{username}</h2>
               <DialogDescription>
-                <span className="text-red-600 font-bold">This action cannot be undone!</span> This will <span className="text-red-600 font-bold">permanently delete</span> the user account and all residents created by {username} (User ID: {userId}). Please review carefully before proceeding.
+                <span className="font-bold text-red-600">This action cannot be undone!</span> This will <span className="font-bold text-red-600">permanently delete</span> the user account and all residents created by {username} (User ID: {userId}). Please review carefully before proceeding.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">

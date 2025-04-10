@@ -77,7 +77,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
       <DialogTrigger asChild>
         <Button 
           onClick={handleRequestClick}
-          className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto"
+          className="w-10 gap-2 p-0 min-[590px]:w-auto min-[590px]:px-4 min-[590px]:py-2"
         >
           <FileUp className="h-4 w-4" />
           <span className="hidden min-[590px]:block min-[680px]:hidden">Request</span>
@@ -85,7 +85,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
         </Button>
       </DialogTrigger>
       {residents.length > 0 ? (
-        <DialogContent className="max-h-[80vh] flex flex-col p-0">
+        <DialogContent className="flex max-h-[80vh] flex-col p-0">
           <div className="px-6 pt-6">
             <DialogHeader>
               <DialogTitle>Request New Certificate</DialogTitle>
@@ -95,11 +95,11 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
             </DialogHeader>
           </div>
           
-          <div className="overflow-y-auto px-6 flex-1">
+          <div className="flex-1 overflow-y-auto px-6">
             <Form {...form}>
               <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="resident" className="text-right">Resident <span className="text-red-600 font-bold">*</span></Label>
+                  <Label htmlFor="resident" className="text-right">Resident <span className="font-bold text-red-600">*</span></Label>
                   <div className="col-span-3">
                     <Select 
                       onValueChange={(value) => {
@@ -120,7 +120,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                       </SelectContent>
                     </Select>
                     {residentError && (
-                      <p className="text-sm font-medium text-red-500 mt-1">
+                      <p className="mt-1 text-sm font-medium text-red-500">
                         Please select a resident
                       </p>
                     )}
@@ -131,7 +131,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                   name="certificateType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Certificate Type <span className="text-red-600 font-bold">*</span></FormLabel>
+                      <FormLabel>Certificate Type <span className="font-bold text-red-600">*</span></FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
@@ -155,7 +155,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                   name="purpose"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Purpose <span className="text-red-600 font-bold">*</span></FormLabel>
+                      <FormLabel>Purpose <span className="font-bold text-red-600">*</span></FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -175,7 +175,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
                     name="requestOf"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Request of <span className="text-red-600 font-bold">*</span></FormLabel>
+                        <FormLabel>Request of <span className="font-bold text-red-600">*</span></FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -188,7 +188,7 @@ export default function RequestCertificateButton({ residents }: RequestCertifica
             </Form>
           </div>
           
-          <div className="border-t px-6 py-4 mt-auto">
+          <div className="mt-auto border-t px-6 py-4">
             <Button 
               type="submit"
               form={formId}

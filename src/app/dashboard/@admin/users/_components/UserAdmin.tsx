@@ -82,22 +82,22 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="@container flex flex-col items-start justify-between pb-4 border-b space-y-4">  
+      <CardHeader className="flex flex-col items-start justify-between space-y-4 border-b pb-4 @container">  
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">Users</CardTitle>
           <CardDescription>Manage all users of Barangay Bahay Toro</CardDescription>
         </div>
-        <div className="@xl:flex-row w-full flex flex-col gap-2 sm:gap-4">
+        <div className="flex w-full flex-col gap-2 @xl:flex-row sm:gap-4">
           <div className="relative basis-1/2">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search users by username or email..."
               value={search || ""}
               onChange={handleSearchChange}
-              className="pl-8 w-full"
+              className="w-full pl-8"
             />
           </div>
-          <div className="flex flex-col gap-2 @sm:flex-row space-y-0 @sm:space-x-2 basis-1/2">
+          <div className="flex basis-1/2 flex-col gap-2 space-y-0 @sm:flex-row @sm:space-x-2">
             <Select value={role} onValueChange={(value) => {
               setRole(value);
               setPage(1);
@@ -120,11 +120,11 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
       </CardHeader>
       <CardContent className="p-0">
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
           </div>
         ) : isError ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <p className="text-red-500">Error loading users. Please try again.</p>
           </div>
         ) : users.length > 0 ? (
@@ -133,7 +133,7 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
               {isFetching && <LoaderComponent/>}
               <UserTable users={users} isLoading={isFetching} refetch={refetch} />
             </div>
-            <div className="flex items-center justify-between p-4 border-t">
+            <div className="flex items-center justify-between border-t p-4">
               <div className="text-sm text-muted-foreground">
                 Showing {((page - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(page * ITEMS_PER_PAGE, totalUsers)} of {totalUsers} users
               </div>
@@ -145,9 +145,9 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
                   disabled={page === 1 || isFetching}
                   className="px-1 min-[500px]:px-3"
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" /> <span className="hidden min-[500px]:inline">Previous</span>
+                  <ChevronLeft className="mr-1 h-4 w-4" /> <span className="hidden min-[500px]:inline">Previous</span>
                 </Button>
-                <div className="text-sm text-nowrap">
+                <div className="text-nowrap text-sm">
                   <span className="hidden min-[500px]:inline">Page</span> {page} of {totalPages}
                 </div>
                 <Button 
@@ -157,17 +157,17 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
                   disabled={isFetching || page >= totalPages}
                   className="px-1 min-[500px]:px-3"
                 >
-                  <span className="hidden min-[500px]:inline">Next</span> <ChevronRight className="h-4 w-4 ml-1" />
+                  <span className="hidden min-[500px]:inline">Next</span> <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
             </div>
           </>
         ) : (
-          <div className="relative flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm py-20">
+          <div className="relative flex flex-1 items-center justify-center rounded-lg border border-dashed py-20 shadow-sm">
             {isFetching && <LoaderComponent/>}
             <div className="flex flex-col items-center text-center">
               <h3 className="text-2xl font-bold tracking-tight">No Users</h3>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="mb-3 text-sm text-muted-foreground">
                 No users match your current filter criteria.
               </p>
             </div>
@@ -180,7 +180,7 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
 
 function LoaderComponent() {
   return (
-    <div className="absolute inset-0 bg-white/60 flex justify-center items-center pt-10 z-10">
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 pt-10">
       <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
     </div>
   );

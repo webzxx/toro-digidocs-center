@@ -119,13 +119,13 @@ const SignUpForm = () => {
             )}
           />
         </div>
-        <Button className="w-full mt-6" type="submit">Sign up</Button>
+        <Button className="mt-6 w-full" type="submit">Sign up</Button>
       </form>
       {/* <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400
       after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
         or
       </div> */}
-      <p className="text-center text-sm text-gray-600 mt-2">
+      <p className="mt-2 text-center text-sm text-gray-600">
         If you don&apos;t have an account, please &nbsp;
         <Link className="text-blue-500 hover:underline" href='/sign-in'>Sign in</Link>
       </p>

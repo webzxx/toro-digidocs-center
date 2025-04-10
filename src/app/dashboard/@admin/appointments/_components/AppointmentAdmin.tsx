@@ -123,25 +123,25 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="@container flex flex-col items-start justify-between pb-4 border-b space-y-4">  
-        <div className="w-full flex flex-row justify-between items-center">
+      <CardHeader className="flex flex-col items-start justify-between space-y-4 border-b pb-4 @container">  
+        <div className="flex w-full flex-row items-center justify-between">
           <div>
             <CardTitle className="text-2xl font-bold text-green-primary">Appointments</CardTitle>
             <CardDescription>Manage all resident appointment schedules</CardDescription>
           </div>
           <AppointmentForm onSuccess={handleAppointmentSuccess} residents={residents} />
         </div>
-        <div className="@lg:flex-row w-full flex flex-col gap-2 sm:gap-4">
+        <div className="flex w-full flex-col gap-2 @lg:flex-row sm:gap-4">
           <div className="relative w-full">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search appointments by resident name or ID..."
               value={search || ""}
               onChange={handleSearchChange}
-              className="pl-8 w-full"
+              className="w-full pl-8"
             />
           </div>
-          <div className="flex flex-row gap-2 space-y-0 space-x-2">
+          <div className="flex flex-row gap-2 space-x-2 space-y-0">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -163,7 +163,7 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
                   initialFocus
                 />
                 {selectedDate && (
-                  <div className="p-2 border-t flex justify-end">
+                  <div className="flex justify-end border-t p-2">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -195,11 +195,11 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
       </CardHeader>
       <CardContent className="p-0">
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
           </div>
         ) : isError ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <p className="text-red-500">Error loading appointments. Please try again.</p>
           </div>
         ) : (
@@ -210,7 +210,7 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
           />
         )}
         
-        <div className="flex items-center justify-between px-4 py-4 border-t">
+        <div className="flex items-center justify-between border-t px-4 py-4">
           <p className="text-sm text-muted-foreground">
             Showing {appointments.length} of {totalAppointments} appointments
           </p>

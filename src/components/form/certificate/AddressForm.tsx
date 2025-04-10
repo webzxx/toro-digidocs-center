@@ -48,7 +48,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
           name="residency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Residency <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Residency <span className="font-bold text-red-600">*</span></FormLabel>
               <Select onValueChange={value => {onChange(formName, field.name, value); field.onChange(value);}} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -123,7 +123,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
           name="subdivision"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subdivision <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Subdivision <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} />
               </FormControl>
@@ -136,7 +136,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
           name="barangay"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Barangay <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Barangay <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} disabled />
               </FormControl>
@@ -149,7 +149,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
           name="city"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>City <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>City <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} disabled />
               </FormControl>
@@ -162,7 +162,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
           name="province"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Province <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Province <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={e => onChange(formName, e.currentTarget.name, e.currentTarget.value)} disabled />
               </FormControl>

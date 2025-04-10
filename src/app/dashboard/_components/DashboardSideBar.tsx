@@ -32,21 +32,21 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
   return (
     <>
       {/* Mobile menu button */}
-      <div className="lg:hidden block">
+      <div className="block lg:hidden">
         <button
           onClick={toggleMobileMenu}
-          className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+          className="rounded-md bg-gray-100 p-2 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
         >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
       {/* Desktop sidebar */}
-      <div className="lg:block hidden h-full bg-gray-50 dark:bg-gray-900">
+      <div className="hidden h-full bg-gray-50 dark:bg-gray-900 lg:block">
         <div className="flex h-full max-h-screen flex-col">
         
           <div className="flex-1 overflow-auto py-6">
-            <nav className="grid items-start px-4 text-sm font-medium gap-2">
+            <nav className="grid items-start gap-2 px-4 text-sm font-medium">
               {/* Common or role-specific navigation links */}
               <Link
                 className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
@@ -188,10 +188,10 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
 
       {/* Mobile sidebar */}
       <div 
-        className={`lg:hidden fixed inset-y-0 left-0 z-40 w-64 bg-gray-50 dark:bg-gray-900 transform transition-transform duration-300 ease-in-out ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-40 w-64 transform bg-gray-50 transition-transform duration-300 ease-in-out dark:bg-gray-900 lg:hidden ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex h-full max-h-screen flex-col">
-          <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center justify-between border-b p-4">
             <h2 className="text-lg font-semibold">{isAdmin ? "Admin Dashboard" : "My Account"}</h2>
             <button onClick={toggleMobileMenu} className="p-2">
               <X className="h-5 w-5" />
@@ -199,7 +199,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
           </div>
         
           <div className="flex-1 overflow-auto py-6">
-            <nav className="grid items-start px-4 text-sm font-medium gap-2">
+            <nav className="grid items-start gap-2 px-4 text-sm font-medium">
               {/* Common or role-specific navigation links - same as desktop */}
               <Link
                 className={clsx("flex items-center gap-3 rounded-lg px-4 py-3 text-gray-600 transition-all hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800", {
@@ -351,7 +351,7 @@ export default function DashboardSideBar({ role }: DashboardSideBarProps) {
       {/* Overlay when mobile menu is open */}
       {mobileMenuOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 lg:hidden"
           onClick={toggleMobileMenu}
         />
       )}

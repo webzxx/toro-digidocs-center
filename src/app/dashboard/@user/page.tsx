@@ -44,7 +44,7 @@ async function UserDashboard({ user }: WithAuthProps) {
       </div>
 
       {/* Main stats cards */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -107,7 +107,7 @@ async function UserDashboard({ user }: WithAuthProps) {
       </div>
 
       {/* User profiles section */}
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {/* My residents */}
         <Card className="col-span-1 lg:col-span-2">
           <CardHeader>
@@ -119,7 +119,7 @@ async function UserDashboard({ user }: WithAuthProps) {
           <CardContent>
             <div className="space-y-4">
               {userResidents.length === 0 ? (
-                <div className="text-center py-6">
+                <div className="py-6 text-center">
                   <p className="text-sm text-muted-foreground">No resident profiles found</p>
                 </div>
               ) : (
@@ -155,17 +155,17 @@ async function UserDashboard({ user }: WithAuthProps) {
         <Card className="col-span-1">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <DollarSign className="h-5 w-5 mr-2 text-amber-500" />
+              <DollarSign className="mr-2 h-5 w-5 text-amber-500" />
               Pending Payments
             </CardTitle>
           </CardHeader>
           <CardContent>
             {pendingPayments > 0 ? (
               <>
-                <div className="text-amber-600 mb-2 font-medium">
+                <div className="mb-2 font-medium text-amber-600">
                   You have {pendingPayments} pending payment{pendingPayments !== 1 ? "s" : ""}
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="mb-4 text-sm text-muted-foreground">
                   Complete your payments to process your certificate requests.
                 </p>
                 <Button variant="outline" size="sm" asChild>
@@ -176,7 +176,7 @@ async function UserDashboard({ user }: WithAuthProps) {
               </>
             ) : (
               <>
-                <div className="text-green-600 font-medium mb-2">No pending payments</div>
+                <div className="mb-2 font-medium text-green-600">No pending payments</div>
                 <p className="text-sm text-muted-foreground">
                   All your certificate requests are paid or don't require payment at this time.
                 </p>
@@ -187,7 +187,7 @@ async function UserDashboard({ user }: WithAuthProps) {
       </div>
 
       {/* Recent activities section */}
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Recent certificate requests */}
         <Card className="col-span-1">
           <CardHeader>
@@ -199,7 +199,7 @@ async function UserDashboard({ user }: WithAuthProps) {
           <CardContent>
             <div className="space-y-4">
               {userCertificates.length === 0 ? (
-                <div className="text-center py-6">
+                <div className="py-6 text-center">
                   <p className="text-sm text-muted-foreground">No certificate requests found</p>
                 </div>
               ) : (
@@ -211,7 +211,7 @@ async function UserDashboard({ user }: WithAuthProps) {
                           {cert.certificateType.replace(/_/g, " ")}
                         </p>
                         <div className="flex flex-wrap items-center text-xs text-muted-foreground">
-                          <span className="inline-block break-words max-w-full">
+                          <span className="inline-block max-w-full break-words">
                             {cert.referenceNumber}
                           </span>
                           <span className="px-1.5">•</span>
@@ -246,7 +246,7 @@ async function UserDashboard({ user }: WithAuthProps) {
           <CardContent>
             <div className="space-y-4">
               {userAppointments.length === 0 ? (
-                <div className="text-center py-6">
+                <div className="py-6 text-center">
                   <p className="text-sm text-muted-foreground">No upcoming appointments</p>
                 </div>
               ) : (

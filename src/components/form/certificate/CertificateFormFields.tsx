@@ -39,7 +39,7 @@ export const CertificateFormFields = ({
           name="childName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Child Name <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -52,7 +52,7 @@ export const CertificateFormFields = ({
           name="soloParentSince"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Solo Parent Since <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Solo Parent Since <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <div>
                   <DatePicker
@@ -70,7 +70,7 @@ export const CertificateFormFields = ({
           name="presentedBy"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Presented by <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Presented by <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -83,7 +83,7 @@ export const CertificateFormFields = ({
           name="registryNo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Registry No <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Registry No <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -101,7 +101,7 @@ export const CertificateFormFields = ({
           name="birthAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Birth Address <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -114,7 +114,7 @@ export const CertificateFormFields = ({
           name="spouseName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Spouse Name <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Spouse Name <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -127,7 +127,7 @@ export const CertificateFormFields = ({
           name="spouseBirthAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Spouse Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Spouse Birth Address <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -140,7 +140,7 @@ export const CertificateFormFields = ({
           name="dateOfMarriage"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date of Marriage <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Date of Marriage <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <div>
                   <DatePicker
@@ -163,7 +163,7 @@ export const CertificateFormFields = ({
         name="noIncomeSince"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>No Income Since <span className="text-red-600 font-bold">*</span></FormLabel>
+            <FormLabel>No Income Since <span className="font-bold text-red-600">*</span></FormLabel>
             <FormControl>
               <div>
                 <DatePicker
@@ -184,7 +184,7 @@ export const CertificateFormFields = ({
         name="dateOfResidency"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
+            <FormLabel>Date of Residency <span className="font-bold text-red-600">*</span></FormLabel>
             <FormControl>
               <div>
                 <DatePicker
@@ -206,7 +206,7 @@ export const CertificateFormFields = ({
           name="birthAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Birth Address <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -219,7 +219,7 @@ export const CertificateFormFields = ({
           name="dateOfResidency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date of Residency <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Date of Residency <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <div>
                   <DatePicker
@@ -241,7 +241,7 @@ export const CertificateFormFields = ({
         name="newAddress"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>New Address <span className="text-red-600 font-bold">*</span></FormLabel>
+            <FormLabel>New Address <span className="font-bold text-red-600">*</span></FormLabel>
             <FormControl>
               <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
             </FormControl>
@@ -257,7 +257,7 @@ export const CertificateFormFields = ({
         name="dateOfTabloid"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Date of Tabloid <span className="text-red-600 font-bold">*</span></FormLabel>
+            <FormLabel>Date of Tabloid <span className="font-bold text-red-600">*</span></FormLabel>
             <FormControl>
               <div>
                 <DatePicker
@@ -279,7 +279,7 @@ export const CertificateFormFields = ({
           name="dateBorn"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date Born <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Date Born <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <div>
                   <DatePicker
@@ -297,7 +297,7 @@ export const CertificateFormFields = ({
           name="childName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Child Name <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Child Name <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -310,7 +310,7 @@ export const CertificateFormFields = ({
           name="birthAddress"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Birth Address <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Birth Address <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -323,7 +323,7 @@ export const CertificateFormFields = ({
           name="witnessName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Witness Name <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Witness Name <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>
@@ -336,7 +336,7 @@ export const CertificateFormFields = ({
           name="witnessType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Witness Type <span className="text-red-600 font-bold">*</span></FormLabel>
+              <FormLabel>Witness Type <span className="font-bold text-red-600">*</span></FormLabel>
               <FormControl>
                 <Input {...field} onChangeCapture={onChange ? e => onChange(formName, e.currentTarget.name, e.currentTarget.value) : undefined} />
               </FormControl>

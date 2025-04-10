@@ -7,16 +7,16 @@ const About = () => {
   const [selected, setSelected] = useState("vision");
   
   return (
-    <div id="about-section" className="relative justify-center w-full py-24">
-      <div className="container grid grid-cols-1 md:grid-cols-2 gap-8 h-auto md:h-[45rem] px-4 md:px-8">
+    <div id="about-section" className="relative w-full justify-center py-24">
+      <div className="container grid h-auto grid-cols-1 gap-8 px-4 md:h-[45rem] md:grid-cols-2 md:px-8">
         {/* Image Section */}
-        <div className="flex justify-center mt-8 md:pt-24">
+        <div className="mt-8 flex justify-center md:pt-24">
           <Image
             src="/bht.png"
             alt="bht"
             width={900}
             height={900}
-            className="w-full max-w-[400px] md:max-w-[700px] md:h-[600px]"
+            className="w-full max-w-[400px] md:h-[600px] md:max-w-[700px]"
           />
         </div>
 
@@ -24,19 +24,19 @@ const About = () => {
         <div className="p-4 text-center md:text-left">
           <div className="pt-4 md:pt-40">
             <h1 className="text-lg">About us</h1>
-            <p className="text-3xl md:text-5xl mt-4">
+            <p className="mt-4 text-3xl md:text-5xl">
               If you change your city, you&apos;re changing the world.
             </p>
-            <p className="text-md md:text-xl mt-6">
+            <p className="text-md mt-6 md:text-xl">
               Barangay Bahay Toro is determined to address everything that
               hinders its way to being the best.
             </p>
 
             <div>
               {/* Selection Buttons */}
-              <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 mt-8">
+              <div className="mt-8 grid grid-cols-3 gap-4 sm:grid-cols-3">
                 <div
-                  className={`bg-gray-300 p-4 rounded-lg flex items-center justify-center md:justify-start cursor-pointer ${selected === "mission" ? "bg-gray-400" : ""}`}
+                  className={`flex cursor-pointer items-center justify-center rounded-lg bg-gray-300 p-4 md:justify-start ${selected === "mission" ? "bg-gray-400" : ""}`}
                   onClick={() => setSelected("mission")}
                 >
                   <input
@@ -45,13 +45,13 @@ const About = () => {
                     name="selection"
                     className="hidden"
                   />
-                  <label htmlFor="mission" className="pl-3 cursor-pointer">
+                  <label htmlFor="mission" className="cursor-pointer pl-3">
                     Our Mission
                   </label>
                 </div>
 
                 <div
-                  className={`bg-gray-300 p-4 rounded-lg flex items-center justify-center md:justify-start cursor-pointer ${selected === "vision" ? "bg-gray-400" : ""}`}
+                  className={`flex cursor-pointer items-center justify-center rounded-lg bg-gray-300 p-4 md:justify-start ${selected === "vision" ? "bg-gray-400" : ""}`}
                   onClick={() => setSelected("vision")}
                 >
                   <input
@@ -60,13 +60,13 @@ const About = () => {
                     name="selection"
                     className="hidden"
                   />
-                  <label htmlFor="vision" className="pl-3 cursor-pointer">
+                  <label htmlFor="vision" className="cursor-pointer pl-3">
                     Our Vision
                   </label>
                 </div>
 
                 <div
-                  className={`bg-gray-300 p-4 rounded-lg flex items-center justify-center md:justify-start cursor-pointer ${selected === "goal" ? "bg-gray-400" : ""}`}
+                  className={`flex cursor-pointer items-center justify-center rounded-lg bg-gray-300 p-4 md:justify-start ${selected === "goal" ? "bg-gray-400" : ""}`}
                   onClick={() => setSelected("goal")}
                 >
                   <input
@@ -75,7 +75,7 @@ const About = () => {
                     name="selection"
                     className="hidden"
                   />
-                  <label htmlFor="goal" className="pl-3 cursor-pointer">
+                  <label htmlFor="goal" className="cursor-pointer pl-3">
                     Our Goal
                   </label>
                 </div>

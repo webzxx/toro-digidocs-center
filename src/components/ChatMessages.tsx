@@ -8,7 +8,7 @@ export default function ChatMessages({ messages } : { messages: JSX.Element[] })
     }
   });
   return (
-    <div className="grow overflow-y-auto h-full px-3">
+    <div className="h-full grow overflow-y-auto px-3">
       {messages}
       <div id={"el"} ref={el} />
     </div>

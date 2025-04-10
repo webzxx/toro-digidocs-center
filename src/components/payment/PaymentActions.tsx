@@ -26,7 +26,7 @@ export function PaymentActions({ variant }: PaymentActionsProps) {
         <Button variant="outline" onClick={handleReturn}>
           Return to Home
         </Button>
-        <p className="text-sm text-muted-foreground mt-2">You can also simply close this tab</p>
+        <p className="mt-2 text-sm text-muted-foreground">You can also simply close this tab</p>
       </div>
     );
   }
@@ -42,7 +42,7 @@ export function PaymentActions({ variant }: PaymentActionsProps) {
             Return to Home
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground mt-2">You can also simply close this tab</p>
+        <p className="mt-2 text-sm text-muted-foreground">You can also simply close this tab</p>
       </div>
     );
   }
@@ -52,7 +52,7 @@ export function PaymentActions({ variant }: PaymentActionsProps) {
       <Button variant="outline" onClick={handleReturn}>
         Return to Home
       </Button>
-      <p className="text-sm text-muted-foreground mt-2">You can also simply close this tab</p>
+      <p className="mt-2 text-sm text-muted-foreground">You can also simply close this tab</p>
     </div>
   );
 }

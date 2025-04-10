@@ -216,7 +216,7 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
     }}>
       <DialogTrigger asChild>
         <Button 
-          className="gap-2 p-0 w-10 min-[500px]:px-4 min-[500px]:py-2 min-[500px]:w-auto"
+          className="w-10 gap-2 p-0 min-[500px]:w-auto min-[500px]:px-4 min-[500px]:py-2"
         >
           <PlusCircle className="h-4 w-4" />
           <span className="hidden min-[500px]:block min-[630px]:hidden">New</span>
@@ -224,7 +224,7 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
         </Button>
       </DialogTrigger>
       
-      <DialogContent className="sm:max-w-[500px] max-w-[95%] w-full">
+      <DialogContent className="w-full max-w-[95%] sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Request New Appointment</DialogTitle>
           <DialogDescription>
@@ -297,8 +297,8 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                     {residentSearchOpen && (
-                      <div className="absolute z-[60] top-full mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
-                        <div className="flex items-center border-b px-3 relative">
+                      <div className="absolute top-full z-[60] mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                        <div className="relative flex items-center border-b px-3">
                           <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
                           <input
                             className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
@@ -337,7 +337,7 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                                     )}
                                   />
                                   {resident.firstName} {resident.lastName}
-                                  {resident.bahayToroSystemId && <span className="text-muted-foreground ml-1">({resident.bahayToroSystemId})</span>}
+                                  {resident.bahayToroSystemId && <span className="ml-1 text-muted-foreground">({resident.bahayToroSystemId})</span>}
                                 </div>
                               ))}
                             </div>
@@ -382,7 +382,7 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                     </Button>
                     
                     {calendarOpen && (
-                      <div className="absolute top-[calc(100%+4px)] left-0 z-50">
+                      <div className="absolute left-0 top-[calc(100%+4px)] z-50">
                         <Calendar
                           mode="single"
                           selected={field.value}
@@ -471,20 +471,20 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
               )}
             />
             
-            <DialogFooter className="sm:flex-row flex-col gap-2 w-full">
+            <DialogFooter className="w-full flex-col gap-2 sm:flex-row">
               <Button 
                 type="button" 
                 variant="outline" 
                 onClick={() => setOpen(false)}
                 disabled={isSubmitting}
-                className="sm:w-auto w-full"
+                className="w-full sm:w-auto"
               >
                 Cancel
               </Button>
               <Button 
                 type="submit"
                 disabled={isSubmitting}
-                className="sm:w-auto w-full"
+                className="w-full sm:w-auto"
               >
                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isSubmitting ? "Submitting..." : "Submit Request"}

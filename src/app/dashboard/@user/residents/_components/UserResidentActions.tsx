@@ -139,9 +139,9 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
       <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" className="flex gap-1 items-center p-0 w-10 min-[470px]:px-4 min-[470px]:py-2 min-[470px]:w-auto" onClick={handleViewCertificates}>
+            <Button variant="outline" className="flex w-10 items-center gap-1 p-0 min-[470px]:w-auto min-[470px]:px-4 min-[470px]:py-2" onClick={handleViewCertificates}>
               <Eye className="size-4 flex-shrink-0" />
-              <span className='sr-only min-[470px]:inline-block min-[470px]:not-sr-only'>View Certificates</span>
+              <span className='sr-only min-[470px]:not-sr-only min-[470px]:inline-block'>View Certificates</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -159,9 +159,9 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
               if (!open) resetForm();
             }}>
               <DialogTrigger asChild>
-                <Button variant="outline" className='flex gap-1 items-center p-0 w-10 min-[510px]:px-4 min-[510px]:py-2 min-[510px]:w-auto'>
+                <Button variant="outline" className='flex w-10 items-center gap-1 p-0 min-[510px]:w-auto min-[510px]:px-4 min-[510px]:py-2'>
                   <Edit className="size-4" />
-                  <span className='sr-only min-[510px]:inline-block min-[510px]:not-sr-only'>Edit</span>
+                  <span className='sr-only min-[510px]:not-sr-only min-[510px]:inline-block'>Edit</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[625px]">
@@ -203,16 +203,16 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
           <TooltipTrigger asChild>
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="destructive" className='flex gap-1 items-center p-0 w-10 min-[565px]:px-4 min-[565px]:py-2 min-[565px]:w-auto'>
+                <Button variant="destructive" className='flex w-10 items-center gap-1 p-0 min-[565px]:w-auto min-[565px]:px-4 min-[565px]:py-2'>
                   <Trash2 className="size-4" />
-                  <span className='sr-only min-[565px]:inline-block min-[565px]:not-sr-only'>Delete</span>
+                  <span className='sr-only min-[565px]:not-sr-only min-[565px]:inline-block'>Delete</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <h2 className="text-xl font-semibold">Delete Resident Profile</h2>
                   <DialogDescription>
-                    <span className="text-red-600 font-bold">This action cannot be undone!</span> This will permanently delete the profile for {resident.firstName} {resident.lastName} and all associated records.
+                    <span className="font-bold text-red-600">This action cannot be undone!</span> This will permanently delete the profile for {resident.firstName} {resident.lastName} and all associated records.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">

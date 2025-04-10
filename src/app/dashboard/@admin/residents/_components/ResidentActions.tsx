@@ -138,7 +138,7 @@ export default function ResidentActions({ resident, refetch }: ResidentActionsPr
           <DialogHeader>
             <h2>{resident.bahayToroSystemId}</h2>
             <DialogDescription>
-              <span className="text-red-600 font-bold">This action cannot be undone!</span> This will <span className="text-red-600 font-bold">delete all records</span> related to resident {titleCase(`${resident.firstName} ${resident.lastName}`)} with ID <b>{resident.bahayToroSystemId}</b> and all associated records. Please review carefully before proceeding.
+              <span className="font-bold text-red-600">This action cannot be undone!</span> This will <span className="font-bold text-red-600">delete all records</span> related to resident {titleCase(`${resident.firstName} ${resident.lastName}`)} with ID <b>{resident.bahayToroSystemId}</b> and all associated records. Please review carefully before proceeding.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

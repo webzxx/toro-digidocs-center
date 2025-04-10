@@ -73,7 +73,7 @@ export const getCertificateTypeBadge = (type: CertificateType) => {
   };
 
   return (
-    <Badge variant="outline" className={`${getColor()} text-center font-medium min-w-28 max-w-36 line-clamp-2 text-xs`}>
+    <Badge variant="outline" className={`${getColor()} line-clamp-2 min-w-28 max-w-36 text-center text-xs font-medium`}>
       {type.replace(/_/g, " ")}
     </Badge>
   );
@@ -120,7 +120,7 @@ export const getCivilStatusBadge = (status: CivilStatus) => {
     }
   };
   return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
+    <span className={`rounded-full px-2 py-1 text-xs font-medium ${getColor()}`}>
       {status.replace(/_/g, " ")}
     </span>
   );
@@ -145,7 +145,7 @@ export const getSectorBadge = (sector: Sector) => {
     }
   };
   return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getColor()}`}>
+    <span className={`rounded-full px-2 py-1 text-xs font-medium ${getColor()}`}>
       {sector.replace(/_/g, " ")}
     </span>
   );

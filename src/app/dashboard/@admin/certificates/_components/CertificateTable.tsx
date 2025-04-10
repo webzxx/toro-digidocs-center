@@ -55,15 +55,15 @@ export default function CertificateTable({ certificates, isLoading = false, refe
             <span>{previewString.length > 30 ? `${previewString.slice(0, 30)}...` : previewString}</span>
           </TooltipTrigger>
           <TooltipContent className="w-80 p-0">
-            <div className="bg-white rounded-md shadow-lg p-4">
-              <h4 className="font-semibold text-lg mb-2">Additional Information</h4>
+            <div className="rounded-md bg-white p-4 shadow-lg">
+              <h4 className="mb-2 text-lg font-semibold">Additional Information</h4>
               <dl className="space-y-1">
                 {Object.entries(additionalInfo).map(([key, value]) => (
                   <div key={key} className="grid grid-cols-3 gap-2">
-                    <dt className="text-sm font-medium text-gray-500 capitalize col-span-1">
+                    <dt className="col-span-1 text-sm font-medium capitalize text-gray-500">
                       {key.replace(/([A-Z])/g, " $1").trim()}
                     </dt>
-                    <dd className="text-sm text-gray-900 col-span-2">{formatValue(value)}</dd>
+                    <dd className="col-span-2 text-sm text-gray-900">{formatValue(value)}</dd>
                   </div>
                 ))}
               </dl>
@@ -77,7 +77,7 @@ export default function CertificateTable({ certificates, isLoading = false, refe
   // Function to determine payment status from certificate payments
   const renderPaymentStatus = (payments?: { id: number; amount: any; paymentStatus: PaymentStatus; paymentDate: Date | null }[]) => {
     if (!payments || payments.length === 0) {
-      return <span className="text-gray-500 text-sm">No payment</span>;
+      return <span className="text-sm text-gray-500">No payment</span>;
     }
 
     // Find the most recent active payment
@@ -89,7 +89,7 @@ export default function CertificateTable({ certificates, isLoading = false, refe
 
   // Function to display remarks with tooltip if text is long
   const renderRemarks = (remarks: string | null) => {
-    if (!remarks) return <span className="text-gray-500 text-sm">None</span>;
+    if (!remarks) return <span className="text-sm text-gray-500">None</span>;
     
     return (
       <TooltipProvider>
@@ -112,7 +112,7 @@ export default function CertificateTable({ certificates, isLoading = false, refe
   return (
     <ScrollArea className="max-h-[70vh] w-full">
       <Table>
-        <TableHeader className="sticky top-0 bg-white z-10">
+        <TableHeader className="sticky top-0 z-10 bg-white">
           <TableRow>
             <TableHead className="w-32">Reference</TableHead>
             <TableHead className="w-32">Resident ID</TableHead>
@@ -190,7 +190,7 @@ export default function CertificateTable({ certificates, isLoading = false, refe
             ))
           ): (
             <TableRow>
-              <TableCell colSpan={9} className="text-center py-8">
+              <TableCell colSpan={9} className="py-8 text-center">
                 No certificate requests found.
               </TableCell>
             </TableRow>

@@ -50,8 +50,8 @@ async function AdminDashboard() {
       </div>
 
       {/* Main stats cards */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="relative group">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="group relative">
           <Link href="/dashboard/certificates?status=PENDING" className="absolute inset-0 z-10" aria-label="View pending certificates" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -61,16 +61,16 @@ async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{pendingCount}</div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
                 Awaiting review & approval
               </p>
-              <ArrowUpRight className="h-4 w-4 text-yellow-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="h-4 w-4 text-yellow-500 opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="relative group">
+        <Card className="group relative">
           <Link href="/dashboard/certificates?status=PROCESSING" className="absolute inset-0 z-10" aria-label="View processing certificates" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -80,16 +80,16 @@ async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{processingCount}</div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
                 Currently being processed
               </p>
-              <ArrowUpRight className="h-4 w-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="h-4 w-4 text-blue-500 opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="relative group">
+        <Card className="group relative">
           <Link href="/dashboard/certificates?status=COMPLETED" className="absolute inset-0 z-10" aria-label="View completed certificates" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -99,16 +99,16 @@ async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{completedCount}</div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
                 Successfully delivered to residents
               </p>
-              <ArrowUpRight className="h-4 w-4 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="h-4 w-4 text-green-500 opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="relative group">
+        <Card className="group relative">
           <Link href="/dashboard/appointments?status=REQUESTED" className="absolute inset-0 z-10" aria-label="View upcoming appointments" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -118,19 +118,19 @@ async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{upcomingAppointments.length}</div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
                 Scheduled for the next few days
               </p>
-              <ArrowUpRight className="h-4 w-4 text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="h-4 w-4 text-purple-500 opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Secondary stats */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        <Card className="relative group">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <Card className="group relative">
           <Link href="/dashboard/users" className="absolute inset-0 z-10" aria-label="View users" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -138,18 +138,18 @@ async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalUsers}</div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <div className="flex items-center pt-1">
-                <TrendingUp className="h-3.5 w-3.5 text-green-500 mr-1" />
+                <TrendingUp className="mr-1 h-3.5 w-3.5 text-green-500" />
                 <span className="text-xs text-green-500">+{newUsersThisMonth}</span>
-                <span className="text-xs text-muted-foreground ml-1">this month</span>
+                <span className="ml-1 text-xs text-muted-foreground">this month</span>
               </div>
-              <ArrowUpRight className="h-4 w-4 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="h-4 w-4 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="relative group">
+        <Card className="group relative">
           <Link href="/dashboard/residents" className="absolute inset-0 z-10" aria-label="View residents" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Residents</CardTitle>
@@ -157,18 +157,18 @@ async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalResidents}</div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <div className="flex items-center pt-1">
-                <TrendingUp className="h-3.5 w-3.5 text-green-500 mr-1" />
+                <TrendingUp className="mr-1 h-3.5 w-3.5 text-green-500" />
                 <span className="text-xs text-green-500">+{newResidentsThisMonth}</span>
-                <span className="text-xs text-muted-foreground ml-1">this month</span>
+                <span className="ml-1 text-xs text-muted-foreground">this month</span>
               </div>
-              <ArrowUpRight className="h-4 w-4 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="h-4 w-4 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="relative group">
+        <Card className="group relative">
           <Link href="/dashboard/payments?status=PENDING" className="absolute inset-0 z-10" aria-label="View pending payments" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -176,22 +176,22 @@ async function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₱{totalAmount.toFixed(2)}</div>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <div className="flex items-center pt-1">
                 <span className="text-xs text-muted-foreground">{totalPayments} successful payments</span>
-                <span className="text-xs text-amber-500 ml-2">{pendingPayments} pending</span>
+                <span className="ml-2 text-xs text-amber-500">{pendingPayments} pending</span>
               </div>
-              <ArrowUpRight className="h-4 w-4 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ArrowUpRight className="h-4 w-4 text-gray-500 opacity-0 transition-opacity group-hover:opacity-100" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Recent activities section */}
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Recent certificate requests */}
         <Card className="col-span-1">
-          <CardHeader className="flex justify-between items-start">
+          <CardHeader className="flex items-start justify-between">
             <div>
               <CardTitle>Recent Certificate Requests</CardTitle>
               <CardDescription>
@@ -200,7 +200,7 @@ async function AdminDashboard() {
             </div>
             <Link 
               href="/dashboard/certificates" 
-              className="text-sm text-blue-500 hover:underline flex items-center"
+              className="flex items-center text-sm text-blue-500 hover:underline"
             >
               View all
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
@@ -212,13 +212,13 @@ async function AdminDashboard() {
                 <p className="text-sm text-muted-foreground">No recent certificate requests</p>
               ) : (
                 <>
-                  <div className="flex justify-between items-center mb-1">
+                  <div className="mb-1 flex items-center justify-between">
                     <span className="text-xs font-medium text-muted-foreground">
                       {recentCertificates.filter(c => c.status === "PENDING").length} pending • {recentCertificates.filter(c => c.status === "AWAITING_PAYMENT").length} awaiting payment
                     </span>
                   </div>
                   {recentCertificates.map((cert) => (
-                    <div key={cert.id} className="relative group">
+                    <div key={cert.id} className="group relative">
                       <Link href={`/dashboard/certificates?search=${cert.referenceNumber}`} className="absolute inset-0 z-10" aria-label={`View certificate ${cert.referenceNumber}`} />
                       <div className="flex items-center justify-between border-b pb-2">
                         <div className="space-y-1">
@@ -244,11 +244,11 @@ async function AdminDashboard() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between pt-2">
-            <Link href="/dashboard/certificates?status=PENDING" className="text-sm text-blue-500 hover:underline flex items-center">
+            <Link href="/dashboard/certificates?status=PENDING" className="flex items-center text-sm text-blue-500 hover:underline">
               Pending certificates
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
-            <Link href="/dashboard/certificates?status=AWAITING_PAYMENT" className="text-sm text-blue-500 hover:underline flex items-center">
+            <Link href="/dashboard/certificates?status=AWAITING_PAYMENT" className="flex items-center text-sm text-blue-500 hover:underline">
               Awaiting payment
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
@@ -257,7 +257,7 @@ async function AdminDashboard() {
 
         {/* Upcoming appointments */}
         <Card className="col-span-1">
-          <CardHeader className="flex justify-between items-start">
+          <CardHeader className="flex items-start justify-between">
             <div>
               <CardTitle>Upcoming Appointments</CardTitle>
               <CardDescription>
@@ -266,7 +266,7 @@ async function AdminDashboard() {
             </div>
             <Link 
               href="/dashboard/appointments" 
-              className="text-sm text-blue-500 hover:underline flex items-center"
+              className="flex items-center text-sm text-blue-500 hover:underline"
             >
               View all
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
@@ -278,13 +278,13 @@ async function AdminDashboard() {
                 <p className="text-sm text-muted-foreground">No upcoming appointments</p>
               ) : (
                 <>
-                  <div className="flex justify-between items-center mb-1">
+                  <div className="mb-1 flex items-center justify-between">
                     <span className="text-xs font-medium text-muted-foreground">
                       {upcomingAppointments.filter(a => a.status === "REQUESTED").length} requesting • {upcomingAppointments.filter(a => a.status === "SCHEDULED").length} scheduled
                     </span>
                   </div>
                   {upcomingAppointments.map((appt) => (
-                    <div key={appt.id} className="relative group">
+                    <div key={appt.id} className="group relative">
                       <Link href={`/dashboard/appointments?search=${appt.referenceNumber}`} className="absolute inset-0 z-10" aria-label={`View appointment ${appt.referenceNumber}`} />
                       <div className="flex items-center justify-between border-b pb-2">
                         <div className="space-y-1">
@@ -292,7 +292,7 @@ async function AdminDashboard() {
                             {appt.resident ? `${appt.resident.firstName} ${appt.resident.lastName}` : appt.user.username}
                           </p>
                           <div className="flex flex-wrap items-center text-xs text-muted-foreground">
-                            <span className="inline-block break-words max-w-full">
+                            <span className="inline-block max-w-full break-words">
                               {appt.appointmentType.replace(/_/g, " ")}
                             </span>
                             <span className="px-1.5">•</span>
@@ -312,11 +312,11 @@ async function AdminDashboard() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-between pt-2">
-            <Link href="/dashboard/appointments?status=REQUESTED" className="text-sm text-blue-500 hover:underline flex items-center">
+            <Link href="/dashboard/appointments?status=REQUESTED" className="flex items-center text-sm text-blue-500 hover:underline">
               Requested appointments
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
-            <Link href="/dashboard/appointments?status=SCHEDULED" className="text-sm text-blue-500 hover:underline flex items-center">
+            <Link href="/dashboard/appointments?status=SCHEDULED" className="flex items-center text-sm text-blue-500 hover:underline">
               Scheduled appointments
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
@@ -331,12 +331,12 @@ async function AdminDashboard() {
           <CardDescription>Frequently used administrative tasks</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Link 
               href="/dashboard/certificates?status=AWAITING_PAYMENT"
-              className="flex flex-col p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+              className="flex flex-col rounded-lg bg-blue-50 p-4 transition-colors hover:bg-blue-100"
             >
-              <div className="flex justify-between items-center mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <h3 className="font-medium">Process Payments</h3>
                 {getCertificateStatusIcon("AWAITING_PAYMENT")}
               </div>
@@ -345,9 +345,9 @@ async function AdminDashboard() {
             
             <Link 
               href="/dashboard/certificates?status=UNDER_REVIEW"
-              className="flex flex-col p-4 bg-amber-50 rounded-lg hover:bg-amber-100 transition-colors"
+              className="flex flex-col rounded-lg bg-amber-50 p-4 transition-colors hover:bg-amber-100"
             >
-              <div className="flex justify-between items-center mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <h3 className="font-medium">Review Certificates</h3>
                 {getCertificateStatusIcon("UNDER_REVIEW")}
               </div>
@@ -356,9 +356,9 @@ async function AdminDashboard() {
             
             <Link 
               href="/dashboard/appointments?status=REQUESTED"
-              className="flex flex-col p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+              className="flex flex-col rounded-lg bg-purple-50 p-4 transition-colors hover:bg-purple-100"
             >
-              <div className="flex justify-between items-center mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <h3 className="font-medium">Schedule Appointments</h3>
                 {getAppointmentStatusIcon("REQUESTED")}
               </div>
@@ -367,9 +367,9 @@ async function AdminDashboard() {
             
             <Link 
               href="/dashboard/certificates?status=READY_FOR_PICKUP"
-              className="flex flex-col p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+              className="flex flex-col rounded-lg bg-green-50 p-4 transition-colors hover:bg-green-100"
             >
-              <div className="flex justify-between items-center mb-2">
+              <div className="mb-2 flex items-center justify-between">
                 <h3 className="font-medium">Ready for Pickup</h3>
                 {getCertificateStatusIcon("READY_FOR_PICKUP")}
               </div>

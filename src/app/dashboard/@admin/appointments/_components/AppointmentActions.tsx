@@ -519,7 +519,7 @@ export default function AppointmentActions({
                       <Textarea
                         {...field}
                         placeholder="Enter reason for cancellation"
-                        className="resize-none min-h-[100px]"
+                        className="min-h-[100px] resize-none"
                       />
                     </FormControl>
                     <FormMessage />

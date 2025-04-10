@@ -89,23 +89,23 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="@container flex flex-col items-start justify-between pb-4 border-b space-y-4">  
+      <CardHeader className="flex flex-col items-start justify-between space-y-4 border-b pb-4 @container">  
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">Residents</CardTitle>
           <CardDescription>Manage all residents of Barangay Bahay Toro</CardDescription>
         </div>
-        <div className="@3xl:flex-row w-full flex flex-col gap-2 sm:gap-4">
+        <div className="flex w-full flex-col gap-2 @3xl:flex-row sm:gap-4">
           <div className="relative basis-3/4">
             <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search by name or ID..."
               value={search || ""}
               onChange={handleSearchChange}
-              className="pl-8 w-full"
+              className="w-full pl-8"
             />
           </div>
           
-          <div className="flex flex-grow flex-col gap-2 @md:flex-row sm:space-y-0 sm:space-x-2 w-full">
+          <div className="flex w-full flex-grow flex-col gap-2 @md:flex-row sm:space-x-2 sm:space-y-0">
             <Select value={gender} onValueChange={(value) => {
               setGender(value);
               setPage(1);
@@ -153,11 +153,11 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
       </CardHeader>
       <CardContent className="p-0">
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
           </div>
         ) : isError ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex items-center justify-center py-20">
             <p className="text-red-500">Error loading residents. Please try again.</p>
           </div>
         ) : residents.length > 0 ? (
@@ -166,7 +166,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
               {isFetching && <LoaderComponent/>}
               <ResidentTable residents={residents} isLoading={isFetching} refetch={refetch} />
             </div>
-            <div className="flex items-center justify-between p-4 border-t">
+            <div className="flex items-center justify-between border-t p-4">
               <div className="text-sm text-muted-foreground">
                 Showing {((page - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(page * ITEMS_PER_PAGE, totalResidents)} of {totalResidents} residents
               </div>
@@ -178,9 +178,9 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
                   disabled={page === 1 || isFetching}
                   className="px-1 min-[500px]:px-3"
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" /> <span className="hidden min-[500px]:inline">Previous</span>
+                  <ChevronLeft className="mr-1 h-4 w-4" /> <span className="hidden min-[500px]:inline">Previous</span>
                 </Button>
-                <div className="text-sm text-nowrap">
+                <div className="text-nowrap text-sm">
                   <span className="hidden min-[500px]:inline">Page</span> {page} of {totalPages}
                 </div>
                 <Button 
@@ -190,17 +190,17 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
                   disabled={isFetching || page >= totalPages}
                   className="px-1 min-[500px]:px-3"
                 >
-                  <span className="hidden min-[500px]:inline">Next</span> <ChevronRight className="h-4 w-4 ml-1" />
+                  <span className="hidden min-[500px]:inline">Next</span> <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
             </div>
           </>
         ) : (
-          <div className="relative flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm py-20 m-6">
+          <div className="relative m-6 flex flex-1 items-center justify-center rounded-lg border border-dashed py-20 shadow-sm">
             {isFetching && <LoaderComponent/>}
             <div className="flex flex-col items-center text-center">
               <h3 className="text-2xl font-bold tracking-tight">No Residents</h3>
-              <p className="text-sm text-muted-foreground mb-3">
+              <p className="mb-3 text-sm text-muted-foreground">
                 No residents match your current filter criteria.
               </p>
             </div>
@@ -213,7 +213,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
 
 function LoaderComponent() {
   return (
-    <div className="absolute inset-0 bg-white/60 flex justify-center items-center pt-10 z-10">
+    <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 pt-10">
       <Loader2 className="h-8 w-8 animate-spin text-green-primary" />
     </div>
   );

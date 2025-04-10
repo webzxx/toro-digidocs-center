@@ -40,7 +40,7 @@ export default function ResidentFormFields({
   isAdmin = false,
 }: ResidentFormFieldsProps) {
   return (
-    <div className="grid gap-4 pb-4 pr-4 max-h-[60vh] overflow-y-auto">
+    <div className="grid max-h-[60vh] gap-4 overflow-y-auto pb-4 pr-4">
       {/* Personal Information */}
       <h3 className="font-semibold">Personal Information</h3>
       <div className="grid grid-cols-4 items-center gap-4">
@@ -201,7 +201,7 @@ export default function ResidentFormFields({
       )}
       
       {/* Address Fields */}
-      <h3 className="font-semibold mt-4">Address Information</h3>
+      <h3 className="mt-4 font-semibold">Address Information</h3>
       
       {/* Admin-only fields */}
       {isAdmin && (
@@ -289,7 +289,7 @@ export default function ResidentFormFields({
       </div>
       
       {/* Emergency Contact Fields */}
-      <h3 className="font-semibold mt-4">Emergency Contact</h3>
+      <h3 className="mt-4 font-semibold">Emergency Contact</h3>
       <div className="grid grid-cols-4 items-center gap-4">
         <Label htmlFor="emergencyName" className="text-right">
           Name

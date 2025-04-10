@@ -119,14 +119,14 @@ async function PaymentStatusPage({
   }
 
   return (
-    <div className="min-h-[40rem] bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="flex min-h-[40rem] flex-col items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-3xl">
         {actualUrlStatus === "success" ? (
           <PaymentReceipt payment={{...payment, paymentStatus: actualPaymentStatus}} />
         ) : actualUrlStatus === "failure" ? (
           <Card className="p-8">
-            <div className="flex flex-col items-center space-y-4 mb-6 text-center">
-              <div className="relative w-20 h-20 mb-4">
+            <div className="mb-6 flex flex-col items-center space-y-4 text-center">
+              <div className="relative mb-4 h-20 w-20">
                 <Image
                   src="/payment/payment-failed.svg"
                   alt="Payment Failed"
@@ -140,7 +140,7 @@ async function PaymentStatusPage({
               </p>
             </div>
             
-            <div className="border rounded-lg p-6 bg-white mb-6">
+            <div className="mb-6 rounded-lg border bg-white p-6">
               <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} showStatus />
             </div>
             
@@ -150,8 +150,8 @@ async function PaymentStatusPage({
           </Card>
         ) : (
           <Card className="p-8">
-            <div className="flex flex-col items-center space-y-4 mb-6 text-center">
-              <div className="relative w-20 h-20 mb-4">
+            <div className="mb-6 flex flex-col items-center space-y-4 text-center">
+              <div className="relative mb-4 h-20 w-20">
                 <Image
                   src="/payment/payment-cancelled.svg"
                   alt="Payment Cancelled"
@@ -165,7 +165,7 @@ async function PaymentStatusPage({
               </p>
             </div>
             
-            <div className="border rounded-lg p-6 bg-white mb-6">
+            <div className="mb-6 rounded-lg border bg-white p-6">
               <PaymentDetails payment={{...payment, paymentStatus: actualPaymentStatus}} showStatus />
             </div>
             

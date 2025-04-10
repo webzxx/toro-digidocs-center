@@ -30,9 +30,9 @@ export function PaymentDetails({
   return (
     <div className="space-y-6">
       {showHeader && (
-        <div className="flex flex-col items-start pt-2 sm:pt-0 sm:justify-between sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start pt-2 sm:flex-row sm:items-center sm:justify-between sm:pt-0">
           <div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-gray-500">
               {formatDistanceToNow(new Date(paidDate), { addSuffix: true })}
             </p>
           </div>
@@ -51,12 +51,12 @@ export function PaymentDetails({
       )}
       
       <div>
-        <h3 className="text-sm font-medium text-gray-500 mb-1">Transaction Reference</h3>
+        <h3 className="mb-1 text-sm font-medium text-gray-500">Transaction Reference</h3>
         <p className="font-mono text-base">{payment.transactionReference}</p>
       </div>
       
       <div>
-        <h3 className="text-sm font-medium text-gray-500 mb-1">Certificate</h3>
+        <h3 className="mb-1 text-sm font-medium text-gray-500">Certificate</h3>
         <p className="text-base font-medium">
           {payment.certificateRequest.certificateType.replaceAll("_", " ")} Certificate
         </p>
@@ -66,13 +66,13 @@ export function PaymentDetails({
       </div>
       
       <div>
-        <h3 className="text-sm font-medium text-gray-500 mb-1">Recipient</h3>
+        <h3 className="mb-1 text-sm font-medium text-gray-500">Recipient</h3>
         <p className="text-base">{resident.firstName} {resident.lastName}</p>
       </div>
       
       {showPaymentMethod && (
         <div>
-          <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Method</h3>
+          <h3 className="mb-1 text-sm font-medium text-gray-500">Payment Method</h3>
           <p className="text-base">{payment.paymentMethod.replaceAll("_", " ")}</p>
         </div>
       )}

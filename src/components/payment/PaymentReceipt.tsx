@@ -6,8 +6,8 @@ import { PaymentDetails } from "@/components/payment/PaymentDetails";
 export function PaymentReceipt({ payment }: { payment: any }) {
   return (
     <div className="space-y-6 py-4">
-      <div className="rounded-xl bg-green-50 p-4 flex items-center gap-3 text-green-700 mb-4">
-        <div className="bg-green-100 rounded-full p-1">
+      <div className="mb-4 flex items-center gap-3 rounded-xl bg-green-50 p-4 text-green-700">
+        <div className="rounded-full bg-green-100 p-1">
           <Check className="h-5 w-5 text-green-600" />
         </div>
         <p className="font-medium">Payment Successful!</p>
@@ -27,7 +27,7 @@ export function PaymentReceipt({ payment }: { payment: any }) {
           />
         </CardContent>
         
-        <CardFooter className="bg-gray-50 p-6 flex justify-end">
+        <CardFooter className="flex justify-end bg-gray-50 p-6">
           <PaymentActions variant="success" />
         </CardFooter>
       </Card>

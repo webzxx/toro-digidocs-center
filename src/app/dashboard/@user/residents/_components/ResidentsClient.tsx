@@ -37,14 +37,14 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="px-7 flex flex-row items-center justify-between border-b pb-4">
+      <CardHeader className="flex flex-row items-center justify-between border-b px-7 pb-4">
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">My Resident Profiles</CardTitle>
           <CardDescription>Manage resident profiles linked to your account</CardDescription>
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline" className="gap-2 p-0 w-10 min-[590px]:px-4 min-[590px]:py-2 min-[590px]:w-auto">
+            <Button variant="outline" className="w-10 gap-2 p-0 min-[590px]:w-auto min-[590px]:px-4 min-[590px]:py-2">
               <HelpCircle className="h-4 w-4" />
               <span className="hidden min-[590px]:block min-[680px]:hidden">Need help?</span>
               <span className="sr-only min-[680px]:not-sr-only">How to Add Profiles</span>
@@ -59,12 +59,12 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
             </DialogHeader>
             <div className="py-4">
               <p className="mb-3">A resident profile will be automatically created when you request a certificate. This ensures that:</p>
-              <ul className="list-disc ml-6 space-y-1 mb-4">
+              <ul className="mb-4 ml-6 list-disc space-y-1">
                 <li>Your information is properly verified</li>
                 <li>All your certificates are linked to a verified resident profile</li>
                 <li>You can manage profiles for family members or dependents</li>
               </ul>
-              <p className="text-sm text-muted-foreground mt-4">
+              <p className="mt-4 text-sm text-muted-foreground">
                 Once you&apos;ve created a profile through certificate request, you&apos;ll be able to manage it here and use it for all future requests.
               </p>
             </div>
@@ -82,34 +82,34 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
           <ScrollArea className="max-h-full">
             <Accordion type="single" collapsible value={expandedResidentId || undefined} onValueChange={setExpandedResidentId}>
               {userResidents.map((resident) => (
-                <AccordionItem key={resident.id} value={resident.id.toString()} className="border border-muted rounded-lg mb-3 overflow-hidden">
-                  <AccordionTrigger className="px-3 py-4 sm:px-6 sm:py-4 hover:no-underline [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0 [&>svg]:ml-2">
-                    <div className="flex flex-col sm:flex-row flex-1 gap-2 sm:gap-9 sm:items-center justify-between sm:mr-4 text-start">
+                <AccordionItem key={resident.id} value={resident.id.toString()} className="mb-3 overflow-hidden rounded-lg border border-muted">
+                  <AccordionTrigger className="px-3 py-4 hover:no-underline sm:px-6 sm:py-4 [&>svg]:ml-2 [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0 [&>svg]:text-muted-foreground">
+                    <div className="flex flex-1 flex-col justify-between gap-2 text-start sm:mr-4 sm:flex-row sm:items-center sm:gap-9">
                       <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
-                        <User className="size-4 sm:size-5 text-green-primary flex-shrink-0" />
+                        <User className="size-4 flex-shrink-0 text-green-primary sm:size-5" />
                         <div className="flex flex-col items-start">
                           <h4 className="font-medium">{resident.firstName} {resident.lastName}</h4>
                           <p className="text-sm text-muted-foreground">ID: {resident.bahayToroSystemId}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Clock className="size-4 text-muted-foreground flex-shrink-0" />
-                        <span className="text-xs sm:text-sm text-muted-foreground">
+                        <Clock className="size-4 flex-shrink-0 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground sm:text-sm">
                           Last Updated: {formatDateTime(resident.updatedAt)}
                         </span>
                       </div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="bg-muted/20 px-6 pb-6 pt-2">
-                    <div className="flex mb-4 mt-2 sm:justify-end">
+                    <div className="mb-4 mt-2 flex sm:justify-end">
                       <UserResidentActions resident={resident} />
                     </div>
                     
-                    <div className="grid gap-6 md:grid-cols-2 mt-2">
+                    <div className="mt-2 grid gap-6 md:grid-cols-2">
                       <div className="space-y-4">
                         <div>
-                          <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Personal Information</h3>
-                          <div className="grid sm:grid-cols-2 gap-2 mt-2">
+                          <h3 className="mb-3 border-b pb-1 text-base font-semibold text-green-primary">Personal Information</h3>
+                          <div className="mt-2 grid gap-2 sm:grid-cols-2">
                             <div className="sm:col-span-2">
                               <p className="text-sm font-medium text-muted-foreground">Full Name</p>
                               <p className="text-base">{`${resident.firstName} ${resident.middleName || ""} ${resident.lastName}`}</p>
@@ -142,8 +142,8 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                         </div>
                         
                         <div>
-                          <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Contact Information</h3>
-                          <div className="grid sm:grid-cols-2 gap-2 mt-2">
+                          <h3 className="mb-3 border-b pb-1 text-base font-semibold text-green-primary">Contact Information</h3>
+                          <div className="mt-2 grid gap-2 sm:grid-cols-2">
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Email</p>
                               <p className="text-base">{resident.email || "N/A"}</p>
@@ -156,11 +156,11 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                         </div>
 
                         <div>
-                          <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Address Information</h3>
-                          <div className="grid gap-2 mt-2">
+                          <h3 className="mb-3 border-b pb-1 text-base font-semibold text-green-primary">Address Information</h3>
+                          <div className="mt-2 grid gap-2">
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Current Address</p>
-                              <p className="text-base break-words">{resident.address ? 
+                              <p className="break-words text-base">{resident.address ? 
                                 `${resident.address.blockLot || ""} ${resident.address.phase || ""} ${resident.address.street || ""}, ${resident.address.subdivision}, ${resident.address.barangay}, ${resident.address.city}, ${resident.address.province}` 
                                 : "N/A"}</p>
                             </div>
@@ -178,8 +178,8 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                       
                       <div className="space-y-4">
                         <div>
-                          <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Emergency Contact</h3>
-                          <div className="grid gap-2 mt-2">
+                          <h3 className="mb-3 border-b pb-1 text-base font-semibold text-green-primary">Emergency Contact</h3>
+                          <div className="mt-2 grid gap-2">
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Name</p>
                               <p className="text-base">{resident.emergencyContact?.name || "N/A"}</p>
@@ -194,76 +194,76 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                             </div>
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Address</p>
-                              <p className="text-base break-words">{resident.emergencyContact?.address || "N/A"}</p>
+                              <p className="break-words text-base">{resident.emergencyContact?.address || "N/A"}</p>
                             </div>
                           </div>
                         </div>
 
                         {resident.proofOfIdentity && (
                           <div>
-                            <h3 className="text-base font-semibold text-green-primary border-b pb-1 mb-3">Proof of Identity</h3>
-                            <div className="grid sm:grid-cols-2 gap-3 mt-2">
+                            <h3 className="mb-3 border-b pb-1 text-base font-semibold text-green-primary">Proof of Identity</h3>
+                            <div className="mt-2 grid gap-3 sm:grid-cols-2">
                               {resident.proofOfIdentity.idPhoto1Path && (
                                 <div>
-                                  <p className="text-xs font-medium text-muted-foreground mb-1">ID Photo 1</p>
-                                  <div className="aspect-video relative">
+                                  <p className="mb-1 text-xs font-medium text-muted-foreground">ID Photo 1</p>
+                                  <div className="relative aspect-video">
                                     <Image 
                                       src={resident.proofOfIdentity.idPhoto1Path} 
                                       alt="ID Photo 1"
                                       fill
-                                      className="object-cover rounded-md" 
+                                      className="rounded-md object-cover" 
                                     />
                                   </div>
                                 </div>
                               )}
                               {resident.proofOfIdentity.idPhoto2Path && (
                                 <div>
-                                  <p className="text-xs font-medium text-muted-foreground mb-1">ID Photo 2</p>
-                                  <div className="aspect-video relative">
+                                  <p className="mb-1 text-xs font-medium text-muted-foreground">ID Photo 2</p>
+                                  <div className="relative aspect-video">
                                     <Image 
                                       src={resident.proofOfIdentity.idPhoto2Path} 
                                       alt="ID Photo 2"
                                       fill
-                                      className="object-cover rounded-md" 
+                                      className="rounded-md object-cover" 
                                     />
                                   </div>
                                 </div>
                               )}
                               {resident.proofOfIdentity.holdingIdPhoto1Path && (
                                 <div>
-                                  <p className="text-xs font-medium text-muted-foreground mb-1">Holding ID Photo 1</p>
-                                  <div className="aspect-video relative">
+                                  <p className="mb-1 text-xs font-medium text-muted-foreground">Holding ID Photo 1</p>
+                                  <div className="relative aspect-video">
                                     <Image 
                                       src={resident.proofOfIdentity.holdingIdPhoto1Path} 
                                       alt="Holding ID Photo 1"
                                       fill
-                                      className="object-cover rounded-md" 
+                                      className="rounded-md object-cover" 
                                     />
                                   </div>
                                 </div>
                               )}
                               {resident.proofOfIdentity.holdingIdPhoto2Path && (
                                 <div>
-                                  <p className="text-xs font-medium text-muted-foreground mb-1">Holding ID Photo 2</p>
-                                  <div className="aspect-video relative">
+                                  <p className="mb-1 text-xs font-medium text-muted-foreground">Holding ID Photo 2</p>
+                                  <div className="relative aspect-video">
                                     <Image 
                                       src={resident.proofOfIdentity.holdingIdPhoto2Path} 
                                       alt="Holding ID Photo 2"
                                       fill
-                                      className="object-cover rounded-md" 
+                                      className="rounded-md object-cover" 
                                     />
                                   </div>
                                 </div>
                               )}
                               {resident.proofOfIdentity.signaturePath && (
                                 <div className="sm:col-span-2">
-                                  <p className="text-xs font-medium text-muted-foreground mb-1">Signature</p>
-                                  <div className="h-20 relative">
+                                  <p className="mb-1 text-xs font-medium text-muted-foreground">Signature</p>
+                                  <div className="relative h-20">
                                     <Image 
                                       src={resident.proofOfIdentity.signaturePath} 
                                       alt="Signature"
                                       fill
-                                      className="object-contain rounded-md" 
+                                      className="rounded-md object-contain" 
                                     />
                                   </div>
                                 </div>
@@ -281,10 +281,10 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
         </CardContent>
       ) : (
         <CardContent className="p-6">
-          <div className="flex flex-col items-center justify-center text-center py-10 border border-dashed rounded-lg">
-            <User2 className="h-12 w-12 text-muted-foreground mb-3" />
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-10 text-center">
+            <User2 className="mb-3 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-medium">No resident profiles found</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="mb-4 text-sm text-muted-foreground">
               Request a certificate to create your first resident profile
             </p>
             <Link href="/pages/services">
@@ -297,7 +297,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
         </CardContent>
       )}
       
-      <CardFooter className="border-t p-4 flex justify-between text-sm text-muted-foreground">
+      <CardFooter className="flex justify-between border-t p-4 text-sm text-muted-foreground">
         <div>Total profiles: {userResidents.length}</div>
       </CardFooter>
     </Card>

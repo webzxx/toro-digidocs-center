@@ -34,23 +34,23 @@ import { PaymentStatus, AppointmentStatus, AppointmentType } from "@prisma/clien
 export const getCertificateStatusIcon = (status: string) => {
   switch(status) {
   case "COMPLETED":
-    return <Check className="h-4 w-4 text-green-500 flex-shrink-0" />;
+    return <Check className="h-4 w-4 flex-shrink-0 text-green-500" />;
   case "PENDING":
-    return <Clock className="h-4 w-4 text-yellow-500 flex-shrink-0" />;
+    return <Clock className="h-4 w-4 flex-shrink-0 text-yellow-500" />;
   case "UNDER_REVIEW":
-    return <AlertCircle className="h-4 w-4 text-purple-500 flex-shrink-0" />;
+    return <AlertCircle className="h-4 w-4 flex-shrink-0 text-purple-500" />;
   case "AWAITING_PAYMENT":
-    return <CircleDollarSign className="h-4 w-4 text-orange-500 flex-shrink-0" />;
+    return <CircleDollarSign className="h-4 w-4 flex-shrink-0 text-orange-500" />;
   case "PROCESSING":
-    return <Hourglass className="h-4 w-4 text-blue-500 flex-shrink-0" />;
+    return <Hourglass className="h-4 w-4 flex-shrink-0 text-blue-500" />;
   case "READY_FOR_PICKUP":
-    return <PackageCheck className="h-4 w-4 text-indigo-500 flex-shrink-0" />;
+    return <PackageCheck className="h-4 w-4 flex-shrink-0 text-indigo-500" />;
   case "IN_TRANSIT":
-    return <Truck className="h-4 w-4 text-cyan-500 flex-shrink-0" />;
+    return <Truck className="h-4 w-4 flex-shrink-0 text-cyan-500" />;
   case "REJECTED":
-    return <XCircle className="h-4 w-4 text-red-500 flex-shrink-0" />;
+    return <XCircle className="h-4 w-4 flex-shrink-0 text-red-500" />;
   case "CANCELLED":
-    return <BanIcon className="h-4 w-4 text-gray-500 flex-shrink-0" />;
+    return <BanIcon className="h-4 w-4 flex-shrink-0 text-gray-500" />;
   default:
     return <FileText className="h-4 w-4 flex-shrink-0" />;
   }

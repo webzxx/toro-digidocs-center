@@ -13,9 +13,9 @@ export default async function DashboardLayout({ children, admin, user }: Dashboa
   const role = session?.user?.role;
 
   return (
-    <div className="container px-1 min-[420px]:px-9 flex flex-col min-h-screen w-full lg:grid lg:grid-cols-[280px_1fr] my-6">
+    <div className="container my-6 flex min-h-screen w-full flex-col px-1 min-[420px]:px-9 lg:grid lg:grid-cols-[280px_1fr]">
       <DashboardSideBar role={role} />
-      <main className="w-full overflow-x-hidden flex flex-col gap-4 pt-4 lg:p-4 lg:gap-6">
+      <main className="flex w-full flex-col gap-4 overflow-x-hidden pt-4 lg:gap-6 lg:p-4">
         {role === "ADMIN" ? admin : user}
       </main>
     </div>

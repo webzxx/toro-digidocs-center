@@ -141,7 +141,7 @@ export default function AppointmentsClient({
 
   return (
     <Card className="shadow-md">
-      <CardHeader className="px-7 flex flex-row items-center justify-between border-b pb-4">
+      <CardHeader className="flex flex-row items-center justify-between border-b px-7 pb-4">
         <div>
           <CardTitle className="text-2xl font-bold text-green-primary">My Appointments</CardTitle>
           <CardDescription>Request and manage your appointments</CardDescription>
@@ -149,7 +149,7 @@ export default function AppointmentsClient({
         <NewAppointmentButton userId={userId} residents={residents} />
       </CardHeader>
       
-      <div className="px-6 py-3 border-b flex sm:items-center justify-between sm:flex-row flex-col items-start gap-2 sm:gap-0">
+      <div className="flex flex-col items-start justify-between gap-2 border-b px-6 py-3 sm:flex-row sm:items-center sm:gap-0">
         <div className="flex items-center space-x-2">
           <Button 
             variant={filter === "all" ? "default" : "outline"} 
@@ -193,9 +193,9 @@ export default function AppointmentsClient({
                 <AccordionItem 
                   key={appointment.id} 
                   value={appointment.id.toString()} 
-                  className="border border-muted rounded-lg mb-3 overflow-hidden"
+                  className="mb-3 overflow-hidden rounded-lg border border-muted"
                 >
-                  <AccordionTrigger className="px-4 py-3 hover:no-underline [&>svg]:text-muted-foreground [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0">
+                  <AccordionTrigger className="px-4 py-3 hover:no-underline [&>svg]:h-5 [&>svg]:w-5 [&>svg]:shrink-0 [&>svg]:text-muted-foreground">
                     <div className="flex flex-1 items-center justify-between">
                       <div className='flex flex-col items-start text-start'>
                         <div className="flex items-center gap-2">
@@ -205,7 +205,7 @@ export default function AppointmentsClient({
                         <p className="text-sm text-muted-foreground">Ref: {appointment.referenceNumber}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="text-sm text-right mr-2">
+                        <div className="mr-2 text-right text-sm">
                           <div className="font-medium">
                             {appointment.status === "REQUESTED" 
                               ? "Awaiting Schedule"
@@ -227,14 +227,14 @@ export default function AppointmentsClient({
                     <div className="grid gap-3 text-sm">
                       {appointment.status === "REQUESTED" ? (
                         <div className="grid grid-cols-1 gap-3">
-                          <div className="p-3 bg-purple-50 rounded-md text-purple-700 text-center">
+                          <div className="rounded-md bg-purple-50 p-3 text-center text-purple-700">
                             Your appointment request is being reviewed by the staff. 
                             You will be notified once it's approved and scheduled.
                           </div>
                           
                           {/* Show the preferred date and time slot for requested appointments */}
-                          <div className="grid grid-cols-2 gap-1 mt-2">
-                            <div className="text-muted-foreground flex items-center gap-1">
+                          <div className="mt-2 grid grid-cols-2 gap-1">
+                            <div className="flex items-center gap-1 text-muted-foreground">
                               <Calendar className="h-4 w-4" />
                               Preferred Date:
                             </div>
@@ -242,7 +242,7 @@ export default function AppointmentsClient({
                           </div>
                           
                           <div className="grid grid-cols-2 gap-1">
-                            <div className="text-muted-foreground flex items-center gap-1">
+                            <div className="flex items-center gap-1 text-muted-foreground">
                               <Clock className="h-4 w-4" />
                               Preferred Time:
                             </div>
@@ -257,7 +257,7 @@ export default function AppointmentsClient({
                         <>
                           {appointment.scheduledDateTime && (
                             <div className="grid grid-cols-2 gap-1">
-                              <div className="text-muted-foreground flex items-center gap-1">
+                              <div className="flex items-center gap-1 text-muted-foreground">
                                 <Calendar className="h-4 w-4" />
                                 Date & Time:
                               </div>
@@ -266,7 +266,7 @@ export default function AppointmentsClient({
                           )}
                           
                           <div className="grid grid-cols-2 gap-1">
-                            <div className="text-muted-foreground flex items-center gap-1">
+                            <div className="flex items-center gap-1 text-muted-foreground">
                               <Clock className="h-4 w-4" />
                               Duration:
                             </div>
@@ -277,7 +277,7 @@ export default function AppointmentsClient({
                       
                       {appointment.resident && (
                         <div className="grid grid-cols-2 gap-1">
-                          <div className="text-muted-foreground flex items-center gap-1">
+                          <div className="flex items-center gap-1 text-muted-foreground">
                             <User className="h-4 w-4" />
                             Resident:
                           </div>
@@ -287,7 +287,7 @@ export default function AppointmentsClient({
                       
                       {appointment.appointmentType === "DOCUMENT_PICKUP" && appointment.certificateRequest && (
                         <div className="grid grid-cols-2 gap-1">
-                          <div className="text-muted-foreground flex items-center gap-1">
+                          <div className="flex items-center gap-1 text-muted-foreground">
                             <FileText className="h-4 w-4" />
                             Document:
                           </div>
@@ -296,7 +296,7 @@ export default function AppointmentsClient({
                       )}
                       
                       <div className="grid grid-cols-2 gap-1">
-                        <div className="text-muted-foreground flex items-center gap-1">
+                        <div className="flex items-center gap-1 text-muted-foreground">
                           <MapPin className="h-4 w-4" />
                           Location:
                         </div>
@@ -305,7 +305,7 @@ export default function AppointmentsClient({
                       
                       {appointment.notes && (
                         <div className="grid grid-cols-2 gap-1">
-                          <div className="text-muted-foreground flex items-center gap-1">
+                          <div className="flex items-center gap-1 text-muted-foreground">
                             <Info className="h-4 w-4" />
                             Notes:
                           </div>
@@ -314,11 +314,11 @@ export default function AppointmentsClient({
                       )}
                       
                       {(appointment.status === "REQUESTED" || appointment.status === "SCHEDULED") && (
-                        <div className="flex justify-end gap-2 mt-2">
+                        <div className="mt-2 flex justify-end gap-2">
                           <Button 
                             variant="outline" 
                             size="sm"
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="text-red-600 hover:bg-red-50 hover:text-red-700"
                             onClick={(e) => {
                               e.stopPropagation(); // Prevent accordion from toggling
                               setConfirmCancel(appointment.id);
@@ -336,10 +336,10 @@ export default function AppointmentsClient({
             </Accordion>
           </ScrollArea>
         ) : (
-          <div className="flex flex-col items-center justify-center text-center py-10 border border-dashed rounded-lg">
-            <Calendar className="h-12 w-12 text-muted-foreground mb-3" />
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-10 text-center">
+            <Calendar className="mb-3 h-12 w-12 text-muted-foreground" />
             <h3 className="text-lg font-medium">No appointments found</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="mb-4 text-sm text-muted-foreground">
               {filter === "all" 
                 ? "Request your first appointment to see it here"
                 : filter === "pending"
@@ -353,12 +353,12 @@ export default function AppointmentsClient({
         )}
       </CardContent>
       
-      <CardFooter className="border-t p-4 flex justify-between text-sm text-muted-foreground">
+      <CardFooter className="flex justify-between border-t p-4 text-sm text-muted-foreground">
         <div>Total appointments: {appointments.length}</div>
         <div className="flex gap-3">
           {Object.entries(statusCounts).map(([status, count]) => (
             <div key={status} className="flex items-center">
-              <div className="w-2 h-2 rounded-full mr-1" 
+              <div className="mr-1 h-2 w-2 rounded-full" 
                 style={{ 
                   backgroundColor: 
                     status === "REQUESTED" ? "#8b5cf6" :

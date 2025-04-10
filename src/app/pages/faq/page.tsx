@@ -12,9 +12,9 @@ export default function Faq() {
     <main className="flex min-h-screen flex-col items-center justify-between p-0">
 
       {/* First Section */}
-      <section id="first-section" className="relative flex justify-center items-center w-full py-8">
+      <section id="first-section" className="relative flex w-full items-center justify-center py-8">
         <div className="w-full max-w-4xl p-4">
-          <div className="bg-white rounded-lg shadow-lg border border-stone-300 p-8 h-[44rem]">
+          <div className="h-[44rem] rounded-lg border border-stone-300 bg-white p-8 shadow-lg">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
                 <AccordionTrigger>Ano-ano ang mga kailangan sa pagkuha ng Barangay I.D.?</AccordionTrigger>
