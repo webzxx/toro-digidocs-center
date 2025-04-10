@@ -106,11 +106,6 @@ export async function GET(req: NextRequest) {
             bahayToroSystemId: true,
           },
         },
-        certificateRequest: {
-          select: {
-            referenceNumber: true,
-          },
-        },
       },
       skip,
       take: limit,

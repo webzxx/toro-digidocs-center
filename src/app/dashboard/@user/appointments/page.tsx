@@ -12,7 +12,6 @@ async function AppointmentsPage({ user }: WithAuthProps) {
     },
     include: {
       resident: true,
-      certificateRequest: true,
     },
     orderBy: {
       scheduledDateTime: "asc",

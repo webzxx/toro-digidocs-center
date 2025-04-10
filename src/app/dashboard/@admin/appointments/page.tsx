@@ -22,11 +22,6 @@ async function AppointmentsPage() {
           bahayToroSystemId: true,
         },
       },
-      certificateRequest: {
-        select: {
-          referenceNumber: true,
-        },
-      },
     },
   });
   
