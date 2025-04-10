@@ -3,7 +3,7 @@
 import React from "react";
 import { Appointment, AppointmentStatus, AppointmentType } from "@prisma/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateTimeShort } from "@/lib/utils";
 import { getAppointmentStatusBadge, getAppointmentTypeBadge } from "@/components/utils/badges";
 import AppointmentActions from "./AppointmentActions";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -115,7 +115,7 @@ export default function AppointmentTable({ appointments, onSuccess }: Appointmen
               <TableCell className="hidden sm:table-cell">
                 {appointment.scheduledDateTime ? (
                   <div className="flex flex-col">
-                    <span>{formatDateShort(new Date(appointment.scheduledDateTime))}</span>
+                    <span>{formatDateTimeShort(new Date(appointment.scheduledDateTime))}</span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(appointment.scheduledDateTime).toLocaleTimeString([], {
                         hour: "2-digit",
@@ -125,7 +125,7 @@ export default function AppointmentTable({ appointments, onSuccess }: Appointmen
                   </div>
                 ) : (
                   <div className="flex flex-col">
-                    <span>{formatDateShort(new Date(appointment.preferredDate))}</span>
+                    <span>{formatDateTimeShort(new Date(appointment.preferredDate))}</span>
                     <span className="text-xs text-muted-foreground">
                       {appointment.preferredTimeSlot === "MORNING" ? "Morning" : "Afternoon"}
                     </span>
@@ -151,7 +151,7 @@ export default function AppointmentTable({ appointments, onSuccess }: Appointmen
                 )}
               </TableCell>
               <TableCell className="hidden sm:table-cell">
-                {formatDateShort(new Date(appointment.createdAt))}
+                {formatDateTimeShort(new Date(appointment.createdAt))}
               </TableCell>
               <TableCell className="text-right">
                 <AppointmentActions 

@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CertificateRequest, Payment, Resident } from "@prisma/client";
-import { formatCurrency, formatDateShort } from "@/lib/utils";
+import { formatCurrency, formatDateTimeShort } from "@/lib/utils";
 import { getPaymentStatusBadge } from "@/components/utils/badges";
 import PaymentActions from "./PaymentActions";
 import { CertificateWithDetails } from "./ManualPaymentButton";
@@ -134,7 +134,7 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                 </div>
               </TableCell>
               <TableCell className="hidden sm:table-cell">
-                {formatDateShort(payment.paymentDate || payment.createdAt)}
+                {formatDateTimeShort(payment.paymentDate || payment.createdAt)}
               </TableCell>
               <TableCell>
                 {getPaymentStatusBadge(payment.paymentStatus)}

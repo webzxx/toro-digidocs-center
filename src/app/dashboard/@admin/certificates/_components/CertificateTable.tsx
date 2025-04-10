@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 import CertificateActions from "./CertificateActions";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AdminCertificate } from "@/types/types";
@@ -33,7 +33,7 @@ export default function CertificateTable({ certificates, isLoading = false, refe
 
   const formatValue = (value: any): string => {
     if (typeof value === "string" && isValidDate(value)) {
-      return formatDate(new Date(value));
+      return formatDateTime(new Date(value));
     }
     return String(value);
   };
@@ -164,7 +164,7 @@ export default function CertificateTable({ certificates, isLoading = false, refe
                   </TooltipProvider>
                 </TableCell>
                 <TableCell>
-                  {formatDate(certificate.requestDate)}
+                  {formatDateTime(certificate.requestDate)}
                 </TableCell>
                 <TableCell>
                   {getCertificateStatusBadge(certificate.status)}

@@ -31,7 +31,7 @@ import {
   getCertificateStatusIcon,
   getPaymentStatusBadge, 
 } from "@/components/utils";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 import { useQueryState } from "nuqs";
 
 type CertificateWithPayment = CertificateRequest & {
@@ -195,7 +195,7 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
                     </div>
                     <div className="grid grid-cols-2 gap-1">
                       <div className="text-muted-foreground">Requested:</div>
-                      <div>{formatDate(certificate.requestDate)}</div>
+                      <div>{formatDateTime(certificate.requestDate)}</div>
                     </div>
                     {certificate.payments.length > 0 && (
                       <div className="grid grid-cols-2 gap-1">

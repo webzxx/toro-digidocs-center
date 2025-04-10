@@ -23,7 +23,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { CertificateRequest, Payment, PaymentStatus, Resident } from "@prisma/client";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 import Image from "next/image";
 import { approvePayment, deletePayment, rejectPayment } from "../actions";
 import { PaymentDetails } from "@/components/payment/PaymentDetails";
@@ -384,12 +384,12 @@ export default function PaymentActions({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Created At</h3>
-                    <p className="text-base">{formatDate(payment.createdAt)}</p>
+                    <p className="text-base">{formatDateTime(payment.createdAt)}</p>
                   </div>
                   
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-1">Updated At</h3>
-                    <p className="text-base">{formatDate(payment.updatedAt)}</p>
+                    <p className="text-base">{formatDateTime(payment.updatedAt)}</p>
                   </div>
                 </div>
                 
@@ -489,7 +489,7 @@ export default function PaymentActions({
               {payment.paymentDate && (
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-1">Payment Date</h3>
-                  <p className="text-base">{formatDate(payment.paymentDate)}</p>
+                  <p className="text-base">{formatDateTime(payment.paymentDate)}</p>
                 </div>
               )}
               

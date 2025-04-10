@@ -13,7 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 import { ResidentWithTypes } from "@/types/types";
 import Image from "next/image";
 import ResidentActions from "./ResidentActions";
@@ -185,7 +185,7 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
                   </TooltipProvider>
                 </TableCell>
                 <TableCell>{getGenderBadge(resident.gender)}</TableCell>
-                <TableCell>{formatDate(resident.birthDate)}</TableCell>
+                <TableCell>{formatDateTime(resident.birthDate)}</TableCell>
                 <TableCell>{formatReligion(resident.religion)}</TableCell>
                 <TableCell>{getCivilStatusBadge(resident.status)}</TableCell>
                 <TableCell>{resident.sector ? getSectorBadge(resident.sector) : "N/A"}</TableCell>

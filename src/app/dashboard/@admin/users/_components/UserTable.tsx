@@ -15,7 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import UserActions from "./UserActions";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
   
 interface UserTableProps {
   users: User[];
@@ -67,7 +67,7 @@ export default function UserTable({ users, isLoading, refetch }: UserTableProps)
                 </Badge>
               </TableCell>
               <TableCell className="hidden sm:table-cell">
-                {formatDate(user.createdAt)}
+                {formatDateTime(user.createdAt)}
               </TableCell>
               <TableCell className="text-right">
                 <UserActions 

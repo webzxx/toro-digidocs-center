@@ -2,7 +2,7 @@ import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { User as UserIcon, Mail, Shield, Calendar } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 import { db } from "@/lib/db";
 
 async function SettingsPage({ user }: WithAuthProps) {
@@ -65,7 +65,7 @@ async function SettingsPage({ user }: WithAuthProps) {
               </div>
               <div className="space-y-1 flex-1">
                 <Label className="text-muted-foreground text-sm">Account Created</Label>
-                <p className="font-medium">{formatDate(fullUser.createdAt)}</p>
+                <p className="font-medium">{formatDateTime(fullUser.createdAt)}</p>
               </div>
             </div>
           </div>

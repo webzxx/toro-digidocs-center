@@ -18,7 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime, formatDateOnly, formatTime } from "@/lib/utils";
 import { useState } from "react";
 import NewAppointmentButton, { Resident as ResidentType } from "./NewAppointmentButton";
 import { useRouter } from "next/navigation";
@@ -121,16 +121,6 @@ export default function AppointmentsClient({
       .split(" ")
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
-  };
-
-  // Format time for display
-  const formatTime = (dateTime: Date | string) => {
-    const date = new Date(dateTime);
-    return date.toLocaleTimeString("en-US", { 
-      hour: "numeric", 
-      minute: "2-digit",
-      hour12: true, 
-    });
   };
 
   // Handle appointment cancellation
@@ -239,7 +229,7 @@ export default function AppointmentsClient({
                           <div className="font-medium">
                             {appointment.status === "REQUESTED" 
                               ? "Awaiting Schedule"
-                              : appointment.scheduledDateTime ? formatDate(appointment.scheduledDateTime) : "Not scheduled"
+                              : appointment.scheduledDateTime ? formatDateOnly(appointment.scheduledDateTime) : "Not scheduled"
                             }
                           </div>
                           <div className="text-muted-foreground">
@@ -268,7 +258,7 @@ export default function AppointmentsClient({
                               <Calendar className="h-4 w-4" />
                               Preferred Date:
                             </div>
-                            <div>{formatDate(appointment.preferredDate)}</div>
+                            <div>{formatDateOnly(appointment.preferredDate)}</div>
                           </div>
                           
                           <div className="grid grid-cols-2 gap-1">
@@ -291,7 +281,7 @@ export default function AppointmentsClient({
                                 <Calendar className="h-4 w-4" />
                                 Date & Time:
                               </div>
-                              <div>{formatDate(appointment.scheduledDateTime)} at {formatTime(appointment.scheduledDateTime)}</div>
+                              <div>{formatDateTime(appointment.scheduledDateTime)}</div>
                             </div>
                           )}
                           

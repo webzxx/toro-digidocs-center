@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatDate = (date: Date) => {
+export const formatDateTime = (date: Date | string) => {
   return new Date(date).toLocaleString("en-US", {
     year: "numeric",
     month: "long",
@@ -15,7 +15,7 @@ export const formatDate = (date: Date) => {
   });
 };
 
-export const formatDateShort = (date: Date) => {
+export const formatDateTimeShort = (date: Date | string) => {
   return new Date(date).toLocaleString("en-US", {
     month: "short",
     day: "numeric",
@@ -25,6 +25,21 @@ export const formatDateShort = (date: Date) => {
   });
 };
 
+export const formatDateOnly = (date: Date | string) => {
+  return new Date(date).toLocaleDateString("en-US", { 
+    year: "numeric", 
+    month: "long", 
+    day: "numeric",
+  });
+};
+
+export const formatTime = (date: Date | string) => {
+  return new Date(date).toLocaleTimeString("en-US", { 
+    hour: "numeric", 
+    minute: "2-digit",
+    hour12: true, 
+  });
+};
 
 export const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("en-PH", {

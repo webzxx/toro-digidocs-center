@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { formatDateTime } from "@/lib/utils";
 import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from "@/components/utils";
 import { ResidentWithTypes } from "@/types/types";
 import {
@@ -95,7 +95,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                       <div className="flex items-center gap-2">
                         <Clock className="size-4 text-muted-foreground flex-shrink-0" />
                         <span className="text-xs sm:text-sm text-muted-foreground">
-                          Last Updated: {formatDate(resident.updatedAt)}
+                          Last Updated: {formatDateTime(resident.updatedAt)}
                         </span>
                       </div>
                     </div>
@@ -124,7 +124,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                             </div>
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Birth Date</p>
-                              <p className="text-base">{formatDate(resident.birthDate)}</p>
+                              <p className="text-base">{formatDateTime(resident.birthDate)}</p>
                             </div>
                             <div>
                               <p className="text-sm font-medium text-muted-foreground">Religion</p>
