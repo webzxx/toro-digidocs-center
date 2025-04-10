@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpWidget } from "@/components/HelpWidget";
 
 export default function Faq() {
   return (
@@ -71,11 +70,7 @@ export default function Faq() {
                 Monday - Friday, 8AM - 5PM
                 </AccordionContent>
               </AccordionItem>
-
             </Accordion>
-
-            <HelpWidget />
-
           </div>
         </div>
       </section>
