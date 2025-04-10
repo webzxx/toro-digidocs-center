@@ -18,7 +18,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formatDateTime, formatDateOnly, formatTime } from "@/lib/utils";
+import { formatDateTime, formatDateOnly, formatTime, formatAppointmentType } from "@/lib/utils";
 import { useState } from "react";
 import NewAppointmentButton, { Resident as ResidentType } from "./NewAppointmentButton";
 import { useRouter } from "next/navigation";
@@ -103,14 +103,6 @@ export default function AppointmentsClient({
     counts[appointment.status] = (counts[appointment.status] || 0) + 1;
     return counts;
   }, {} as Record<string, number>);
-
-  // Format the appointment type for display
-  const formatAppointmentType = (type: AppointmentType) => {
-    return type.replace("_", " ").toLowerCase()
-      .split(" ")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
 
   // Handle appointment cancellation
   const handleCancelAppointment = async (appointmentId: number) => {

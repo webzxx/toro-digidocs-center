@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { AppointmentType } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -75,4 +76,15 @@ export const formatReligion = (religion: string | null) => {
   default:
     return "N/A";
   }
+};
+
+/**
+ * Formats appointment type for display
+ * Converts DOCUMENT_PICKUP to "Document Pickup"
+ */
+export const formatAppointmentType = (type: AppointmentType) => {
+  return type.replace("_", " ").toLowerCase()
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
