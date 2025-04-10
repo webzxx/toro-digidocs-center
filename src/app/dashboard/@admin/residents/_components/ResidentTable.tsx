@@ -13,12 +13,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatDateTime } from "@/lib/utils";
+import { formatDateTime, formatReligion } from "@/lib/utils";
 import { ResidentWithTypes } from "@/types/types";
 import Image from "next/image";
 import ResidentActions from "./ResidentActions";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from "@/components/utils";
+import { getGenderBadge, getCivilStatusBadge, getSectorBadge } from "@/components/utils";
 
 interface ResidentTableProps {
   residents?: ResidentWithTypes[];

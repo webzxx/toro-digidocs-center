@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { formatDateTime } from "@/lib/utils";
-import { getGenderBadge, getCivilStatusBadge, getSectorBadge, formatReligion } from "@/components/utils";
+import { formatDateTime, formatReligion } from "@/lib/utils";
+import { getGenderBadge, getCivilStatusBadge, getSectorBadge } from "@/components/utils";
 import { ResidentWithTypes } from "@/types/types";
 import {
   Accordion,
