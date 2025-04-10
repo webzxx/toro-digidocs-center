@@ -220,9 +220,12 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
   return (
     <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          New Appointment
+        <Button 
+          className="gap-2 p-0 w-10 min-[530px]:px-4 min-[530px]:py-2 min-[530px]:w-auto"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="hidden min-[530px]:block min-[640px]:hidden">Add</span>
+          <span className="sr-only min-[640px]:not-sr-only">New Appointment</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[550px]">
