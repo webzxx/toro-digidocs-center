@@ -23,8 +23,10 @@ import {
   CalendarCheck,
   CalendarX,
   CalendarOff,
+  Video,
+  Info,
 } from "lucide-react";
-import { PaymentStatus, AppointmentStatus } from "@prisma/client";
+import { PaymentStatus, AppointmentStatus, AppointmentType } from "@prisma/client";
 
 /**
  * Returns an icon component based on the certificate status
@@ -105,5 +107,19 @@ export const getAppointmentStatusIcon = (status: AppointmentStatus) => {
     return <CalendarOff {...iconProps} />;
   default:
     return <Clock {...iconProps} />;
+  }
+};
+
+/**
+ * Returns an appropriate icon for appointment type
+ */
+export const getAppointmentTypeIcon = (type: AppointmentType) => {
+  switch (type) {
+  case "DOCUMENT_PICKUP":
+    return <FileText className="h-4 w-4 text-blue-500" />;
+  case "SUBPOENA_MEETING":
+    return <Video className="h-4 w-4 text-purple-500" />;
+  default:
+    return <Info className="h-4 w-4" />;
   }
 };

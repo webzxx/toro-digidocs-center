@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { getAppointmentStatusBadge } from "@/components/utils";
+import { getAppointmentTypeIcon } from "@/components/utils/icons";
 
 type AppointmentWithRelations = Appointment & {
   resident: Resident | null;
@@ -102,18 +103,6 @@ export default function AppointmentsClient({
     counts[appointment.status] = (counts[appointment.status] || 0) + 1;
     return counts;
   }, {} as Record<string, number>);
-
-  // Helper function to get appropriate icon for appointment type
-  const getAppointmentTypeIcon = (type: AppointmentType) => {
-    switch (type) {
-    case "DOCUMENT_PICKUP":
-      return <FileText className="h-4 w-4 text-blue-500" />;
-    case "SUBPOENA_MEETING":
-      return <Video className="h-4 w-4 text-purple-500" />;
-    default:
-      return <Info className="h-4 w-4" />;
-    }
-  };
 
   // Format the appointment type for display
   const formatAppointmentType = (type: AppointmentType) => {
