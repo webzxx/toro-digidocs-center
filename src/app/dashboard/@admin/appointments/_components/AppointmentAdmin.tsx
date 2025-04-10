@@ -19,6 +19,7 @@ import { useQueryState } from "nuqs";
 import { cn } from "@/lib/utils";
 import AppointmentTable from "./AppointmentTable";
 import AppointmentForm from "./AppointmentForm";
+import { ResidentForAppointment } from "@/types/types";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -33,9 +34,10 @@ type AppointmentWithDetails = Appointment & {
 interface AppointmentAdminProps {
   initialAppointments: AppointmentWithDetails[];
   initialTotal: number;
+  residents: ResidentForAppointment[];
 }
 
-export default function AppointmentAdmin({ initialAppointments, initialTotal }: AppointmentAdminProps) {
+export default function AppointmentAdmin({ initialAppointments, initialTotal, residents }: AppointmentAdminProps) {
   // Query states for URL parameters
   const [page, setPage] = useQueryState("page", { defaultValue: 1, parse: Number });
   const [status, setStatus] = useQueryState("status", { defaultValue: "ALL" });
@@ -57,7 +59,7 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal }: 
   });
   
   // Fetch appointments with pagination, filtering, and search
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useQuery({
     queryKey: ["appointments", page, status, date, search],
     queryFn: async () => {
       // When a query executes, we're no longer in the initial load
@@ -127,7 +129,7 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal }: 
             <CardTitle className="text-2xl font-bold text-green-primary">Appointments</CardTitle>
             <CardDescription>Manage all resident appointment schedules</CardDescription>
           </div>
-          <AppointmentForm onSuccess={handleAppointmentSuccess} />
+          <AppointmentForm onSuccess={handleAppointmentSuccess} residents={residents} />
         </div>
         <div className="@lg:flex-row w-full flex flex-col gap-2 sm:gap-4">
           <div className="relative w-full">
@@ -203,7 +205,8 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal }: 
         ) : (
           <AppointmentTable 
             appointments={appointments} 
-            onSuccess={handleAppointmentSuccess}
+            refetch={handleAppointmentSuccess}
+            isLoading={isFetching}
           />
         )}
         

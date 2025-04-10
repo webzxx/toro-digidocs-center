@@ -3,12 +3,12 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/types";
+import { AppointmentRequestInput, appointmentRequestSchema, ResidentForAppointment } from "@/types/types";
 import { AppointmentStatus, AppointmentType, TimeSlot } from "@prisma/client";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, Plus, Check, ChevronsUpDown, Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -48,13 +48,14 @@ import { useRouter } from "next/navigation";
 interface AppointmentFormProps {
   initialData?: Partial<AppointmentRequestInput>;
   onSuccess?: () => void;
+  residents: ResidentForAppointment[];
 }
 
-export default function AppointmentForm({ initialData, onSuccess }: AppointmentFormProps) {
+export default function AppointmentForm({ initialData, onSuccess, residents }: AppointmentFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [residentSearchOpen, setResidentSearchOpen] = useState(false);
-  const [filteredResidents, setFilteredResidents] = useState<any[]>([]);
+  const [filteredResidents, setFilteredResidents] = useState<ResidentForAppointment[]>([]);
   const [residentSearchValue, setResidentSearchValue] = useState("");
   
   // Add ref for detecting outside clicks
@@ -79,27 +80,16 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
     },
   });
   
-  // Fetch residents if needed
-  const { data: residents } = useQuery({
-    queryKey: ["residents-for-appointment"],
-    queryFn: async () => {
-      const response = await fetch("/api/admin/residents?limit=1000");
-      if (!response.ok) throw new Error("Failed to fetch residents");
-      return response.json();
-    },
-    enabled: open,
-  });
-  
   // Filter residents based on search input
   useEffect(() => {
-    if (open && residents?.residents) {
+    if (open) {
       const searchLower = residentSearchValue.toLowerCase();
       
       // Regular filtering
-      const filtered = residents.residents.filter((resident: any) => 
+      const filtered = residents.filter((resident) => 
         resident.firstName.toLowerCase().includes(searchLower) ||
         resident.lastName.toLowerCase().includes(searchLower) ||
-        resident.bahayToroSystemId.toLowerCase().includes(searchLower) ||
+        (resident.bahayToroSystemId && resident.bahayToroSystemId.toLowerCase().includes(searchLower)) ||
         `${resident.firstName} ${resident.lastName}`.toLowerCase().includes(searchLower),
       ).slice(0, 20); // Limit to 20 results for better performance
       
@@ -213,8 +203,8 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
   }, [residentSearchOpen]);
 
   // Find selected resident details
-  const selectedResident = residents?.residents?.find(
-    (resident: any) => resident.id === form.watch("residentId"),
+  const selectedResident = residents.find(
+    (resident) => resident.id === form.watch("residentId"),
   );
   
   return (
@@ -286,7 +276,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                       type="button"
                     >
                       {field.value && selectedResident
-                        ? `${selectedResident.firstName} ${selectedResident.lastName} (${selectedResident.bahayToroSystemId})`
+                        ? `${selectedResident.firstName} ${selectedResident.lastName} ${selectedResident.bahayToroSystemId ? `(${selectedResident.bahayToroSystemId})` : ""}`
                         : "Select resident"
                       }
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -303,7 +293,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                           />
                         </div>
                         <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
-                          {filteredResidents?.length === 0 ? (
+                          {filteredResidents.length === 0 ? (
                             <div className="py-6 text-center text-sm">
                               {residentSearchValue.length > 0 
                                 ? "No residents found." 
@@ -311,7 +301,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                             </div>
                           ) : (
                             <div className="overflow-hidden p-1 text-foreground">
-                              {filteredResidents?.map((resident: any) => (
+                              {filteredResidents.map((resident) => (
                                 <div
                                   key={resident.id}
                                   onClick={() => {
@@ -329,7 +319,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
                                       field.value === resident.id ? "opacity-100" : "opacity-0",
                                     )}
                                   />
-                                  {resident.firstName} {resident.lastName} ({resident.bahayToroSystemId})
+                                  {resident.firstName} {resident.lastName} {resident.bahayToroSystemId && `(${resident.bahayToroSystemId})`}
                                 </div>
                               ))}
                             </div>

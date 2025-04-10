@@ -53,6 +53,7 @@ import {
   rescheduleAppointment,
   deleteAppointment,
 } from "../actions";
+import { AdminAppointment } from "@/types/types";
 
 // Define form schema for scheduling appointments
 const scheduleFormSchema = z.object({
@@ -75,26 +76,13 @@ const cancelFormSchema = z.object({
 type CancelFormValues = z.infer<typeof cancelFormSchema>;
 
 interface AppointmentActionsProps {
-  appointment: Appointment & {
-    user: {
-      username: string;
-      email: string;
-    };
-    resident?: {
-      firstName: string;
-      lastName: string;
-      bahayToroSystemId: string;
-    } | null;
-    certificateRequest?: {
-      referenceNumber: string;
-    } | null;
-  };
-  onActionComplete: () => void;
+  appointment: AdminAppointment
+  refetch: () => void;
 }
 
 export default function AppointmentActions({
   appointment,
-  onActionComplete,
+  refetch,
 }: AppointmentActionsProps) {
   const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
@@ -161,7 +149,7 @@ export default function AppointmentActions({
         }, 100);
         
         queryClient.invalidateQueries({ queryKey: ["appointments"] });
-        onActionComplete();
+        refetch();
       } else {
         throw new Error(result.error || "Failed to schedule appointment");
       }
@@ -198,7 +186,7 @@ export default function AppointmentActions({
         }, 100);
         
         queryClient.invalidateQueries({ queryKey: ["appointments"] });
-        onActionComplete();
+        refetch();
       } else {
         throw new Error(result.error || "Failed to cancel appointment");
       }
@@ -255,7 +243,7 @@ export default function AppointmentActions({
         }, 100);
         
         queryClient.invalidateQueries({ queryKey: ["appointments"] });
-        onActionComplete();
+        refetch();
       } else {
         throw new Error(result.error || `Failed to ${confirmAction.action} appointment`);
       }

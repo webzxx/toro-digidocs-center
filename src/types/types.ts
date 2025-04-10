@@ -335,3 +335,12 @@ export const adminAppointmentWithRelations = Prisma.validator<Prisma.Appointment
 });
 
 export type AdminAppointment = Prisma.AppointmentGetPayload<typeof adminAppointmentWithRelations>;
+
+// Type for residents data to be passed to appointment components
+export type ResidentForAppointment = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  bahayToroSystemId: string | null;
+  userId: number;
+};

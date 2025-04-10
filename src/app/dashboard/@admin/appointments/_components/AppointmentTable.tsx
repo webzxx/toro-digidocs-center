@@ -8,40 +8,34 @@ import { getAppointmentStatusBadge, getAppointmentTypeBadge } from "@/components
 import AppointmentActions from "./AppointmentActions";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertCircle } from "lucide-react";
-
-type AppointmentWithDetails = Appointment & {
-  user: {
-    username: string;
-    email: string;
-  };
-  resident?: {
-    firstName: string;
-    lastName: string;
-    bahayToroSystemId: string | null;
-  } | null;
-  certificateRequest?: {
-    referenceNumber: string;
-  } | null;
-};
+import { AdminAppointment } from "@/types/types";
 
 interface AppointmentTableProps {
-  appointments: AppointmentWithDetails[];
-  onSuccess: () => void;
+  appointments: AdminAppointment[];
+  isLoading?: boolean;
+  refetch: () => void;
 }
 
-export default function AppointmentTable({ appointments, onSuccess }: AppointmentTableProps) {
+export default function AppointmentTable({ appointments, isLoading = false, refetch }: AppointmentTableProps) {
   // Function to check if the appointment is a pending request
-  const isPendingRequest = (appointment: AppointmentWithDetails) => {
+  const isPendingRequest = (appointment: AdminAppointment) => {
     return appointment.status === AppointmentStatus.REQUESTED;
   };
   
   // Function to get the background color class for the row
-  const getRowClassName = (appointment: AppointmentWithDetails) => {
-    if (isPendingRequest(appointment)) {
-      return "bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/30 dark:hover:bg-purple-950/50 relative";
+  const getRowClassName = (appointment: AdminAppointment) => {
+    let baseClass = "";
+    
+    // Apply loading animation if isLoading is true
+    if (isLoading) {
+      baseClass = "animate-pulse bg-gradient-to-r from-transparent via-gray-200/60 to-transparent bg-[length:400%_100%] bg-[0%_0] transition-all";
+    } 
+    // Apply special styling for pending requests
+    else if (isPendingRequest(appointment)) {
+      baseClass = "bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/30 dark:hover:bg-purple-950/50 relative";
     }
     
-    return "";
+    return baseClass;
   };
 
   return (
@@ -105,11 +99,6 @@ export default function AppointmentTable({ appointments, onSuccess }: Appointmen
                       {appointment.resident.firstName} {appointment.resident.lastName}
                     </div>
                   )}
-                  {appointment.certificateRequest && (
-                    <div className="text-xs text-muted-foreground">
-                      Ref: {appointment.certificateRequest.referenceNumber}
-                    </div>
-                  )}
                 </div>
               </TableCell>
               <TableCell className="hidden sm:table-cell">
@@ -162,7 +151,7 @@ export default function AppointmentTable({ appointments, onSuccess }: Appointmen
                       bahayToroSystemId: appointment.resident.bahayToroSystemId || "",
                     } : null,
                   }}
-                  onActionComplete={onSuccess}
+                  refetch={refetch}
                 />
               </TableCell>
             </TableRow>
