@@ -172,7 +172,7 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
       </div>
 
       {hasCertificates ? (
-        <ScrollArea className="max-h-[500px] pr-4">
+        <ScrollArea className="h-[500px] w-full pr-4">
           <Accordion type="single" collapsible className="w-full">
             {resident.certificateRequests.map((certificate) => (
               <AccordionItem key={certificate.id} value={certificate.id.toString()} className="mb-3 overflow-hidden rounded-lg border border-muted">
