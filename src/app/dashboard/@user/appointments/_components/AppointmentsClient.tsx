@@ -7,9 +7,8 @@ import {
   CardDescription, 
   CardFooter, 
 } from "@/components/ui/card";
-import { Appointment, AppointmentStatus, AppointmentType, CertificateRequest, Resident } from "@prisma/client";
+import { Appointment, CertificateRequest, Resident } from "@prisma/client";
 import { Calendar, Clock, FileText, Info, MapPin, User, Video } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
