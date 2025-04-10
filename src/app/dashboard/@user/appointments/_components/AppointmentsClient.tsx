@@ -34,6 +34,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { getAppointmentStatusBadge } from "@/components/utils";
 
 type AppointmentWithRelations = Appointment & {
   resident: Resident | null;
@@ -101,28 +102,6 @@ export default function AppointmentsClient({
     counts[appointment.status] = (counts[appointment.status] || 0) + 1;
     return counts;
   }, {} as Record<string, number>);
-
-  // Helper function to get appropriate badge for appointment status
-  const getStatusBadge = (status: AppointmentStatus) => {
-    switch (status) {
-    case "REQUESTED":
-      return <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">Requested</Badge>;
-    case "SCHEDULED":
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Scheduled</Badge>;
-    case "CONFIRMED":
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Confirmed</Badge>;
-    case "COMPLETED":
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Completed</Badge>;
-    case "CANCELLED":
-      return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Cancelled</Badge>;
-    case "RESCHEDULED":
-      return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Rescheduled</Badge>;
-    case "NO_SHOW":
-      return <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">No Show</Badge>;
-    default:
-      return <Badge variant="outline">Unknown</Badge>;
-    }
-  };
 
   // Helper function to get appropriate icon for appointment type
   const getAppointmentTypeIcon = (type: AppointmentType) => {
@@ -270,7 +249,7 @@ export default function AppointmentsClient({
                             }
                           </div>
                         </div>
-                        {getStatusBadge(appointment.status)}
+                        {getAppointmentStatusBadge(appointment.status)}
                       </div>
                     </div>
                   </AccordionTrigger>
