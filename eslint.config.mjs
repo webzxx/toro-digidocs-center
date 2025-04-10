@@ -2,6 +2,7 @@ import pluginNext from "@next/eslint-plugin-next";
 import parser from "@typescript-eslint/parser";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactPlugin from "eslint-plugin-react";
+import tailwindcssPlugin from "eslint-plugin-tailwindcss";
 
 export default [
   {
@@ -32,6 +33,7 @@ export default [
       "@next/next": pluginNext,
       "react-hooks": reactHooksPlugin,
       "react": reactPlugin,
+      "tailwindcss": tailwindcssPlugin,
     },
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     rules: {
@@ -44,6 +46,9 @@ export default [
       "react-hooks/exhaustive-deps": "warn",
       "react/display-name": "warn",
       "comma-dangle": ["error", "always-multiline"],
+      "tailwindcss/classnames-order": "warn",
+      "tailwindcss/no-custom-classname": "warn",
+      "tailwindcss/no-contradicting-classname": "error",
     },
   },
 ];
