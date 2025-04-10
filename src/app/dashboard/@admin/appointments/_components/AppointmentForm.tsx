@@ -129,7 +129,7 @@ export default function AppointmentForm({ initialData, onSuccess }: AppointmentF
       // Submit to server action
       const result = await createAppointment({
         ...values,
-        // Don't pass userId - the server action will retrieve the resident's userId
+        // Don't pass admin userId - the server action will retrieve the resident's userId
       });
       
       if (result.success) {

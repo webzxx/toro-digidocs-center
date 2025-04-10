@@ -227,7 +227,7 @@ export default function AppointmentsClient({
                   <AccordionContent className="px-4 pb-4 pt-1">
                     <div className="grid gap-3 text-sm">
                       {appointment.status === "REQUESTED" ? (
-                        <div className="grid grid-cols-1 gap-2">
+                        <div className="grid grid-cols-1 gap-3">
                           <div className="p-3 bg-purple-50 rounded-md text-purple-700 text-center">
                             Your appointment request is being reviewed by the staff. 
                             You will be notified once it's approved and scheduled.

@@ -17,23 +17,46 @@ export async function createAppointmentRequest(
     }
 
     // Validate incoming data against schema
-    const validatedData = appointmentRequestSchema.safeParse(values);
+    const validationResult = appointmentRequestSchema.safeParse(values);
 
-    if (!validatedData.success) {
-      const err = validatedData.error.flatten();
+    if (!validationResult.success) {
+      const err = validationResult.error.flatten();
       return { 
         success: false,
         fieldErrors: err.fieldErrors, 
       };
     }
 
+    const validatedData = validationResult.data;
+
     const { 
-      appointmentType, 
-      preferredDate, 
+      appointmentType,  
       preferredTimeSlot, 
       notes, 
       residentId,
-    } = validatedData.data;
+    } = validatedData;
+
+    // Format date properly if it's a string
+    let preferredDate: Date;
+    if (typeof validatedData.preferredDate === "string") {
+      preferredDate = new Date(validatedData.preferredDate);
+    } else {
+      preferredDate = validatedData.preferredDate;
+    }
+    
+    // Set the appropriate time based on the selected time slot if it doesn't have a time component
+    const hasTimeComponent = 
+      preferredDate.getHours() !== 0 || 
+      preferredDate.getMinutes() !== 0 || 
+      preferredDate.getSeconds() !== 0;
+    
+    if (!hasTimeComponent) {
+      if (validatedData.preferredTimeSlot === "MORNING") {
+        preferredDate.setHours(8, 0, 0, 0); // 8:00 AM for morning
+      } else {
+        preferredDate.setHours(13, 0, 0, 0); // 1:00 PM for afternoon
+      }
+    }
 
     // Ensure the user exists in the database
     const userId = session.user.id;
@@ -76,7 +99,7 @@ export async function createAppointmentRequest(
       data: {
         userId: user.id, // Use the verified user ID
         appointmentType,
-        preferredDate: new Date(preferredDate),
+        preferredDate,
         preferredTimeSlot,
         notes,
         residentId: residentId || null,

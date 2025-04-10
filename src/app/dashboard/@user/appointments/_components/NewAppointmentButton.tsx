@@ -144,18 +144,9 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
   async function onSubmit(data: AppointmentFormValues) {
     try {
       setIsSubmitting(true);
-
-      // Prepare appointment request data 
-      const appointmentData: AppointmentRequestInput = {
-        appointmentType: data.appointmentType,
-        preferredDate: data.preferredDate.toISOString().split("T")[0], // Just the date part
-        preferredTimeSlot: data.preferredTimeSlot,
-        notes: data.notes,
-        residentId: data.residentId,
-      };
       
       // Submit to the server action
-      const result = await createAppointmentRequest(appointmentData);
+      const result = await createAppointmentRequest(data);
       
       if (!result.success) {
         // Handle validation or server errors

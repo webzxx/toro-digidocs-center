@@ -118,8 +118,8 @@ export default function AppointmentActions({
         notes: appointment.notes || "",
       }
       : {
-        scheduledDate: new Date(),
-        scheduledTime: "09:00",
+        scheduledDate: new Date(appointment.preferredDate), // Use the preferred date from the appointment request
+        scheduledTime: appointment.preferredTimeSlot === "MORNING" ? "08:00" : "13:00", // Set appropriate default time based on preferred time slot
         notes: appointment.notes || "",
       },
   });
@@ -356,7 +356,7 @@ export default function AppointmentActions({
   const canNoShow = appointment.status === AppointmentStatus.SCHEDULED;
   const canCancel = ([AppointmentStatus.SCHEDULED] as AppointmentStatus[]).includes(appointment.status);
   const canReschedule = ([AppointmentStatus.SCHEDULED] as AppointmentStatus[]).includes(appointment.status);
-  const canDelete = appointment.status !== AppointmentStatus.COMPLETED;
+  const canDelete = true; // Allow deletion for all appointment statuses including COMPLETED
   
   return (
     <>

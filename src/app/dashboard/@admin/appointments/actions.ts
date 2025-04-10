@@ -51,6 +51,20 @@ export async function createAppointment(data: AppointmentRequestInput) {
       preferredDate = validatedData.preferredDate;
     }
     
+    // Set the appropriate time based on the selected time slot if it doesn't have a time component
+    const hasTimeComponent = 
+      preferredDate.getHours() !== 0 || 
+      preferredDate.getMinutes() !== 0 || 
+      preferredDate.getSeconds() !== 0;
+    
+    if (!hasTimeComponent) {
+      if (validatedData.preferredTimeSlot === "MORNING") {
+        preferredDate.setHours(8, 0, 0, 0); // 8:00 AM for morning
+      } else {
+        preferredDate.setHours(13, 0, 0, 0); // 1:00 PM for afternoon
+      }
+    }
+    
     // Set optional scheduledDateTime if admin is directly scheduling
     let scheduledDateTime: Date | undefined = undefined;
     let initialStatus: AppointmentStatus = AppointmentStatus.REQUESTED;
