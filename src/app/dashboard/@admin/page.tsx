@@ -1,5 +1,6 @@
 import { withAuth } from "@/lib/auth/withAuth";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+
 import { 
   getAdminCertificateStatusCounts, 
   getAdminRecentCertificates, 
@@ -27,8 +28,8 @@ import {
 async function AdminDashboard() {
   // Fetch all required data using centralized utilities
   const { pendingCount, processingCount, completedCount } = await getAdminCertificateStatusCounts();
-  const recentCertificates = await getAdminRecentCertificates();
-  const upcomingAppointments = await getAdminUpcomingAppointments();
+  const { certificates: recentCertificates, totalCount: totalCertificates } = await getAdminRecentCertificates();
+  const { appointments: upcomingAppointments, totalCount: totalAppointments } = await getAdminUpcomingAppointments();
   const { totalUsers, newUsersThisMonth } = await getAdminUserStats();
   const { totalPayments, totalAmount, pendingPayments } = await getAdminPaymentStats();
   const { totalResidents, newResidentsThisMonth } = await getAdminResidentStats();
@@ -117,7 +118,7 @@ async function AdminDashboard() {
             {getAppointmentStatusIcon("REQUESTED")}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{upcomingAppointments.length}</div>
+            <div className="text-2xl font-bold">{totalAppointments}</div>
             <div className="flex items-center justify-between">
               <p className="text-xs text-muted-foreground">
                 Scheduled for the next few days
@@ -190,12 +191,12 @@ async function AdminDashboard() {
       {/* Recent activities section */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Recent certificate requests */}
-        <Card className="col-span-1">
+        <Card className="col-span-1 flex flex-col">
           <CardHeader className="flex items-start justify-between">
             <div>
               <CardTitle>Recent Certificate Requests</CardTitle>
               <CardDescription>
-                Latest certificate requests from residents
+                Showing {recentCertificates.length} of {totalCertificates} certificate requests
               </CardDescription>
             </div>
             <Link 
@@ -206,17 +207,12 @@ async function AdminDashboard() {
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="flex-1 overflow-hidden">
+            <div className="h-[220px] space-y-4 overflow-y-auto pr-1">
               {recentCertificates.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No recent certificate requests</p>
               ) : (
                 <>
-                  <div className="mb-1 flex items-center justify-between">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {recentCertificates.filter(c => c.status === "PENDING").length} pending • {recentCertificates.filter(c => c.status === "AWAITING_PAYMENT").length} awaiting payment
-                    </span>
-                  </div>
                   {recentCertificates.map((cert) => (
                     <div key={cert.id} className="group relative">
                       <Link href={`/dashboard/certificates?search=${cert.referenceNumber}`} className="absolute inset-0 z-10" aria-label={`View certificate ${cert.referenceNumber}`} />
@@ -243,25 +239,25 @@ async function AdminDashboard() {
               )}
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between pt-2">
+          <CardFooter className="mt-auto flex flex-col space-y-2 border-t pt-2 sm:flex-row sm:justify-between sm:space-y-0">
             <Link href="/dashboard/certificates?status=PENDING" className="flex items-center text-sm text-blue-500 hover:underline">
-              Pending certificates
+              <span className="flex-grow">Pending certificates</span>
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
             <Link href="/dashboard/certificates?status=AWAITING_PAYMENT" className="flex items-center text-sm text-blue-500 hover:underline">
-              Awaiting payment
+              <span className="flex-grow">Awaiting payment</span>
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
           </CardFooter>
         </Card>
 
         {/* Upcoming appointments */}
-        <Card className="col-span-1">
+        <Card className="col-span-1 flex flex-col">
           <CardHeader className="flex items-start justify-between">
             <div>
               <CardTitle>Upcoming Appointments</CardTitle>
               <CardDescription>
-                Scheduled appointments with residents
+                Showing {upcomingAppointments.length} of {totalAppointments} appointments
               </CardDescription>
             </div>
             <Link 
@@ -272,17 +268,12 @@ async function AdminDashboard() {
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <CardContent className="flex-1 overflow-hidden">
+            <div className="h-[220px] space-y-4 overflow-y-auto pr-1">
               {upcomingAppointments.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No upcoming appointments</p>
               ) : (
                 <>
-                  <div className="mb-1 flex items-center justify-between">
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {upcomingAppointments.filter(a => a.status === "REQUESTED").length} requesting • {upcomingAppointments.filter(a => a.status === "SCHEDULED").length} scheduled
-                    </span>
-                  </div>
                   {upcomingAppointments.map((appt) => (
                     <div key={appt.id} className="group relative">
                       <Link href={`/dashboard/appointments?search=${appt.referenceNumber}`} className="absolute inset-0 z-10" aria-label={`View appointment ${appt.referenceNumber}`} />
@@ -311,13 +302,13 @@ async function AdminDashboard() {
               )}
             </div>
           </CardContent>
-          <CardFooter className="flex justify-between pt-2">
+          <CardFooter className="mt-auto flex flex-col space-y-2 border-t pt-2 sm:flex-row sm:justify-between sm:space-y-0">
             <Link href="/dashboard/appointments?status=REQUESTED" className="flex items-center text-sm text-blue-500 hover:underline">
-              Requested appointments
+              <span className="flex-grow">Requested appointments</span>
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
             <Link href="/dashboard/appointments?status=SCHEDULED" className="flex items-center text-sm text-blue-500 hover:underline">
-              Scheduled appointments
+              <span className="flex-grow">Scheduled appointments</span>
               <ArrowUpRight className="ml-1 h-3 w-3 flex-shrink-0" />
             </Link>
           </CardFooter>

@@ -78,7 +78,7 @@ export const getAdminResidentStats = async () => {
 
 // Fetch recent certificate requests for admin dashboard
 export const getAdminRecentCertificates = async () => {
-  return await db.certificateRequest.findMany({
+  const certificates = await db.certificateRequest.findMany({
     take: 5,
     orderBy: {
       requestDate: "desc",
@@ -106,11 +106,15 @@ export const getAdminRecentCertificates = async () => {
       },
     },
   });
+
+  const totalCount = await db.certificateRequest.count();
+  
+  return { certificates, totalCount };
 };
 
 // Fetch upcoming appointments for admin dashboard
 export const getAdminUpcomingAppointments = async () => {
-  return await db.appointment.findMany({
+  const appointments = await db.appointment.findMany({
     take: 5,
     where: {
       status: {
@@ -139,6 +143,19 @@ export const getAdminUpcomingAppointments = async () => {
       },
     },
   });
+
+  const totalCount = await db.appointment.count({
+    where: {
+      status: {
+        in: ["SCHEDULED", "REQUESTED"],
+      },
+      scheduledDateTime: {
+        gte: new Date(),
+      },
+    },
+  });
+  
+  return { appointments, totalCount };
 };
 
 // USER DASHBOARD QUERIES
