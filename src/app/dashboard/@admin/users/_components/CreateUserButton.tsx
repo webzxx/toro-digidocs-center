@@ -33,6 +33,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CreateUserValues, createUserSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { UserRole } from "@prisma/client";
 
 export default function CreateUserButton() {
   const queryClient = useQueryClient();
@@ -178,8 +179,11 @@ export default function CreateUserButton() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="ADMIN">ADMIN</SelectItem>
-                      <SelectItem value="USER">USER</SelectItem>
+                      {Object.values(UserRole).map((key) => (
+                        <SelectItem key={key} value={key}>
+                          {key}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />

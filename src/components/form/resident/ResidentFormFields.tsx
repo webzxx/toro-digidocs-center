@@ -11,6 +11,7 @@ import {
 import { DatePicker } from "@/components/DatePicker";
 import { ResidentWithTypes } from "@/types/types";
 import { Gender, Religion, CivilStatus, Sector, ResidencyType } from "@prisma/client";
+import { formatReligion, formatSector, titleCase } from "@/lib/utils";
 
 interface ResidentFormFieldsProps {
   editedResident: ResidentWithTypes;
@@ -21,14 +22,6 @@ interface ResidentFormFieldsProps {
   handleEmergencyContactChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isAdmin?: boolean;
 }
-
-// Helper function to format enum values for display
-const formatEnumValue = (value: string): string => {
-  return value
-    .split("_")
-    .map(word => word.charAt(0) + word.slice(1).toLowerCase())
-    .join(" ");
-};
 
 export default function ResidentFormFields({
   editedResident,
@@ -156,7 +149,7 @@ export default function ResidentFormFields({
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(Religion).map(([key, value]) => (
-                  <SelectItem key={key} value={value}>{formatEnumValue(value)}</SelectItem>
+                  <SelectItem key={key} value={value}>{formatReligion(value)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -174,7 +167,7 @@ export default function ResidentFormFields({
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(CivilStatus).map(([key, value]) => (
-                  <SelectItem key={key} value={value}>{formatEnumValue(value)}</SelectItem>
+                  <SelectItem key={key} value={value}>{titleCase(value.replace(/_/g, " "))}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -192,7 +185,7 @@ export default function ResidentFormFields({
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(Sector).map(([key, value]) => (
-                  <SelectItem key={key} value={value}>{formatEnumValue(value)}</SelectItem>
+                  <SelectItem key={key} value={value}>{formatSector(value)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -218,7 +211,7 @@ export default function ResidentFormFields({
             </SelectTrigger>
             <SelectContent>
               {Object.entries(ResidencyType).map(([key, value]) => (
-                <SelectItem key={key} value={value}>{formatEnumValue(value)}</SelectItem>
+                <SelectItem key={key} value={value}>{titleCase(value.replace(/_/g, " "))}</SelectItem>
               ))}
             </SelectContent>
           </Select>

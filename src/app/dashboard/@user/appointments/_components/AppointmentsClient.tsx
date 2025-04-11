@@ -17,7 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formatDateTime, formatDateOnly, formatTime, formatAppointmentType } from "@/lib/utils";
+import { formatDateTime, formatDateOnly, formatTime, titleCase } from "@/lib/utils";
 import { useState } from "react";
 import NewAppointmentButton, { Resident as ResidentType } from "./NewAppointmentButton";
 import { useRouter } from "next/navigation";
@@ -200,7 +200,7 @@ export default function AppointmentsClient({
                       <div className='flex flex-col items-start text-start'>
                         <div className="flex items-center gap-2">
                           {getAppointmentTypeIcon(appointment.appointmentType)}
-                          <h4 className="font-medium">{formatAppointmentType(appointment.appointmentType)}</h4>
+                          <h4 className="font-medium">{titleCase(appointment.appointmentType.replace(/_/g, " "))}</h4>
                         </div>
                         <p className="text-sm text-muted-foreground">Ref: {appointment.referenceNumber}</p>
                       </div>

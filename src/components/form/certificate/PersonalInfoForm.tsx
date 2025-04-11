@@ -12,6 +12,8 @@ import {
   useStepper,
 } from "@/components/ui/stepper";
 import { scrollToForm, StepperFormActions } from "./StepperFormActions";
+import { CivilStatus, Religion, Sector } from "@prisma/client";
+import { formatReligion, formatSector, titleCase } from "@/lib/utils";
 
 export interface PersonalInfoFormProps {
   data: Partial<PersonalInfoInput>;
@@ -202,14 +204,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="CATHOLIC">Catholic</SelectItem>
-                  <SelectItem value="IGLESIA_NI_CRISTO">Iglesia ni Cristo</SelectItem>
-                  <SelectItem value="AGLIPAY">Aglipay</SelectItem>
-                  <SelectItem value="BAPTIST">Baptist</SelectItem>
-                  <SelectItem value="DATING_DAAN">Dating Daan</SelectItem>
-                  <SelectItem value="ISLAM">Islam</SelectItem>
-                  <SelectItem value="JEHOVAHS_WITNESSES">Jehovah&apos;s Witnesses</SelectItem>
-                  <SelectItem value="OTHERS">Others</SelectItem>
+                  {Object.values(Religion).map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {formatReligion(key)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -229,13 +228,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="SINGLE">Single</SelectItem>
-                  <SelectItem value="MARRIED">Married</SelectItem>
-                  <SelectItem value="WIDOW">Widow</SelectItem>
-                  <SelectItem value="LEGALLY_SEPARATED">Legally Separated</SelectItem>
-                  <SelectItem value="LIVING_IN">LIVING-IN</SelectItem>
-                  <SelectItem value="SEPARATED">SEPARATED</SelectItem>
-                  <SelectItem value="DIVORCED">DIVORCED</SelectItem>
+                  {Object.values(CivilStatus).map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {titleCase(key.replace(/_/g, " "))}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -255,10 +252,11 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChange }) =
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="SOLO_PARENT">Solo Parent</SelectItem>
-                  <SelectItem value="PWD">PWD</SelectItem>
-                  <SelectItem value="SENIOR_CITIZEN">Senior Citizen</SelectItem>
-                  <SelectItem value="INDIGENT_INDIGENOUS_PEOPLE">Indigent Indigenous People</SelectItem>
+                  {Object.values(Sector).map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {formatSector(key)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />

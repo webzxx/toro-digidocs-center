@@ -21,7 +21,7 @@ import {
   FormMessage, 
 } from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
+import { cn, formatTimeSlot, titleCase } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -274,8 +274,11 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={AppointmentType.DOCUMENT_PICKUP}>Document Pickup</SelectItem>
-                      <SelectItem value={AppointmentType.SUBPOENA_MEETING}>Subpoena Meeting</SelectItem>
+                      {Object.values(AppointmentType).map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {titleCase(type.replace(/_/g, " "))}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>
@@ -452,8 +455,11 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value={TimeSlot.MORNING}>Morning (8:00 AM - 12:00 PM)</SelectItem>
-                      <SelectItem value={TimeSlot.AFTERNOON}>Afternoon (1:00 PM - 5:00 PM)</SelectItem>
+                      {Object.values(TimeSlot).map((slot) => (
+                        <SelectItem key={slot} value={slot}>
+                          {formatTimeSlot(slot)}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormDescription>

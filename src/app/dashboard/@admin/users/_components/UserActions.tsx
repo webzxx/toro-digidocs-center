@@ -25,6 +25,7 @@ import { updateUser, deleteUser } from "@/app/dashboard/@admin/users/actions";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { UserRole } from "@prisma/client";
 
 interface UserActionsProps {
   userId: string;
@@ -170,8 +171,11 @@ export default function UserActions({
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ADMIN">ADMIN</SelectItem>
-                  <SelectItem value="USER">USER</SelectItem>
+                  {Object.values(UserRole).map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {key}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

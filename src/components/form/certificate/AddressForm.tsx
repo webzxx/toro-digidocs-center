@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { StepperFormActions } from "./StepperFormActions";
 import { useStepper } from "../../ui/stepper";
 import { scrollToForm } from "./StepperFormActions";
+import { ResidencyType } from "@prisma/client";
+import { titleCase } from "@/lib/utils";
 
 export interface AddressFormProps {
   data: Partial<AddressInput>;
@@ -56,10 +58,11 @@ const AddressForm: React.FC<AddressFormProps> = ({ data, onChange }) => {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="HOME_OWNER">Home owner</SelectItem>
-                  <SelectItem value="TENANT">Tenant</SelectItem>
-                  <SelectItem value="HELPER">Helper</SelectItem>
-                  <SelectItem value="CONSTRUCTION_WORKER">Construction Worker</SelectItem>
+                  {Object.values(ResidencyType).map((key) => (
+                    <SelectItem key={key} value={key}>
+                      {titleCase(key.replace(/_/g, " "))}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               <FormMessage />
