@@ -61,11 +61,15 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
       return data;
     },
     staleTime: 0,
+    initialData: isInitialLoadRef.current ? previousDataRef.current : undefined,
+    // Use the previous data as a placeholder while loading
+    // This is useful for keeping the UI responsive while data is being fetched
     placeholderData: !isInitialLoadRef.current || 
                   (gender === "ALL" && 
                   status === "ALL" && 
                   sector === "ALL" && 
-                  search === "") ?
+                  search === "" &&
+                  page === 1 ) ?
       previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
@@ -73,6 +77,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
               status === "ALL" && 
               sector === "ALL" && 
               search === "" && 
+              page === 1 &&
               initialResidents.length > 0),
   });
 
@@ -81,6 +86,24 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
     const value = e.target.value;
     setSearch(value || null);
     setPage(1); // Reset to first page on search change
+  };
+
+  // Handle gender filter changes
+  const handleGenderChange = (value: string) => {
+    setGender(value || null);
+    setPage(1);
+  };
+
+  // Handle sector filter changes
+  const handleSectorChange = (value: string) => {
+    setSector(value || null);
+    setPage(1);
+  };
+
+  // Handle status filter changes
+  const handleStatusChange = (value: string) => {
+    setStatus(value || null);
+    setPage(1);
   };
 
   // Get the residents data to display
@@ -107,10 +130,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
           </div>
           
           <div className="flex w-full flex-grow flex-col gap-2 @md:flex-row sm:space-x-2 sm:space-y-0">
-            <Select value={gender} onValueChange={(value) => {
-              setGender(value);
-              setPage(1);
-            }}>
+            <Select value={gender} onValueChange={handleGenderChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by gender" />
               </SelectTrigger>
@@ -121,10 +141,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
                 ))}
               </SelectContent>
             </Select>
-            <Select value={status} onValueChange={(value) => {
-              setStatus(value);
-              setPage(1);
-            }}>
+            <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by civil status" />
               </SelectTrigger>
@@ -135,10 +152,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
                 ))}
               </SelectContent>
             </Select>
-            <Select value={sector} onValueChange={(value) => {
-              setSector(value);
-              setPage(1);
-            }}>
+            <Select value={sector} onValueChange={handleSectorChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by sector" />
               </SelectTrigger>

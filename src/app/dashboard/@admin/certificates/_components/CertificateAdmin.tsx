@@ -21,11 +21,11 @@ interface CertificateAdminProps {
 
 export default function CertificateAdmin({ initialCertificates, initialTotal }: CertificateAdminProps) {
   const [page, setPage] = useQueryState("page", { defaultValue: 1, parse: Number });
-  const [status, setStatus] = useQueryState("status", { defaultValue: "ALL" });
   const [type, setType] = useQueryState("type", { defaultValue: "ALL" });
+  const [status, setStatus] = useQueryState("status", { defaultValue: "ALL" });
   const [search, setSearch] = useQueryState("search", { defaultValue: "" });
   const isInitialLoadRef = useRef(true);
-  
+
   const previousDataRef = useRef({
     certificates: JSON.parse(initialCertificates),
     total: initialTotal,
@@ -55,23 +55,39 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
       return data;
     },
     staleTime: 0,
+    initialData: isInitialLoadRef.current ? previousDataRef.current : undefined,
+    // Use the previous data as a placeholder while loading
+    // This is useful for keeping the UI responsive while data is being fetched
     placeholderData: !isInitialLoadRef.current || 
                   (status === "ALL" && 
                   type === "ALL" && 
-                  search === "" ) ?
+                  search === "" && 
+                  page === 1 ) ?
       previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
               status === "ALL" && 
               type === "ALL" && 
               search === "" && 
+              page === 1 && 
               initialCertificates.length > 0),
+    // This will prevent the query from running on the initial render
+    // and will only run when the page, status, type, or search changes
   });
-
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value || null);
     setPage(1); // Reset to first page on search change
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatus(value || null);
+    setPage(1); // Reset to first page on status change
+  };
+  const handleTypeChange = (value: string) => {
+    setType(value || null);
+    setPage(1); // Reset to first page on type change
   };
 
   const certificates = data?.certificates || [];
@@ -98,7 +114,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
           </div>
           
           <div className="flex w-full flex-col gap-2 @sm:flex-row sm:space-x-2 sm:space-y-0">
-            <Select value={status} onValueChange={setStatus}>
+            <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -110,7 +126,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
               </SelectContent>
             </Select>
 
-            <Select value={type} onValueChange={setType}>
+            <Select value={type} onValueChange={handleTypeChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>

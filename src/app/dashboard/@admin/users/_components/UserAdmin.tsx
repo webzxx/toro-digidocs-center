@@ -57,14 +57,17 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
       return data;
     },
     staleTime: 0,
+    initialData: isInitialLoadRef.current ? previousDataRef.current : undefined,
     placeholderData: !isInitialLoadRef.current || 
                   (role === "ALL" && 
-                  search === "") ?
+                  search === "" &&
+                  page === 1) ?
       previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
               role === "ALL" && 
               search === "" && 
+              page === 1 &&
               initialUsers.length > 0),
   });
 
@@ -73,6 +76,12 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
     const value = e.target.value;
     setSearch(value || null);
     setPage(1); // Reset to first page on search change
+  };
+
+  // Handle role selection
+  const handleRoleChange = (selected: string) => {
+    setRole(selected);
+    setPage(1); // Reset to first page on role change
   };
 
   // Get the users data to display
@@ -98,10 +107,7 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
             />
           </div>
           <div className="flex basis-1/2 flex-col gap-2 space-y-0 @sm:flex-row @sm:space-x-2">
-            <Select value={role} onValueChange={(value) => {
-              setRole(value);
-              setPage(1);
-            }}>
+            <Select value={role} onValueChange={handleRoleChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by role" />
               </SelectTrigger>

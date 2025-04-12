@@ -81,16 +81,21 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
       return data;
     },
     staleTime: 0,
+    initialData: isInitialLoadRef.current ? previousDataRef.current : undefined,
+    // Use the previous data as a placeholder while loading
+    // This is useful for keeping the UI responsive while data is being fetched
     placeholderData: !isInitialLoadRef.current || 
                   (status === "ALL" && 
                    !date &&
-                   search === "") ?
+                   search === "" &&
+                    page === 1 ) ?
       previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
               status === "ALL" &&
               !date && 
               search === "" && 
+              page === 1 &&
               initialAppointments.length > 0),
   });
   
@@ -110,6 +115,12 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
       setDate(null);
     }
     setPage(1); // Reset to first page on date change
+  };
+
+  // Handle status filter changes
+  const handleStatusChange = (value: string) => {
+    setStatus(value || null);
+    setPage(1); // Reset to first page on status change
   };
 
   // Function to handle successful appointment creation or update
@@ -177,10 +188,7 @@ export default function AppointmentAdmin({ initialAppointments, initialTotal, re
               </PopoverContent>
             </Popover>
             
-            <Select value={status} onValueChange={(value) => {
-              setStatus(value);
-              setPage(1);
-            }}>
+            <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>

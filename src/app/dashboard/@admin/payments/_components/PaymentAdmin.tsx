@@ -69,16 +69,22 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
       return data;
     },
     staleTime: 0,
+    initialData: isInitialLoadRef.current ? previousDataRef.current : undefined,
+    // Use the previous data as a placeholder while loading
+    // This is useful for keeping the UI responsive while data is being fetched
+    // and to avoid flickering when the data is being updated
     placeholderData: !isInitialLoadRef.current || 
                   (status === "ALL" && 
                    method === "ALL" &&
-                   search === "") ?
+                   search === "" &&
+                    page === 1) ?
       previousDataRef.current : undefined,
     // Check if we should skip the initial query
     enabled: !(isInitialLoadRef.current && 
               status === "ALL" &&
               method === "ALL" && 
               search === "" && 
+              page === 1 &&
               initialPayments.length > 0),
   });
 
@@ -101,6 +107,18 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
     const value = e.target.value;
     setSearch(value || null);
     setPage(1); // Reset to first page on search change
+  };
+
+  // Handle status filter change
+  const handleStatusChange = (value: string) => {
+    setStatus(value || null);
+    setPage(1); // Reset to first page on status change
+  };
+
+  // Handle method filter change
+  const handleMethodChange = (value: string) => {
+    setMethod(value || null);
+    setPage(1); // Reset to first page on method change
   };
 
   // Function to handle successful payment creation
@@ -139,10 +157,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
             />
           </div>
           <div className="flex w-full flex-col gap-2 space-y-0 @sm:flex-row @sm:space-x-2">
-            <Select value={method} onValueChange={(value) => {
-              setMethod(value);
-              setPage(1);
-            }}>
+            <Select value={method} onValueChange={handleMethodChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by method" />
               </SelectTrigger>
@@ -154,10 +169,7 @@ export default function PaymentAdmin({ initialPayments, initialTotal, initialCer
               </SelectContent>
             </Select>
             
-            <Select value={status} onValueChange={(value) => {
-              setStatus(value);
-              setPage(1);
-            }}>
+            <Select value={status} onValueChange={handleStatusChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
