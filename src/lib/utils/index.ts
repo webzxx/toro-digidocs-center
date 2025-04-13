@@ -55,7 +55,7 @@ export const titleCase = (str: string) =>
 /**
  * Formats religion for display
  */
-export const formatReligion = (religion: Religion) => {
+export const formatReligion = (religion: Religion | null) => {
   switch (religion) {
   case Religion.CATHOLIC:
     return "Catholic";

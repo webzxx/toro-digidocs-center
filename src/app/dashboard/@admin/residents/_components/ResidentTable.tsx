@@ -185,7 +185,7 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
                 </TableCell>
                 <TableCell>{getGenderBadge(resident.gender)}</TableCell>
                 <TableCell>{formatDateTime(resident.birthDate)}</TableCell>
-                <TableCell>{resident.religion ? formatReligion(resident.religion) : "N/A"}</TableCell>
+                <TableCell>{formatReligion(resident.religion)}</TableCell>
                 <TableCell>{getCivilStatusBadge(resident.status)}</TableCell>
                 <TableCell>{resident.sector ? getSectorBadge(resident.sector) : "N/A"}</TableCell>
                 <TableCell>{renderAddress(resident.address)}</TableCell>
