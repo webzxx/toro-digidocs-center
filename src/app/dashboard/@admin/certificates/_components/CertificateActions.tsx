@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -33,7 +33,7 @@ interface CertificateActionsProps {
   purpose: string;
   status: string;
   remarks?: string;
-  refetch: () => void;  // Add this line
+  refetch: () => void;
 }
 
 export default function CertificateActions({
@@ -50,6 +50,22 @@ export default function CertificateActions({
   const [editedPurpose, setEditedPurpose] = useState<string>(purpose);
   const [editedStatus, setEditedStatus] = useState<string>(status);
   const [editedRemarks, setEditedRemarks] = useState<string>(remarks || "");
+  
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isStatusSelectOpen, setIsStatusSelectOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isEditDialogOpen || !isStatusSelectOpen) {
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+    
+    return () => {
+      document.body.style.pointerEvents = "";
+    };
+  }, [isEditDialogOpen, isStatusSelectOpen]);
 
   const handleEditedPurposeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedPurpose(e.target.value);
@@ -82,6 +98,7 @@ export default function CertificateActions({
         title: "Certificate updated",
         description: `Certificate ${referenceNumber} has been successfully updated.`,
       });
+      setIsEditDialogOpen(false);
     } catch (error) {
       toast({
         title: "Update failed",
@@ -101,6 +118,7 @@ export default function CertificateActions({
         title: "Certificate deleted",
         description: `Certificate ${referenceNumber} has been permanently deleted.`,
       });
+      setIsDeleteDialogOpen(false);
     } catch (error) {
       toast({
         title: "Delete failed",
@@ -110,9 +128,45 @@ export default function CertificateActions({
     }
   };
 
+  const handleEditDialogChange = (open: boolean) => {
+    setIsEditDialogOpen(open);
+    if (!open) {
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+  };
+
+  const handleDeleteDialogChange = (open: boolean) => {
+    setIsDeleteDialogOpen(open);
+    if (!open) {
+      setDeleteConfirmation("");
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+  };
+
+  const handleEditCloseButtonClick = () => {
+    setIsEditDialogOpen(false);
+    document.body.style.pointerEvents = "";
+    setTimeout(() => {
+      document.body.style.pointerEvents = "";
+    }, 100);
+  };
+
+  const handleDeleteCloseButtonClick = () => {
+    setIsDeleteDialogOpen(false);
+    setDeleteConfirmation("");
+    document.body.style.pointerEvents = "";
+    setTimeout(() => {
+      document.body.style.pointerEvents = "";
+    }, 100);
+  };
+
   return (
     <div className="flex gap-2">
-      <Dialog>
+      <Dialog open={isEditDialogOpen} onOpenChange={handleEditDialogChange}>
         <DialogTrigger asChild>
           <Button variant="outline" size="icon">
             <Edit className="size-4" />
@@ -142,6 +196,7 @@ export default function CertificateActions({
               <Select
                 onValueChange={handleEditedStatusChange}
                 defaultValue={status}
+                onOpenChange={setIsStatusSelectOpen}
               >
                 <SelectTrigger className="w-[180px]" id="status">
                   <SelectValue placeholder="Select a status" />
@@ -173,19 +228,20 @@ export default function CertificateActions({
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button 
-                type="submit" 
-                onClick={handleEditCertificate}
-                disabled={editedStatus === "REJECTED" && !editedRemarks.trim()}
-              >
-                Save changes
-              </Button>
-            </DialogClose>
+            <Button type="button" variant="outline" onClick={handleEditCloseButtonClick}>
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              onClick={handleEditCertificate}
+              disabled={editedStatus === "REJECTED" && !editedRemarks.trim()}
+            >
+              Save changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Dialog>
+      <Dialog open={isDeleteDialogOpen} onOpenChange={handleDeleteDialogChange}>
         <DialogTrigger asChild>
           <Button variant="destructive" size="icon">
             <Trash className="size-4" />
@@ -213,9 +269,9 @@ export default function CertificateActions({
             </div>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
+            <Button type="button" variant="outline" onClick={handleDeleteCloseButtonClick}>
+              Cancel
+            </Button>
             <Button
               variant="destructive"
               type="submit"
