@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { initiatePayment, cancelPayment } from "@/app/actions/payment";
+import { initiatePayment, cancelPayment } from "../actions";
 
 interface PaymentButtonProps {
   certificateId: number;

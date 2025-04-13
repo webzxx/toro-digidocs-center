@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { ManualPaymentInput } from "@/types/types";
-import { createManualPayment } from "@/app/actions/payment";
+import { createManualPayment } from "../actions";
 import { Loader2, Plus } from "lucide-react";
 import ManualPaymentForm from "./ManualPaymentForm";
 

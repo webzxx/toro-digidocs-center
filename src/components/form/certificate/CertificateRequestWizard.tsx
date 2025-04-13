@@ -18,7 +18,7 @@ import CertificateForm from "./CertificateForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
 import { CompleteCertificateFormInputWithoutFiles, completeCertificateFormSchema } from "@/types/types";
 import { scrollToForm } from "./StepperFormActions";
-import { createCertificateRequest } from "@/app/actions/certificate-request";
+import { createCertificateRequest } from "@/actions/certificate-request";
 import { useToast } from "@/components/ui/use-toast";
 
 const steps = [
@@ -148,9 +148,7 @@ export default function CertificateRequestWizard() {
   };
 
   const resetFormData = () => { 
-    console.log("Resetting form data");
     setFormData(initialFormData);
-    
   };
 
   const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {

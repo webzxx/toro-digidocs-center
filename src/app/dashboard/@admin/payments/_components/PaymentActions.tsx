@@ -28,7 +28,7 @@ import { PaymentDetails } from "@/components/payment/PaymentDetails";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ManualPaymentForm from "./ManualPaymentForm";
 import { ManualPaymentInput } from "@/types/types";
-import { updatePayment } from "@/app/actions/payment";
+import { updatePayment } from "../actions";
 import { format } from "date-fns";
 import { CertificateWithDetails } from "./ManualPaymentButton";
 import { Input } from "@/components/ui/input";
