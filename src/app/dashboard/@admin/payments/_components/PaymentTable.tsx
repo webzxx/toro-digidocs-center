@@ -44,11 +44,11 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
       <TableHeader>
         <TableRow>
           <TableHead className="w-44">Transaction Ref</TableHead>
-          <TableHead className="hidden md:table-cell">Resident</TableHead>
-          <TableHead className="hidden md:table-cell">Certificate</TableHead>
-          <TableHead className="hidden sm:table-cell">Amount</TableHead>
-          <TableHead className="hidden sm:table-cell">Method</TableHead>
-          <TableHead className="hidden sm:table-cell">Date</TableHead>
+          <TableHead>Resident</TableHead>
+          <TableHead>Certificate</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Method</TableHead>
+          <TableHead>Date</TableHead>
           <TableHead>Status</TableHead>
           <TableHead className="text-right">Actions</TableHead>
         </TableRow>
@@ -87,7 +87,7 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                   {payment.certificateRequest?.resident?.firstName} {payment.certificateRequest?.resident?.lastName}
                 </div>
               </TableCell>
-              <TableCell className="hidden md:table-cell">
+              <TableCell>
                 {payment.certificateRequest?.resident ? (
                   <div>
                     <div className="font-medium">
@@ -101,7 +101,7 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                   <span className="italic text-muted-foreground">Unknown</span>
                 )}
               </TableCell>
-              <TableCell className="hidden md:table-cell">
+              <TableCell>
                 {payment.certificateRequest ? (
                   <div>
                     <div className="font-medium">{payment.certificateRequest.certificateType.replace(/_/g, " ")}</div>
@@ -113,10 +113,10 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                   <span className="italic text-muted-foreground">Unknown</span>
                 )}
               </TableCell>
-              <TableCell className="hidden sm:table-cell">
+              <TableCell>
                 {formatCurrency(Number(payment.amount))}
               </TableCell>
-              <TableCell className="hidden sm:table-cell">
+              <TableCell>
                 <div className="flex items-center gap-1">
                   {payment.paymentMethod?.replace(/_/g, " ")}
                   {isActiveOnlineTransaction(payment) && (
@@ -133,7 +133,7 @@ export default function PaymentTable({ payments, certificates, isLoading, refetc
                   )}
                 </div>
               </TableCell>
-              <TableCell className="hidden sm:table-cell">
+              <TableCell>
                 {formatDateTimeShort(payment.paymentDate || payment.createdAt)}
               </TableCell>
               <TableCell>
