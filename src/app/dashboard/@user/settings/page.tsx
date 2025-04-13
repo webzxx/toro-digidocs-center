@@ -1,9 +1,10 @@
 import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { User as UserIcon, Mail, Shield, Calendar } from "lucide-react";
+import { User as UserIcon, Mail, Shield, Calendar, LockKeyhole } from "lucide-react";
 import { formatDateTime } from "@/lib/utils";
 import { db } from "@/lib/db";
+import { ChangePasswordForm } from "./_components/ChangePasswordForm";
 
 async function SettingsPage({ user }: WithAuthProps) {
   // Convert the session user ID (string) to a number for Prisma query
@@ -19,12 +20,12 @@ async function SettingsPage({ user }: WithAuthProps) {
   }
 
   return (
-    <main className="flex min-h-[90vh] w-full flex-col gap-2">
+    <main className="flex min-h-[90vh] w-full flex-col gap-4">
       <Card className="shadow-md">
         <CardHeader className="flex flex-row items-center justify-between border-b px-7 pb-4">
           <div>
-            <CardTitle className="text-2xl font-bold text-green-primary">Account Settings</CardTitle>
-            <CardDescription>Manage your account information</CardDescription>
+            <CardTitle className="text-2xl font-bold text-green-primary">Account Information</CardTitle>
+            <CardDescription>View your account details</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="p-6">
@@ -69,6 +70,21 @@ async function SettingsPage({ user }: WithAuthProps) {
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-md">
+        <CardHeader className="flex flex-row items-center justify-between border-b px-7 pb-4">
+          <div>
+            <CardTitle className="text-2xl font-bold text-green-primary">Security</CardTitle>
+            <CardDescription>Update your password</CardDescription>
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
+            <LockKeyhole className="h-5 w-5 text-green-700" />
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <ChangePasswordForm />
         </CardContent>
       </Card>
     </main>
