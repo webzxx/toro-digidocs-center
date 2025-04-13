@@ -23,6 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import ResidentFormFields from "@/components/form/resident/ResidentFormFields";
 import { useResidentForm } from "@/hooks/useResidentForm";
+import { updateResident, deleteResident } from "../actions";
 
 interface UserResidentActionsProps {
   resident: ResidentWithTypes;
@@ -59,18 +60,8 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
     }
     
     try {
-      // Call API to update resident
-      const response = await fetch(`/api/user/residents/${resident.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editedResident),
-      });
-      
-      if (!response.ok) {
-        throw new Error("Failed to update resident");
-      }
+      // Call server action to update resident
+      await updateResident(resident.id, editedResident);
       
       // Refresh data
       queryClient.invalidateQueries({ queryKey: ["user-residents"] });
@@ -86,7 +77,7 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
       console.error("Failed to update resident:", error);
       toast({
         title: "Error",
-        description: "Failed to update resident",
+        description: error instanceof Error ? error.message : "Failed to update resident",
         variant: "destructive",
       });
     }
@@ -103,14 +94,8 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
     }
     
     try {
-      // Call API to delete resident
-      const response = await fetch(`/api/user/residents/${resident.id}`, {
-        method: "DELETE",
-      });
-      
-      if (!response.ok) {
-        throw new Error("Failed to delete resident");
-      }
+      // Call server action to delete resident
+      await deleteResident(resident.id);
       
       // Refresh data
       queryClient.invalidateQueries({ queryKey: ["user-residents"] });
@@ -127,7 +112,7 @@ export default function UserResidentActions({ resident }: UserResidentActionsPro
       console.error("Failed to delete resident:", error);
       toast({
         title: "Error",
-        description: "Failed to delete resident",
+        description: error instanceof Error ? error.message : "Failed to delete resident",
         variant: "destructive",
       });
     }

@@ -5,15 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarIcon, Check, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
+import { CalendarIcon, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
 import { Appointment, AppointmentStatus } from "@prisma/client";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format, isToday } from "date-fns";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { format } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
 import { cn } from "@/lib/utils";
