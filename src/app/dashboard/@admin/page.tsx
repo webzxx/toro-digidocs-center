@@ -36,7 +36,7 @@ async function AdminDashboard() {
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start justify-between gap-1 px-4 min-[420px]:p-0 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <p className="text-muted-foreground">
