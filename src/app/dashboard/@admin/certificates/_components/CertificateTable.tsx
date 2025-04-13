@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDateTime } from "@/lib/utils";
 import CertificateActions from "./CertificateActions";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { AdminCertificate } from "@/types/types";
 import { getCertificateStatusBadge, getCertificateTypeBadge, getPaymentStatusBadge } from "@/components/utils";
 import { PaymentStatus } from "@prisma/client";
@@ -110,94 +109,94 @@ export default function CertificateTable({ certificates, isLoading = false, refe
   };
 
   return (
-    <ScrollArea className="max-h-[70vh] w-full">
-      <Table>
-        <TableHeader className="sticky top-0 z-10 bg-white">
-          <TableRow>
-            <TableHead className="w-32">Reference</TableHead>
-            <TableHead className="w-32">Resident ID</TableHead>
-            <TableHead className="w-36">Certificate Type</TableHead>
-            <TableHead>Purpose</TableHead>
-            <TableHead>Request Date</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Payment</TableHead>
-            <TableHead>Remarks</TableHead>
-            <TableHead>Additional Info</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {certificates && certificates.length > 0 ? (
-            certificates.map((certificate) => (
-              <TableRow 
-                key={certificate.id}
-                className={isLoading ? "animate-pulse bg-gradient-to-r from-transparent via-gray-200/60 to-transparent bg-[length:400%_100%] bg-[0%_0] transition-all" : ""}
-              >
-                <TableCell>
-                  <div className="font-medium">{certificate.referenceNumber}</div>
-                </TableCell>
-                <TableCell>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        {certificate.resident.bahayToroSystemId}
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {`${certificate.resident.firstName} ${certificate.resident.lastName}`}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </TableCell>
-                <TableCell>{getCertificateTypeBadge(certificate.certificateType)}</TableCell>
-                <TableCell>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        {certificate.purpose.length > 20
-                          ? `${certificate.purpose.slice(0, 20)}...`
-                          : certificate.purpose}
-                      </TooltipTrigger>
-                      <TooltipContent className="w-60 whitespace-normal text-wrap break-words">
-                        <div>{certificate.purpose}</div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </TableCell>
-                <TableCell>
-                  {formatDateTime(certificate.requestDate)}
-                </TableCell>
-                <TableCell>
-                  {getCertificateStatusBadge(certificate.status)}
-                </TableCell>
-                <TableCell>
-                  {renderPaymentStatus(certificate.payments)}
-                </TableCell>
-                <TableCell>
-                  {renderRemarks(certificate.remarks)}
-                </TableCell>
-                <TableCell>{renderAdditionalInfo(certificate.additionalInfo)}</TableCell>
-                <TableCell>
-                  <CertificateActions
-                    certificateId={certificate.id}
-                    referenceNumber={certificate.referenceNumber}
-                    purpose={certificate.purpose}
-                    status={certificate.status}
-                    remarks={certificate.remarks || ""}
-                    refetch={refetch}
-                  />
-                </TableCell>
-              </TableRow>
-            ))
-          ): (
-            <TableRow>
-              <TableCell colSpan={9} className="py-8 text-center">
-                No certificate requests found.
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-32">Reference</TableHead>
+          <TableHead className="w-32">Resident ID</TableHead>
+          <TableHead className="w-36">Certificate Type</TableHead>
+          <TableHead>Purpose</TableHead>
+          <TableHead>Request Date</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Payment</TableHead>
+          <TableHead>Remarks</TableHead>
+          <TableHead>Additional Info</TableHead>
+          <TableHead>Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {certificates && certificates.length > 0 ? (
+          certificates.map((certificate) => (
+            <TableRow 
+              key={certificate.id}
+              className={isLoading ? "animate-pulse bg-gradient-to-r from-transparent via-gray-200/60 to-transparent bg-[length:400%_100%] bg-[0%_0] transition-all" : ""}
+            >
+              <TableCell>
+                <div className="font-medium">{certificate.referenceNumber}</div>
+                <div className="text-xs text-muted-foreground md:hidden">
+                  {certificate.resident.firstName} {certificate.resident.lastName}
+                </div>
+              </TableCell>
+              <TableCell>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      {certificate.resident.bahayToroSystemId}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {`${certificate.resident.firstName} ${certificate.resident.lastName}`}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
+              <TableCell>{getCertificateTypeBadge(certificate.certificateType)}</TableCell>
+              <TableCell>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      {certificate.purpose.length > 20
+                        ? `${certificate.purpose.slice(0, 20)}...`
+                        : certificate.purpose}
+                    </TooltipTrigger>
+                    <TooltipContent className="w-60 whitespace-normal text-wrap break-words">
+                      <div>{certificate.purpose}</div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
+              <TableCell>
+                {formatDateTime(certificate.requestDate)}
+              </TableCell>
+              <TableCell>
+                {getCertificateStatusBadge(certificate.status)}
+              </TableCell>
+              <TableCell>
+                {renderPaymentStatus(certificate.payments)}
+              </TableCell>
+              <TableCell>
+                {renderRemarks(certificate.remarks)}
+              </TableCell>
+              <TableCell>{renderAdditionalInfo(certificate.additionalInfo)}</TableCell>
+              <TableCell>
+                <CertificateActions
+                  certificateId={certificate.id}
+                  referenceNumber={certificate.referenceNumber}
+                  purpose={certificate.purpose}
+                  status={certificate.status}
+                  remarks={certificate.remarks || ""}
+                  refetch={refetch}
+                />
               </TableCell>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <ScrollBar orientation='horizontal' />
-    </ScrollArea>
+          ))
+        ): (
+          <TableRow>
+            <TableCell colSpan={9} className="py-8 text-center">
+              No certificate requests found.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }

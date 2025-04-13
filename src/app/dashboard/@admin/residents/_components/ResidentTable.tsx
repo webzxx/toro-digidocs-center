@@ -17,7 +17,6 @@ import { formatDateTime, formatReligion } from "@/lib/utils";
 import { ResidentWithTypes } from "@/types/types";
 import Image from "next/image";
 import ResidentActions from "./ResidentActions";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { getGenderBadge, getCivilStatusBadge, getSectorBadge } from "@/components/utils";
 
 interface ResidentTableProps {
@@ -141,9 +140,9 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
   };
   
   return (
-    <ScrollArea className="max-h-[70vh] w-full">
+    <div className="w-full overflow-auto">
       <Table>
-        <TableHeader className="sticky top-0 z-10 bg-white">
+        <TableHeader>
           <TableRow>
             <TableHead className="w-32">Bahay Toro ID</TableHead>
             <TableHead className="w-52">Name</TableHead>
@@ -206,7 +205,6 @@ export default function ResidentTable({ residents, isLoading = false, refetch }:
           )}
         </TableBody>
       </Table>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </div>
   );
 }
