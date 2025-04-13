@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 interface BotMessageProps {
   fetchMessage: () => Promise<string>;
@@ -13,8 +15,7 @@ export default function BotMessage({ fetchMessage }: BotMessageProps) {
     async function loadMessage() {
       const data = await fetchMessage();
       setLoading(false);
-      const formattedMessage = data.replace(/\n/g, "<br />");
-      setMessage(formattedMessage);
+      setMessage(data);
     }
     loadMessage();
   }, [fetchMessage]);
@@ -40,7 +41,11 @@ export default function BotMessage({ fetchMessage }: BotMessageProps) {
             <div className="h-2 w-2 animate-bounce rounded-full bg-zinc-400"></div>
           </div>
         ) : (
-          <span dangerouslySetInnerHTML={{ __html: message }} />
+          <div className="markdown-content">
+            <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+              {message}
+            </ReactMarkdown>
+          </div>
         )}
       </div>
     </div>
