@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react";
+import Link from "next/link";
 
 import {
   Step,
@@ -251,15 +252,19 @@ function Footer({ details, resetFormData }: FooterProps) {
             <p className="text-lg font-bold">{details.systemId}</p>
           </div>
         </div>
-        <p className="text-sm text-gray-600">
+        <p className="mb-4 text-sm text-gray-600">
           We will get in touch with you using the details you have provided. Thank you.
         </p>
+        <div className="text-sm text-gray-500">
+          <Link href="/dashboard/certificates" className="text-green-primary hover:underline">
+            View all certificates
+          </Link>
+          <span className="mx-2">·</span>
+          <button onClick={resetMultiForm} className="text-green-primary hover:underline">
+            New request for different resident
+          </button>
+        </div>
       </CardContent>
-      <CardFooter>
-        <Button className="w-full" variant="outline" onClick={resetMultiForm}>
-          REQUEST ANOTHER CERTIFICATE
-        </Button>
-      </CardFooter>
     </Card>
   );
 }
