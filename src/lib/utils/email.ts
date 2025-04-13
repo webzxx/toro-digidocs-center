@@ -6,6 +6,7 @@ const resend = new Resend(process.env.RESEND_KEY);
 // Email sender configuration
 const FROM_EMAIL = "onboarding@resend.dev"; // Using verified Resend domain for development
 const DEFAULT_SUBJECT_PREFIX = "Barangay Bahay Toro - ";
+const WEBSITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://bahaytoro.vercel.app"; // Fallback to production URL
 
 // Email templates for different certificate statuses
 type EmailTemplateProps = {
@@ -41,7 +42,7 @@ export const emailTemplates = {
         <p><strong>Next Steps:</strong></p>
         <ol>
           <li>Please proceed with the payment to continue the processing of your certificate.</li>
-          <li>You can pay online through our dashboard at <a href="https://bahaytoro.gov.ph/dashboard/certificates">https://bahaytoro.gov.ph/dashboard/certificates</a></li>
+          <li>You can pay online through our dashboard at <a href="${WEBSITE_URL}/dashboard/certificates">${WEBSITE_URL}/dashboard/certificates</a></li>
           <li>Alternatively, you can visit the Barangay Bahay Toro office during business hours to make your payment in person.</li>
         </ol>
         <p>If you have any questions, please contact our office.</p>
