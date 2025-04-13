@@ -10,7 +10,6 @@ import {
 import { Appointment, CertificateRequest, Resident } from "@prisma/client";
 import { Calendar, Clock, FileText, Info, MapPin, User, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Accordion,
   AccordionContent,
@@ -187,7 +186,7 @@ export default function AppointmentsClient({
       
       <CardContent className="p-6">
         {filteredAppointments.length > 0 ? (
-          <ScrollArea className="max-h-[500px] pr-4">
+          <div className="max-h-[500px] overflow-auto pr-4">
             <Accordion type="single" collapsible className="w-full">
               {filteredAppointments.map((appointment) => (
                 <AccordionItem 
@@ -334,7 +333,7 @@ export default function AppointmentsClient({
                 </AccordionItem>
               ))}
             </Accordion>
-          </ScrollArea>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-10 text-center">
             <Calendar className="mb-3 h-12 w-12 text-muted-foreground" />

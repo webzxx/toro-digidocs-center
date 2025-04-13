@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+
 import { 
   Card, 
   CardContent, 
@@ -19,7 +19,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Accordion,
   AccordionContent,
@@ -172,7 +171,7 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
       </div>
 
       {hasCertificates ? (
-        <ScrollArea className="h-[500px] w-full pr-4">
+        <div className="h-[500px] w-full overflow-auto pr-4">
           <Accordion type="single" collapsible className="w-full">
             {resident.certificateRequests.map((certificate) => (
               <AccordionItem key={certificate.id} value={certificate.id.toString()} className="mb-3 overflow-hidden rounded-lg border border-muted">
@@ -250,7 +249,7 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
               </AccordionItem>
             ))}
           </Accordion>
-        </ScrollArea>
+        </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-10 text-center">
           <FileText className="mb-3 h-12 w-12 text-muted-foreground" />

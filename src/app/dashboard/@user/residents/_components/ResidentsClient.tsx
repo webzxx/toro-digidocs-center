@@ -11,7 +11,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { User2, Clock, User, HelpCircle, FileText } from "lucide-react";
 import UserResidentActions from "./UserResidentActions";
 import Image from "next/image";
@@ -79,7 +78,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
       
       {userResidents.length > 0 ? (
         <CardContent className="p-6">
-          <ScrollArea className="max-h-full">
+          <div className="max-h-full overflow-auto">
             <Accordion type="single" collapsible value={expandedResidentId || undefined} onValueChange={setExpandedResidentId}>
               {userResidents.map((resident) => (
                 <AccordionItem key={resident.id} value={resident.id.toString()} className="mb-3 overflow-hidden rounded-lg border border-muted">
@@ -277,7 +276,7 @@ export default function ResidentsClient({ userResidents }: ResidentsClientProps)
                 </AccordionItem>
               ))}
             </Accordion>
-          </ScrollArea>
+          </div>
         </CardContent>
       ) : (
         <CardContent className="p-6">
