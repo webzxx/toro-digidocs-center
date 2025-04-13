@@ -4,7 +4,7 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_KEY);
 
 // Email sender configuration
-const FROM_EMAIL = "notifications@bahaytoro.gov.ph";
+const FROM_EMAIL = "onboarding@resend.dev"; // Using verified Resend domain for development
 const DEFAULT_SUBJECT_PREFIX = "Barangay Bahay Toro - ";
 
 // Email templates for different certificate statuses
