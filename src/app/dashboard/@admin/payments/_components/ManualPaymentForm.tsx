@@ -38,7 +38,6 @@ export type PaymentFormProps = {
   certificates: CertificateWithDetails[];
   initialData?: Partial<ManualPaymentInput> & { id?: number; proofOfPaymentPath?: string | null };
   onSubmit: (values: ManualPaymentInput, file: File | null) => Promise<void>;
-  loading: boolean;
   formId: string;
   resetFileOnSubmit?: boolean;
 };
@@ -47,7 +46,6 @@ export default function ManualPaymentForm({
   certificates,
   initialData,
   onSubmit,
-  loading,
   formId,
   resetFileOnSubmit = true,
 }: PaymentFormProps) {

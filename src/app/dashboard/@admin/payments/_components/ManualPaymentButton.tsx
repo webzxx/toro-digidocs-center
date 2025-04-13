@@ -110,7 +110,6 @@ export default function ManualPaymentButton({ certificates, onSuccess }: ManualP
           <ManualPaymentForm
             certificates={certificates}
             onSubmit={handleSubmit}
-            loading={loading}
             formId={formId}
           />
         </div>

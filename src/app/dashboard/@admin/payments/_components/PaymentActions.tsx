@@ -538,7 +538,6 @@ export default function PaymentActions({
               certificates={certificates}
               initialData={getInitialEditData()}
               onSubmit={handleUpdatePayment}
-              loading={loading}
               formId={formId}
               resetFileOnSubmit={false}
             />
