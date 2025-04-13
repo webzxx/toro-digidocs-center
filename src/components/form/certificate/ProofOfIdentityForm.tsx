@@ -70,8 +70,23 @@ export default function ProofOfIdentityForm({ data, onChange, validateAndSubmit 
 
   const handleSignatureSave = () => {
     if (signaturePadRef.current) {
+      // Check if signature pad is empty - more reliable method
+      const isEmpty = signaturePadRef.current.isEmpty() || 
+                      !signaturePadRef.current.toData() || 
+                      signaturePadRef.current.toData().length === 0;
+      
+      if (isEmpty) {
+        // Set form error
+        form.setError("signature", {
+          type: "manual",
+          message: "Please sign before saving",
+        });
+        return;
+      }
+      
       const signatureData = signaturePadRef.current.toDataURL();
       form.setValue("signature", signatureData);
+      form.clearErrors("signature");
       onChange("proofOfIdentity", "signature", signatureData);
     }
   };
