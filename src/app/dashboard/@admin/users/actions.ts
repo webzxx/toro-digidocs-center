@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { hash } from "bcrypt";
 import getSession from "@/lib/auth/getSession";
-import { deletePOIImages } from "../residents/actions";
+import { deletePOIImages } from "@/lib/utils/resident";
 
 export async function updateUser(id: number, data: any) {
   const session = await getSession();
@@ -27,20 +27,23 @@ export async function deleteUser(id: number) {
     throw new Error("Unauthorized: Only admins can delete users");
   }
   
-  // check if user has created a resident
-  const resident = await db.resident.findMany({
+  // Check if user has any residents
+  const residents = await db.resident.findMany({
     where: { userId: id },
   });
 
-  if (resident.length > 0) {
-    resident.forEach(async (resident) => {
+  // Delete POI images for each resident before cascading delete
+  if (residents.length > 0) {
+    for (const resident of residents) {
       await deletePOIImages(resident.id);
-    });
+    }
   }
 
+  // Delete user - cascading will handle related records in the database
   await db.user.delete({
     where: { id },
   });
+  
   revalidatePath("/dashboard/users");
 }
 
