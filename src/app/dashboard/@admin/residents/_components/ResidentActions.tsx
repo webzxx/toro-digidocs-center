@@ -16,7 +16,7 @@ import { deleteResident, updateResident } from "@/app/dashboard/@admin/residents
 import { ResidentWithTypes } from "@/types/types";
 import { titleCase } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import ResidentFormFields from "@/components/form/resident/ResidentFormFields";
 import { useResidentForm } from "@/hooks/useResidentForm";
 
@@ -36,7 +36,7 @@ export default function ResidentActions({ resident, refetch }: ResidentActionsPr
     resetForm,
     isDirty,
   } = useResidentForm(resident);
-
+  const { toast } = useToast();
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);

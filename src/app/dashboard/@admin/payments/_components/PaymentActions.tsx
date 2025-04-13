@@ -18,10 +18,9 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { useId, useState } from "react";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { CertificateRequest, Payment, PaymentStatus, Resident } from "@prisma/client";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { formatDateTime } from "@/lib/utils";
 import Image from "next/image";
 import { approvePayment, deletePayment, rejectPayment } from "../actions";
@@ -63,6 +62,7 @@ export default function PaymentActions({
   certificates,
 }: PaymentActionsProps) {
   const formId = useId();
+  const { toast } = useToast();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);

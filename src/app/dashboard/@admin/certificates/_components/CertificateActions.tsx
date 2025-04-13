@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Edit, Trash } from "lucide-react";
 import { deleteCertificateRequest, updateCertificateRequest } from "@/app/dashboard/@admin/certificates/actions";
 import { CertificateStatus } from "@prisma/client";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -45,6 +45,7 @@ export default function CertificateActions({
   refetch,
 }: CertificateActionsProps) {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [deleteConfirmation, setDeleteConfirmation] = useState<string>("");
   const [editedPurpose, setEditedPurpose] = useState<string>(purpose);
   const [editedStatus, setEditedStatus] = useState<string>(status);

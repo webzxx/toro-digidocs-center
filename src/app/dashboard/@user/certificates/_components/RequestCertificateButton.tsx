@@ -16,7 +16,7 @@ import { getCertificateTypeLabel } from "@/lib/utils/certificate";
 import { useRouter } from "next/navigation";
 import { CertificateInput, certificateSchema } from "@/types/types";
 import { CertificateFormFields } from "@/components/form/certificate/CertificateFormFields";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 type RequestCertificateButtonProps = {
   residents: Resident[]
@@ -25,6 +25,7 @@ type RequestCertificateButtonProps = {
 export default function RequestCertificateButton({ residents }: RequestCertificateButtonProps) {
   const formId = useId();
   const router = useRouter();
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [selectedResident, setSelectedResident] = useState("");
   const [residentError, setResidentError] = useState(false);

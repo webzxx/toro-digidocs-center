@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { ManualPaymentInput, manualPaymentSchema } from "@/types/types";
 import { Calendar } from "@/components/ui/calendar";
@@ -53,6 +53,7 @@ export default function ManualPaymentForm({
   const [filePreview, setFilePreview] = useState<string | null>(
     initialData?.proofOfPaymentPath || null,
   );
+  const { toast } = useToast();
   const isEditing = !!initialData?.id;
   const [certificateSearchOpen, setCertificateSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");

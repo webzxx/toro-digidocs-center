@@ -12,7 +12,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { ManualPaymentInput } from "@/types/types";
 import { createManualPayment } from "@/app/actions/payment";
 import { Loader2, Plus } from "lucide-react";
@@ -29,6 +29,7 @@ type ManualPaymentButtonProps = {
 
 export default function ManualPaymentButton({ certificates, onSuccess }: ManualPaymentButtonProps) {
   const formId = useId();
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 

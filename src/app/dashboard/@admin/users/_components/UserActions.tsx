@@ -23,7 +23,7 @@ import React, { useState } from "react";
 
 import { updateUser, deleteUser } from "@/app/dashboard/@admin/users/actions";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { UserRole } from "@prisma/client";
 
@@ -42,6 +42,7 @@ export default function UserActions({
   role,
   refetch,
 }: UserActionsProps) {
+  const { toast } = useToast();
   const [deleteUserId, setDeleteUserId] = useState<string>("");
   const [editedUsername, setEditedUsername] = useState<string>(username);
   const [editedEmail, setEditedEmail] = useState<string>(email);
