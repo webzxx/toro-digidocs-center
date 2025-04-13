@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppointmentRequestInput, appointmentRequestSchema, ResidentForAppointment } from "@/types/types";
-import { AppointmentStatus, AppointmentType, TimeSlot } from "@prisma/client";
+import { AppointmentType, TimeSlot } from "@prisma/client";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, Plus, Check, ChevronsUpDown, Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";

@@ -20,7 +20,6 @@ import {
   CheckCircle2,
   CalendarPlus,
   Calendar,
-  CalendarCheck,
   CalendarX,
   CalendarOff,
   Video,

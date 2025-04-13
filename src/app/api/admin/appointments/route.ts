@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getSession from "@/lib/auth/getSession";
 import { AppointmentStatus, AppointmentType } from "@prisma/client";
-import { appointmentRequestSchema } from "@/types/types";
-import { z } from "zod";
 
 export async function GET(req: NextRequest) {
   try {

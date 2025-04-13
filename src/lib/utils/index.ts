@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { AppointmentType, Religion, Sector, TimeSlot } from "@prisma/client";
+import { Religion, Sector, TimeSlot } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

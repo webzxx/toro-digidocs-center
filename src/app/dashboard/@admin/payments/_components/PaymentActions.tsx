@@ -6,7 +6,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { 
   FileText, 
@@ -18,7 +17,7 @@ import {
   Trash,
   MoreHorizontal,
 } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { CertificateRequest, Payment, PaymentStatus, Resident } from "@prisma/client";
@@ -63,6 +62,7 @@ export default function PaymentActions({
   refetch,
   certificates,
 }: PaymentActionsProps) {
+  const formId = useId();
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -300,6 +300,7 @@ export default function PaymentActions({
     }, 100);
   };
 
+  
   return (
     <div className="flex items-center justify-end">
       <DropdownMenu>
@@ -538,7 +539,7 @@ export default function PaymentActions({
               initialData={getInitialEditData()}
               onSubmit={handleUpdatePayment}
               loading={loading}
-              formId="edit-payment-form"
+              formId={formId}
               resetFileOnSubmit={false}
             />
           </div>

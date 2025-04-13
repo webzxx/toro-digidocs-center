@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Appointment, AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus } from "@prisma/client";
 import {
   MoreHorizontal,
   CalendarIcon,

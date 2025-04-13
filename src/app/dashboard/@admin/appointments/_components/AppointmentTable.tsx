@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Appointment, AppointmentStatus, AppointmentType } from "@prisma/client";
+import { AppointmentStatus, AppointmentType } from "@prisma/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatDateTimeShort } from "@/lib/utils";
 import { getAppointmentStatusBadge, getAppointmentTypeBadge } from "@/components/utils/badges";

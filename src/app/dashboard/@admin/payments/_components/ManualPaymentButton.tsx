@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { CertificateRequest, Resident } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +28,7 @@ type ManualPaymentButtonProps = {
 };
 
 export default function ManualPaymentButton({ certificates, onSuccess }: ManualPaymentButtonProps) {
-  const formId = "manual-payment-form";
+  const formId = useId();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
