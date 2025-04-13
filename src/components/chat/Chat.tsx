@@ -10,8 +10,7 @@ import { Message } from "@/lib/validators/message";
 import { useMutation } from "@tanstack/react-query";
 import BotMessage from "./BotMessage";
 import UserMessage from "./UserMessage";
-
-const STORAGE_KEY = "chat_messages";
+import { STORAGE_KEYS } from "@/lib/utils";
 
 const Chat: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -72,7 +71,7 @@ const Chat: FC = () => {
         }
       }
       
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messageData));
+      localStorage.setItem(STORAGE_KEYS.CHAT_MESSAGES, JSON.stringify(messageData));
     }
   }, [messages]);
 
@@ -97,7 +96,7 @@ const Chat: FC = () => {
     if (isOpen && !hasLoadedInitialMessages) {
       const loadSavedMessages = async () => {
         try {
-          const savedMessages = localStorage.getItem(STORAGE_KEY);
+          const savedMessages = localStorage.getItem(STORAGE_KEYS.CHAT_MESSAGES);
           
           if (savedMessages) {
             const parsedMessages = JSON.parse(savedMessages) as Array<{
@@ -183,7 +182,7 @@ const Chat: FC = () => {
   };
 
   const handleClearChat = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEYS.CHAT_MESSAGES);
     setMessages([
       <BotMessage
         key="0"

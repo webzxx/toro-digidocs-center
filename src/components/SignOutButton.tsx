@@ -3,6 +3,7 @@
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { STORAGE_KEYS } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,22 @@ import {
 } from "@/components/ui/dialog";
 
 export default function SignOutButton() {
+  const handleSignOut = () => {
+    // Clear the chat history from localStorage
+    localStorage.removeItem(STORAGE_KEYS.CHAT_MESSAGES);
+    
+    // Clear any payment-related data from localStorage
+    // Find and remove all items that match the payment pattern
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith("payment_")) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    // Proceed with the sign out
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -30,7 +47,7 @@ export default function SignOutButton() {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => signOut({ callbackUrl: "/" })}>
+          <Button variant="outline" onClick={handleSignOut}>
             Yes, Sign Out
           </Button>
         </DialogFooter>

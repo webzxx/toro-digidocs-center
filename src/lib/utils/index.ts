@@ -2,6 +2,12 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Religion, Sector, TimeSlot } from "@prisma/client";
 
+// Application constants
+export const STORAGE_KEYS = {
+  CHAT_MESSAGES: "chat_messages",
+  PAYMENT: (id: number) => `payment_${id}`,
+};
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

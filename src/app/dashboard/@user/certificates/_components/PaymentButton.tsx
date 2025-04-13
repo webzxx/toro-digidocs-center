@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2, Truck, Store } from "lucide-react";
 import { Toast, useToast } from "@/components/ui/use-toast";
+import { STORAGE_KEYS } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +18,7 @@ import { initiatePayment, cancelPayment } from "../actions";
 
 interface PaymentButtonProps {
   certificateId: number;
-};
+}
 
 export default function PaymentButton({ certificateId }: PaymentButtonProps) {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -32,27 +33,27 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
 
   // Check for existing transaction and window state on mount
   useEffect(() => {
-    const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
+    const storedTransaction = localStorage.getItem(STORAGE_KEYS.PAYMENT(certificateId));
     if (storedTransaction) {
       try {
         const { transactionId, timestamp, checkoutUrl, windowOpen } = JSON.parse(storedTransaction);
         const timeSinceInitiated = Date.now() - timestamp;
-        
+
         if (timeSinceInitiated < 30 * 60 * 1000) {
           setCheckoutUrl(checkoutUrl);
           checkTransactionStatus(transactionId, windowOpen);
         } else {
-          localStorage.removeItem(`payment_${certificateId}`);
+          localStorage.removeItem(STORAGE_KEYS.PAYMENT(certificateId));
         }
       } catch (error) {
         console.error("Error parsing stored transaction:", error);
-        localStorage.removeItem(`payment_${certificateId}`);
+        localStorage.removeItem(STORAGE_KEYS.PAYMENT(certificateId));
       }
     }
-    
+
     // Mark initialization as complete
     setIsInitializing(false);
-    
+
     return () => {
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
     };
@@ -62,23 +63,23 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
   const handlePayment = async () => {
     try {
       setIsProcessing(true);
-      
-      const result = await initiatePayment({ 
+
+      const result = await initiatePayment({
         certificateId,
         deliveryMethod,
       });
 
-      if(result.error || !result.transactionId)
+      if (result.error || !result.transactionId)
         throw new Error(result.error || "Payment initialization failed");
 
       // Store transaction info in localStorage with checkout URL
-      localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
+      localStorage.setItem(STORAGE_KEYS.PAYMENT(certificateId), JSON.stringify({
         transactionId: result.transactionId,
         timestamp: Date.now(),
         checkoutUrl: result.checkoutUrl,
         windowOpen: true,
       }));
-      
+
       setCheckoutUrl(result.checkoutUrl);
       // Open the checkout URL in a new tab
       openCheckoutWindow(result.checkoutUrl);
@@ -86,30 +87,30 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
       setIsDialogOpen(false);
       // Poll for payment status
       pollPaymentStatus(result.transactionId);
-      
+
     } catch (error) {
       console.error("Payment error:", error);
-      
+
       // Show error toast
       toast({
         title: "Payment Error",
         description: error instanceof Error ? error.message : "Failed to initialize payment. Please try again.",
         variant: "destructive",
       });
-      
+
       setIsProcessing(false);
     }
   };
 
   const openCheckoutWindow = (url: string) => {
     checkoutWindow = window.open(url, "_blank");
-    
+
     if (checkoutWindow) {
       // Update localStorage with window state
-      const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
+      const storedTransaction = localStorage.getItem(STORAGE_KEYS.PAYMENT(certificateId));
       if (storedTransaction) {
         const transaction = JSON.parse(storedTransaction);
-        localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
+        localStorage.setItem(STORAGE_KEYS.PAYMENT(certificateId), JSON.stringify({
           ...transaction,
           windowOpen: true,
         }));
@@ -120,10 +121,10 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
           clearInterval(checkWindowClosed);
           setIsProcessing(false);
           // Update localStorage when window is closed
-          const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
+          const storedTransaction = localStorage.getItem(STORAGE_KEYS.PAYMENT(certificateId));
           if (storedTransaction) {
             const transaction = JSON.parse(storedTransaction);
-            localStorage.setItem(`payment_${certificateId}`, JSON.stringify({
+            localStorage.setItem(STORAGE_KEYS.PAYMENT(certificateId), JSON.stringify({
               ...transaction,
               windowOpen: false,
             }));
@@ -151,7 +152,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
 
       const response = await fetch(`/api/certificates/payment/status?certificateId=${certificateId}&transactionId=${transactionId}`);
       const data = await response.json();
-      
+
       if (data.status === "PENDING") {
         // Transaction exists and is still pending, resume polling
         pollPaymentStatus(transactionId);
@@ -161,7 +162,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
       } else {
         // Transaction failed or doesn't exist
         setIsProcessing(false);
-        localStorage.removeItem(`payment_${certificateId}`);
+        localStorage.removeItem(STORAGE_KEYS.PAYMENT(certificateId));
       }
     } catch (error) {
       console.error("Error checking transaction status:", error);
@@ -169,13 +170,13 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
     }
   };
 
-  const resetPaymentState = (showToast = false, toastOptions:Toast = {}) => {
+  const resetPaymentState = (showToast = false, toastOptions: Toast = {}) => {
     clearPolling();
     setIsDialogOpen(false);
     setIsProcessing(false);
     setCheckoutUrl(null);
-    localStorage.removeItem(`payment_${certificateId}`);
-    
+    localStorage.removeItem(STORAGE_KEYS.PAYMENT(certificateId));
+
     if (showToast) {
       toast({
         title: toastOptions.title || "Payment Status",
@@ -203,7 +204,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
             description: "Payment was not completed. Please try again.",
             variant: "destructive",
           });
-        } else if (data.status === "CANCELLED"){
+        } else if (data.status === "CANCELLED") {
           resetPaymentState();
         }
       } catch (error) {
@@ -215,7 +216,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
   const handlePaymentSuccess = () => {
     clearPolling();
     setIsProcessing(false);
-    localStorage.removeItem(`payment_${certificateId}`);
+    localStorage.removeItem(STORAGE_KEYS.PAYMENT(certificateId));
     toast({
       title: "Payment Successful",
       description: "Your certificate has been successfully paid.",
@@ -238,27 +239,27 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
   const handleCancelPayment = async () => {
     try {
       setIsCancelling(true);
-      
+
       // Get the transaction ID from localStorage
-      const storedTransaction = localStorage.getItem(`payment_${certificateId}`);
+      const storedTransaction = localStorage.getItem(STORAGE_KEYS.PAYMENT(certificateId));
       if (!storedTransaction) {
         throw new Error("No active payment found");
       }
-      
+
       const { transactionId } = JSON.parse(storedTransaction);
-      
+
       // Call the server action to cancel the payment
       const result = await cancelPayment({
         certificateId,
         transactionId,
       });
-      
+
       if (result.error) {
         throw new Error(result.error);
       }
-      
+
       // Clear local storage and reset state
-      localStorage.removeItem(`payment_${certificateId}`);
+      localStorage.removeItem(STORAGE_KEYS.PAYMENT(certificateId));
       setIsProcessing(false);
       setCheckoutUrl(null);
       setIsDialogOpen(false);
@@ -274,10 +275,10 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
       setTimeout(() => {
         window.location.reload();
       }, 1500); // 1.5 second delay
-      
+
     } catch (error) {
       console.error("Payment cancellation error:", error);
-      
+
       // Show error toast
       toast({
         title: "Cancellation Error",
@@ -306,7 +307,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
             )}
           </Button>
         </DialogTrigger>
-        
+
         {/* Dialog content remains the same for new payments */}
         {!checkoutUrl ? (
           <DialogContent className="sm:max-w-[425px]">
@@ -316,9 +317,9 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
                 Choose how you would like to receive your certificate
               </DialogDescription>
             </DialogHeader>
-            
-            <RadioGroup 
-              value={deliveryMethod} 
+
+            <RadioGroup
+              value={deliveryMethod}
               onValueChange={(value) => setDeliveryMethod(value as "pickup" | "delivery")}
               className="grid gap-6 py-4"
             >
@@ -343,10 +344,10 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
                 </Label>
               </div>
             </RadioGroup>
-            
+
             <DialogFooter>
-              <Button 
-                onClick={handlePayment} 
+              <Button
+                onClick={handlePayment}
                 disabled={isProcessing}
                 className="w-full"
               >
@@ -370,13 +371,13 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex-col gap-2 sm:flex-col sm:space-x-0 sm:space-y-1">
-              <Button 
-                onClick={reopenCheckout} 
+              <Button
+                onClick={reopenCheckout}
                 className="w-full"
               >
                 Reopen Checkout
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={handleCancelPayment}
                 disabled={isCancelling}
