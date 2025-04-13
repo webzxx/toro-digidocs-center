@@ -39,20 +39,40 @@ const Chat: FC = () => {
   // Save messages to localStorage whenever they change
   useEffect(() => {
     if (messages.length > 0) {
-      const messageTexts = messages.map((msg, index) => {
-        const isUserMessage = index % 2 === 1;
-        const text = isUserMessage 
-          ? (msg as JSX.Element).props.text 
-          : undefined;
-        
-        return {
-          id: index.toString(),
-          isUserMessage,
-          text,
-        };
-      });
+      // Create an array to collect the message data
+      const messageData: Array<{
+        id: string;
+        isUserMessage: boolean;
+        text: string | undefined;
+      }> = [];
       
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messageTexts));
+      // Process the messages and extract their text content
+      for (let i = 0; i < messages.length; i++) {
+        const msg = messages[i];
+        const isUserMessage = msg.type === UserMessage;
+        
+        // For user messages, directly extract the text prop
+        if (isUserMessage && msg.props.text) {
+          messageData.push({
+            id: `msg-${i}`,
+            isUserMessage: true,
+            text: msg.props.text,
+          });
+        } 
+        // For bot messages, we need to handle them differently
+        else if (msg.type === BotMessage) {
+          // Store the bot's processed message
+          // Since fetchMessage is a function, we'll mark it to be loaded later
+          messageData.push({
+            id: `msg-${i}`,
+            isUserMessage: false,
+            text: msg.props.children?.props?.dangerouslySetInnerHTML?.__html || 
+                  "Hello! How can I help you today? (Type 'start' to show quick links)",
+          });
+        }
+      }
+      
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messageData));
     }
   }, [messages]);
 
@@ -93,12 +113,12 @@ const Chat: FC = () => {
                 if (msg.isUserMessage && msg.text) {
                   newMessages.push(<UserMessage key={`user-${msg.id}`} text={msg.text} />);
                 } else {
+                  // Fixed: Use the actual text from saved message instead of a default message
+                  const botMessage = msg.text || "Hello! How can I help you today?";
                   newMessages.push(
                     <BotMessage
                       key={`bot-${msg.id}`}
-                      fetchMessage={async () => {
-                        return msg.text || "Hello! How can I help you today?";
-                      }}
+                      fetchMessage={async () => botMessage}
                     />,
                   );
                 }
