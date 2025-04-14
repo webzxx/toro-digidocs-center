@@ -1,6 +1,7 @@
 import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
 import PaymentAdmin from "./_components/PaymentAdmin";
+import { adminCertificateForAwaitingPayment, adminPaymentWithRelations } from "@/types/admin";
 
 async function PaymentsPage() {
   // Initial data fetch for SSR - limited to first page only
@@ -9,21 +10,7 @@ async function PaymentsPage() {
     orderBy: {
       createdAt: "desc",
     },
-    include: {
-      certificateRequest: {
-        select: {
-          referenceNumber: true,
-          certificateType: true,
-          resident: {
-            select: {
-              firstName: true,
-              lastName: true,
-              bahayToroSystemId: true,
-            },
-          },
-        },
-      },
-    },
+    ...adminPaymentWithRelations,
   });
   
   // Count total payments for pagination
@@ -38,15 +25,7 @@ async function PaymentsPage() {
     orderBy: {
       requestDate: "desc",
     },
-    include: {
-      resident: {
-        select: {
-          firstName: true,
-          lastName: true,
-          bahayToroSystemId: true,
-        },
-      },
-    },
+    ...adminCertificateForAwaitingPayment,
   });
   
   // Serialize the data to avoid date serialization issues

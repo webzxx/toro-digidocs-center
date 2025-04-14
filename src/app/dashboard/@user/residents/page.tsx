@@ -1,6 +1,6 @@
 import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
-import { ResidentWithTypes } from "@/types/types";
+import { residentWithRelations } from "@/types/shared";
 import ResidentsClient from "./_components/ResidentsClient";
 
 async function ResidentsPage({ user }: WithAuthProps) {
@@ -11,15 +11,11 @@ async function ResidentsPage({ user }: WithAuthProps) {
     where: {
       userId: userId,
     },
-    include: {
-      address: true,
-      emergencyContact: true,
-      proofOfIdentity: true,
-    },
     orderBy: {
       createdAt: "desc",
     },
-  }) as ResidentWithTypes[];
+    ...residentWithRelations,
+  });
 
   return (
     <main className='flex min-h-[90vh] w-full flex-col gap-2'>

@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import getSession from "@/lib/auth/getSession";
-import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/types";
+import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/forms";
 
 export async function createAppointmentRequest(
   values: AppointmentRequestInput,

@@ -1,6 +1,7 @@
 import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
 import CertificatesClient from "./_components/CertificatesClient";
+import { userResidentWithCertificateRequests } from "@/types/user";
 
 async function CertificatesPage({ user }: WithAuthProps) {
   const userId = parseInt(user.id as unknown as string); // Convert string to number
@@ -9,28 +10,7 @@ async function CertificatesPage({ user }: WithAuthProps) {
     where: {
       userId: userId,
     },
-    include: {
-      certificateRequests: {
-        include: {
-          payments: {
-            orderBy: {
-              createdAt: "desc",
-            },
-            take: 1,
-            // Include all payment details we need to display
-            select: {
-              transactionReference: true,
-              amount: true,
-              paymentStatus: true,
-              paymentMethod: true,
-              createdAt: true,
-              updatedAt: true,
-              paymentDate: true,
-            },
-          },
-        },
-      },
-    },  
+    ...userResidentWithCertificateRequests,
   });
 
   // Serialize the data to avoid "only plain objects can be passed to Client Components" warning

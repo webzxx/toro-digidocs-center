@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { formatDateTime } from "@/lib/utils";
 import CertificateActions from "./CertificateActions";
-import { AdminCertificate } from "@/types/types";
+import { AdminCertificate } from "@/types/admin";
 import { getCertificateStatusBadge, getCertificateTypeBadge, getPaymentStatusBadge } from "@/components/utils";
 import { PaymentStatus } from "@prisma/client";
 

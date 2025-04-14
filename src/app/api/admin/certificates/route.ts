@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getSession from "@/lib/auth/getSession";
-import { adminCertificateWithRelations } from "@/types/types";
+import { adminCertificateWithRelations } from "@/types/admin";
 
 export async function GET(req: NextRequest) {
   try {

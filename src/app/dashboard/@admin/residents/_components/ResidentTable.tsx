@@ -14,13 +14,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { formatDateTime, formatReligion } from "@/lib/utils";
-import { ResidentWithTypes } from "@/types/types";
 import Image from "next/image";
 import ResidentActions from "./ResidentActions";
 import { getGenderBadge, getCivilStatusBadge, getSectorBadge } from "@/components/utils";
+import { ResidentWithRelations } from "@/types/shared";
 
 interface ResidentTableProps {
-  residents?: ResidentWithTypes[];
+  residents?: ResidentWithRelations[];
   isLoading?: boolean;
   refetch: () => void;
 }

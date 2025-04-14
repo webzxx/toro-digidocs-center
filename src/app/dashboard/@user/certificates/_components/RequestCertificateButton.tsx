@@ -14,12 +14,13 @@ import { createCertificate } from "@/app/dashboard/@user/certificates/actions";
 import { CertificateType, Resident } from "@prisma/client";
 import { getCertificateTypeLabel } from "@/lib/utils/certificate";
 import { useRouter } from "next/navigation";
-import { CertificateInput, certificateSchema } from "@/types/types";
+import { CertificateInput, certificateSchema } from "@/types/forms";
 import { CertificateFormFields } from "@/components/form/certificate/CertificateFormFields";
 import { useToast } from "@/components/ui/use-toast";
+import { UserResidentWithCertificateRequests } from "@/types/user";
 
 type RequestCertificateButtonProps = {
-  residents: Resident[]
+  residents: UserResidentWithCertificateRequests[]
 };
 
 export default function RequestCertificateButton({ residents }: RequestCertificateButtonProps) {

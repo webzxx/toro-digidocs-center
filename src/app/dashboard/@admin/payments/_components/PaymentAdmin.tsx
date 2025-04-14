@@ -5,28 +5,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
-import { CertificateRequest, Payment, PaymentMethod, PaymentStatus, Resident } from "@prisma/client";
+import { PaymentMethod, PaymentStatus } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PaymentTable from "./PaymentTable";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
 import { getPaymentStatusBadge } from "@/components/utils";
 import ManualPaymentButton from "./ManualPaymentButton";
+import { AdminCertificateForAwaitingPayment, AdminPayment } from "@/types/admin";
 
 const ITEMS_PER_PAGE = 10;
 
-type PaymentWithDetails = Payment & {
-  certificateRequest?: CertificateRequest & {
-    referenceNumber: string;
-    certificateType: string;
-    resident: Pick<Resident, "firstName" | "lastName" | "bahayToroSystemId">;
-  };
-};
-
 interface PaymentAdminProps {
-  initialPayments: PaymentWithDetails[];
+  initialPayments: AdminPayment[];
   initialTotal: number;
-  initialCertificates: CertificateRequest[];
+  initialCertificates: AdminCertificateForAwaitingPayment[];
 }
 
 export default function PaymentAdmin({ initialPayments, initialTotal, initialCertificates }: PaymentAdminProps) {

@@ -9,12 +9,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/DatePicker";
-import { ResidentWithTypes } from "@/types/types";
+import { ResidentWithRelations } from "@/types/shared";
 import { Gender, Religion, CivilStatus, Sector, ResidencyType } from "@prisma/client";
 import { formatReligion, formatSector, titleCase } from "@/lib/utils";
 
 interface ResidentFormFieldsProps {
-  editedResident: ResidentWithTypes;
+  editedResident: ResidentWithRelations;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSelectChange: (name: string) => (value: string) => void;
   handleAddressChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

@@ -1,4 +1,4 @@
-import { CertificateInput } from "@/types/types";
+import { CertificateInput } from "@/types/forms";
 import { CertificateType } from "@prisma/client";
 
 export const getCertificateTypeLabel = (type: CertificateType): string => {

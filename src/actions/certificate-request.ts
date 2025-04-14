@@ -3,7 +3,7 @@
 import {
   completeCertificateFormSchema,
   CompleteCertificateFormInputWithoutFiles,
-} from "@/types/types";
+} from "@/types/forms";
 import { db } from "@/lib/db";
 import { UTApi } from "uploadthing/server";
 import getSession from "@/lib/auth/getSession";

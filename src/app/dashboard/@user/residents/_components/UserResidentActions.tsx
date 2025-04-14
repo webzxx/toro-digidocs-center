@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Edit, Eye, Trash2 } from "lucide-react";
-import { ResidentWithTypes } from "@/types/types";
+import { ResidentWithRelations } from "@/types/shared";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -26,7 +26,7 @@ import { useResidentForm } from "@/hooks/useResidentForm";
 import { updateResident, deleteResident } from "../actions";
 
 interface UserResidentActionsProps {
-  resident: ResidentWithTypes;
+  resident: ResidentWithRelations;
 }
 
 export default function UserResidentActions({ resident }: UserResidentActionsProps) {

@@ -17,7 +17,7 @@ import AddressForm from "./AddressForm";
 import { useState } from "react";
 import CertificateForm from "./CertificateForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
-import { CompleteCertificateFormInputWithoutFiles, completeCertificateFormSchema } from "@/types/types";
+import { CompleteCertificateFormInputWithoutFiles, completeCertificateFormSchema } from "@/types/forms";
 import { scrollToForm } from "./StepperFormActions";
 import { createCertificateRequest } from "@/actions/certificate-request";
 import { useToast } from "@/components/ui/use-toast";

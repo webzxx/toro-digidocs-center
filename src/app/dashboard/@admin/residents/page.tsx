@@ -1,6 +1,7 @@
 import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
 import ResidentAdmin from "./_components/ResidentAdmin";
+import { residentWithRelations } from "@/types/shared";
 
 async function ResidentsPage() {
   // Initial data fetch for SSR - limited to first page only
@@ -9,11 +10,7 @@ async function ResidentsPage() {
     orderBy: {
       lastName: "asc",
     },
-    include: {
-      address: true,
-      emergencyContact: true,
-      proofOfIdentity: true,
-    },
+    ...residentWithRelations,
   });
 
   // Count total residents for pagination

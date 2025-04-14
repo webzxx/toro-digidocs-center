@@ -1,24 +1,43 @@
-// types.ts
 import { 
-  Prisma, 
-  PaymentMethod, 
-  PaymentStatus, 
   Gender, 
   Religion, 
   CivilStatus,
   Sector,
   ResidencyType,
   CertificateType,
+  PaymentMethod,
+  PaymentStatus,
   AppointmentType,
   TimeSlot,
 } from "@prisma/client";
 import { z } from "zod";
+
+// #region Helper Functions
 
 // Helper function to create a date schema with a custom error message
 const dateSchema = (errorMessage: string) =>
   z
     .string()
     .refine((date) => !isNaN(Date.parse(date)), { message: errorMessage });
+
+// Helper function to validate data URL
+const isValidDataUrl = (value: string) => {
+  const regex = /^data:image\/(png|jpg|jpeg|gif);base64,/;
+  return regex.test(value);
+};
+
+// Helper function to validate file type and size
+const fileSchema = z
+  .instanceof(File)
+  .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
+  .refine(
+    (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
+    "Only .jpg, .png, .gif formats are supported",
+  );
+
+// #endregion
+
+// #region Certificate Request Wizard schemas
 
 // Step 1: Personal Information
 const personalInfoSchema = z.object({
@@ -75,11 +94,6 @@ const certificateSchema = z
   })
   .and(
     z.discriminatedUnion("certificateType", [
-      // z.object({
-      //   certificateType: z.nativeEnum(CertificateType, {
-      //     required_error: "Certificate type is required",
-      //   }).pipe(z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"])),
-      // }),
       z.object({
         certificateType: z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"]),
       }),
@@ -142,20 +156,6 @@ const certificateSchema = z
     ]),
   );
 
-// Helper function to validate data URL
-const isValidDataUrl = (value: string) => {
-  const regex = /^data:image\/(png|jpg|jpeg|gif);base64,/;
-  return regex.test(value);
-};
-
-const fileSchema = z
-  .instanceof(File)
-  .refine((file) => file.size <= 5 * 1024 * 1024, "Max file size is 5MB")
-  .refine(
-    (file) => ["image/jpeg", "image/png", "image/gif"].includes(file.type),
-    "Only .jpg, .png, .gif formats are supported",
-  );
-
 // Step 4: Proof of Identity schema
 const proofOfIdentitySchema = z.object({
   signature: z
@@ -170,7 +170,55 @@ const proofOfIdentitySchema = z.object({
     .length(2, "Exactly two Photo Holding IDs are required"),
 });
 
-// Manual Payment Form schema
+// Complete form schema
+const completeCertificateFormSchema = z.object({
+  personalInfo: personalInfoSchema,
+  address: addressSchema,
+  certificate: certificateSchema,
+  proofOfIdentity: proofOfIdentitySchema,
+});
+
+// Complete form schema without files
+const completeCertificateFormSchemaWithoutFiles = z.object({
+  personalInfo: personalInfoSchema,
+  address: addressSchema,
+  certificate: certificateSchema,
+  proofOfIdentity: proofOfIdentitySchema.omit({
+    photoId: true,
+    photoHoldingId: true,
+  }),
+});
+
+// #endregion
+
+// #region Appointment Request schema
+
+const appointmentRequestSchema = z.object({
+  appointmentType: z.nativeEnum(AppointmentType, {
+    required_error: "Appointment type is required",
+  }),
+  preferredDate: z.union([
+    z.date({
+      required_error: "A preferred date is required",
+    }),
+    z.string().refine((date) => {
+      const parsedDate = new Date(date);
+      return !isNaN(parsedDate.getTime());
+    }, {
+      message: "Invalid date format",
+    }),
+  ]),
+  preferredTimeSlot: z.nativeEnum(TimeSlot, {
+    required_error: "Please select your preferred time slot",
+  }),
+  notes: z.string().optional(),
+  residentId: z.number().optional(),
+});
+
+// #endregion
+
+// #region Manual Payment Form schema
+
 const manualPaymentSchema = z.object({
   certificateRequestId: z.number({
     required_error: "Certificate request is required",
@@ -208,139 +256,32 @@ const manualPaymentSchema = z.object({
   receiptNumber: z.string().optional(),
 });
 
-export type ManualPaymentInput = z.infer<typeof manualPaymentSchema>;
+// #endregion
 
-// Appointment Request schema
-const appointmentRequestSchema = z.object({
-  appointmentType: z.nativeEnum(AppointmentType, {
-    required_error: "Appointment type is required",
-  }),
-  preferredDate: z.union([
-    z.date({
-      required_error: "A preferred date is required",
-    }),
-    z.string().refine((date) => {
-      const parsedDate = new Date(date);
-      return !isNaN(parsedDate.getTime());
-    }, {
-      message: "Invalid date format",
-    }),
-  ]),
-  preferredTimeSlot: z.nativeEnum(TimeSlot, {
-    required_error: "Please select your preferred time slot",
-  }),
-  notes: z.string().optional(),
-  residentId: z.number().optional(),
-});
-
-export type AppointmentRequestInput = z.infer<typeof appointmentRequestSchema>;
-
+// Export types
 export type PersonalInfoInput = z.infer<typeof personalInfoSchema>;
 export type AddressInput = z.infer<typeof addressSchema>;
 export type CertificateInput = z.infer<typeof certificateSchema>;
 export type ProofOfIdentityInput = z.infer<typeof proofOfIdentitySchema>;
-
-// Complete form schema
-const completeCertificateFormSchema = z.object({
-  personalInfo: personalInfoSchema,
-  address: addressSchema,
-  certificate: certificateSchema,
-  proofOfIdentity: proofOfIdentitySchema,
-});
-
 export type CompleteCertificateFormInput = z.infer<
   typeof completeCertificateFormSchema
 >;
-
-// Complete form schema without files
-const completeCertificateFormSchemaWithoutFiles = z.object({
-  personalInfo: personalInfoSchema,
-  address: addressSchema,
-  certificate: certificateSchema,
-  proofOfIdentity: proofOfIdentitySchema.omit({
-    photoId: true,
-    photoHoldingId: true,
-  }),
-});
-
 export type CompleteCertificateFormInputWithoutFiles = z.infer<
   typeof completeCertificateFormSchemaWithoutFiles
 >;
+export type AppointmentRequestInput = z.infer<typeof appointmentRequestSchema>;
+export type ManualPaymentInput = z.infer<typeof manualPaymentSchema>;
 
+// Export schemas
 export {
+  dateSchema,
+  fileSchema,
   personalInfoSchema,
   addressSchema,
   certificateSchema,
   proofOfIdentitySchema,
   completeCertificateFormSchema,
   completeCertificateFormSchemaWithoutFiles,
-  manualPaymentSchema,
   appointmentRequestSchema,
-};
-
-const residentWithTypes = Prisma.validator<Prisma.ResidentDefaultArgs>()({
-  include: {
-    address: true,
-    emergencyContact: true,
-    proofOfIdentity: true,
-  },
-});
-
-export type ResidentWithTypes = Prisma.ResidentGetPayload<typeof residentWithTypes>;
-
-export const adminCertificateWithRelations = Prisma.validator<Prisma.CertificateRequestDefaultArgs>()({
-  include: {
-    resident: {
-      select: {
-        firstName: true,
-        lastName: true,
-        bahayToroSystemId: true,
-      },
-    },
-    payments: {
-      orderBy: {
-        createdAt: "desc",  // Get payments in reverse chronological order
-      },
-      take: 1,  // Take only the most recent payment
-      select: {
-        id: true,
-        paymentStatus: true,
-        amount: true,
-        paymentDate: true,
-        isActive: true,  // Include isActive status for reference
-      },
-    },
-  },
-});
-
-export type AdminCertificate = Prisma.CertificateRequestGetPayload<typeof adminCertificateWithRelations>;
-
-// Define Prisma type for appointments with relations
-export const adminAppointmentWithRelations = Prisma.validator<Prisma.AppointmentDefaultArgs>()({
-  include: {
-    user: {
-      select: {
-        username: true,
-        email: true,
-      },
-    },
-    resident: {
-      select: {
-        firstName: true,
-        lastName: true,
-        bahayToroSystemId: true,
-      },
-    },
-  },
-});
-
-export type AdminAppointment = Prisma.AppointmentGetPayload<typeof adminAppointmentWithRelations>;
-
-// Type for residents data to be passed to appointment components
-export type ResidentForAppointment = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  bahayToroSystemId: string | null;
-  userId: number;
+  manualPaymentSchema,
 };

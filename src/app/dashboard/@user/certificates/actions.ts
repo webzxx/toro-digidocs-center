@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import getSession from "@/lib/auth/getSession";
-import { CertificateInput } from "@/types/types";
+import { CertificateInput } from "@/types/forms";
 import { revalidatePath } from "next/cache";
 import paymaya from "@api/paymaya";
 import { headers } from "next/headers";

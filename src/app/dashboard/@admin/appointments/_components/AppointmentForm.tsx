@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AppointmentRequestInput, appointmentRequestSchema, ResidentForAppointment } from "@/types/types";
+import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/forms";
 import { AppointmentType, TimeSlot } from "@prisma/client";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2, Plus, Check, ChevronsUpDown, Search } from "lucide-react";
@@ -44,18 +44,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn, formatTimeSlot, titleCase } from "@/lib/utils";
 import { createAppointment } from "../actions";
 import { useRouter } from "next/navigation";
+import { AdminResidentForAppointment } from "@/types/admin";
 
 interface AppointmentFormProps {
-  initialData?: Partial<AppointmentRequestInput>;
+  initialData?: Partial<AppointmentRequestInput>; // FIX - was this used?
   onSuccess?: () => void;
-  residents: ResidentForAppointment[];
+  residents: AdminResidentForAppointment[];
 }
 
 export default function AppointmentForm({ initialData, onSuccess, residents }: AppointmentFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [residentSearchOpen, setResidentSearchOpen] = useState(false);
-  const [filteredResidents, setFilteredResidents] = useState<ResidentForAppointment[]>([]);
+  const [filteredResidents, setFilteredResidents] = useState<AdminResidentForAppointment[]>([]);
   const [residentSearchValue, setResidentSearchValue] = useState("");
   const [selectsOpen, setSelectsOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);

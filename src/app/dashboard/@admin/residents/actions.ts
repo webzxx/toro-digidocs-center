@@ -1,12 +1,12 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { ResidentWithTypes } from "@/types/types";
+import { ResidentWithRelations } from "@/types/shared";
 import { revalidatePath } from "next/cache";
 import getSession from "@/lib/auth/getSession";
 import { deletePOIImages } from "@/lib/utils/resident";
 
-export async function updateResident(id: number, data: ResidentWithTypes) {
+export async function updateResident(id: number, data: ResidentWithRelations) {
   const session = await getSession();
   
   if (!session || session.user.role !== "ADMIN") {

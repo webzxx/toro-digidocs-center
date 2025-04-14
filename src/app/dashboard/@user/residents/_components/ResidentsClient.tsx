@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from "@/components/ui/button";
 import { formatDateTime, formatReligion } from "@/lib/utils";
 import { getGenderBadge, getCivilStatusBadge, getSectorBadge } from "@/components/utils";
-import { ResidentWithTypes } from "@/types/types";
+import { ResidentWithRelations } from "@/types/shared";
 import {
   Accordion,
   AccordionContent,
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 
 interface ResidentsClientProps {
-  userResidents: ResidentWithTypes[];
+  userResidents: ResidentWithRelations[];
 }
 
 export default function ResidentsClient({ userResidents }: ResidentsClientProps) {

@@ -5,31 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
-import { CertificateStatus, CertificateType, CertificateRequest } from "@prisma/client";
+import { CertificateStatus, CertificateType } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CertificateTable from "./CertificateTable";
 import { Input } from "@/components/ui/input";
 import { useQueryState } from "nuqs";
 import { getCertificateStatusBadge } from "@/components/utils";
+import { AdminCertificate } from "@/types/admin";
 
 const ITEMS_PER_PAGE = 10;
 
-// Define a specific type for the certificate data
-type CertificateWithDetails = CertificateRequest & {
-  resident: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    bahayToroSystemId: string | null;
-  };
-  payment?: {
-    id: string;
-    status: string;
-  } | null;
-};
-
 interface CertificateAdminProps {
-  initialCertificates: CertificateWithDetails[]; // More specific type
+  initialCertificates: AdminCertificate[];
   initialTotal: number;
 }
 

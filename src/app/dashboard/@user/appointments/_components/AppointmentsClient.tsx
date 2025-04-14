@@ -7,8 +7,7 @@ import {
   CardDescription, 
   CardFooter, 
 } from "@/components/ui/card";
-import { Appointment, CertificateRequest, Resident } from "@prisma/client";
-import { Calendar, Clock, FileText, Info, MapPin, User, Video } from "lucide-react";
+import { Calendar, Clock, Info, MapPin, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -18,7 +17,7 @@ import {
 } from "@/components/ui/accordion";
 import { formatDateTime, formatDateOnly, formatTime, titleCase } from "@/lib/utils";
 import { useState } from "react";
-import NewAppointmentButton, { Resident as ResidentType } from "./NewAppointmentButton";
+import NewAppointmentButton from "./NewAppointmentButton";
 import { useRouter } from "next/navigation";
 import { cancelAppointment } from "../../appointments/actions";
 import { useToast } from "@/components/ui/use-toast";
@@ -34,15 +33,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { getAppointmentStatusBadge } from "@/components/utils";
 import { getAppointmentTypeIcon } from "@/components/utils/icons";
-
-type AppointmentWithRelations = Appointment & {
-  resident: Resident | null;
-  certificateRequest: CertificateRequest | null;
-};
+import { UserAppointment, UserResidentForAppointment } from "@/types/user";
 
 type AppointmentsClientProps = {
-  appointments: AppointmentWithRelations[];
-  residents: ResidentType[];
+  appointments: UserAppointment[];
+  residents: UserResidentForAppointment[];
   userId: number;
 };
 
@@ -281,16 +276,6 @@ export default function AppointmentsClient({
                             Resident:
                           </div>
                           <div>{appointment.resident.firstName} {appointment.resident.lastName}</div>
-                        </div>
-                      )}
-                      
-                      {appointment.appointmentType === "DOCUMENT_PICKUP" && appointment.certificateRequest && (
-                        <div className="grid grid-cols-2 gap-1">
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <FileText className="h-4 w-4" />
-                            Document:
-                          </div>
-                          <div>{appointment.certificateRequest.certificateType.replace(/_/g, " ")}</div>
                         </div>
                       )}
                       

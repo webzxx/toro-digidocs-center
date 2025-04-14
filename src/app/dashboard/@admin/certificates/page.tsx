@@ -1,7 +1,7 @@
 import { withAuth } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
 import CertificateAdmin from "./_components/CertificateAdmin";
-import { adminCertificateWithRelations } from "@/types/types";
+import { adminCertificateWithRelations } from "@/types/admin";
 
 async function CertificatesPage() {
   // Initial data fetch for SSR

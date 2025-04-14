@@ -14,18 +14,8 @@ import CreateUserButton from "./CreateUserButton";
 
 const ITEMS_PER_PAGE = 10;
 
-// Define a specific type for the user data
-type UserWithDetails = User & {
-  resident?: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    bahayToroSystemId: string | null;
-  } | null;
-};
-
 interface UserAdminProps {
-  initialUsers: UserWithDetails[]; // More specific type
+  initialUsers: User[];
   initialTotal: number;
 }
 

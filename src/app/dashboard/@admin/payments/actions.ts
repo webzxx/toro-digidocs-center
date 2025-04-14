@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { PaymentStatus } from "@prisma/client";
 import { UTApi } from "uploadthing/server";
-import { ManualPaymentInput, manualPaymentSchema } from "@/types/types";
+import { ManualPaymentInput, manualPaymentSchema } from "@/types/forms";
 import { generateTransactionRef, generateFile } from "@/lib/utils/payment";
 
 export async function createManualPayment(

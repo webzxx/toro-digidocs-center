@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { AppointmentStatus } from "@prisma/client";
-import { appointmentRequestSchema, AppointmentRequestInput } from "@/types/types";
+import { appointmentRequestSchema, AppointmentRequestInput } from "@/types/forms";
 
 // Create a new appointment (admin)
 export async function createAppointment(data: AppointmentRequestInput) {

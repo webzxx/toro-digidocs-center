@@ -20,17 +20,16 @@ import {
 import { useId, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { CertificateRequest, Payment, PaymentStatus, Resident } from "@prisma/client";
+import { PaymentStatus } from "@prisma/client";
 import { formatDateTime } from "@/lib/utils";
 import Image from "next/image";
 import { approvePayment, deletePayment, rejectPayment } from "../actions";
 import { PaymentDetails } from "@/components/payment/PaymentDetails";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ManualPaymentForm from "./ManualPaymentForm";
-import { ManualPaymentInput } from "@/types/types";
+import { ManualPaymentInput } from "@/types/forms";
 import { updatePayment } from "../actions";
 import { format } from "date-fns";
-import { CertificateWithDetails } from "./ManualPaymentButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -41,19 +40,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-type PaymentWithDetails = Payment & {
-  certificateRequest?: CertificateRequest & {
-    referenceNumber: string;
-    certificateType: string;
-    resident: Pick<Resident, "firstName" | "lastName" | "bahayToroSystemId">;
-  };
-};
+import { AdminCertificateForAwaitingPayment, AdminPayment } from "@/types/admin";
 
 interface PaymentActionsProps {
-  payment: PaymentWithDetails;
+  payment: AdminPayment;
+  certificates: AdminCertificateForAwaitingPayment[];
   refetch?: () => void;
-  certificates: CertificateWithDetails[];
 }
 
 export default function PaymentActions({

@@ -2,7 +2,7 @@ import { CertificateType } from "@prisma/client";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/DatePicker";
-import { CertificateInput } from "@/types/types";
+import { CertificateInput } from "@/types/forms";
 import { UseFormReturn } from "react-hook-form";
 
 interface CertificateFormFieldsProps {

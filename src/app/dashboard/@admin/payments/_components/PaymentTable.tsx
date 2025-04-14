@@ -1,35 +1,26 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CertificateRequest, Payment, Resident } from "@prisma/client";
 import { formatCurrency, formatDateTimeShort } from "@/lib/utils";
 import { getPaymentStatusBadge } from "@/components/utils/badges";
-import PaymentActions from "./PaymentActions";
-import { CertificateWithDetails } from "./ManualPaymentButton";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertCircle } from "lucide-react";
-
-type PaymentWithDetails = Payment & {
-  certificateRequest?: CertificateRequest & {
-    referenceNumber: string;
-    certificateType: string;
-    resident: Pick<Resident, "firstName" | "lastName" | "bahayToroSystemId">;
-  };
-};
+import { AdminCertificateForAwaitingPayment, AdminPayment } from "@/types/admin";
+import PaymentActions from "./PaymentActions";
 
 interface PaymentTableProps {
-  payments: PaymentWithDetails[];
-  certificates: CertificateWithDetails[];
+  payments: AdminPayment[];
+  certificates: AdminCertificateForAwaitingPayment[];
   isLoading?: boolean;
   refetch?: () => void;
 }
 
 export default function PaymentTable({ payments, certificates, isLoading, refetch }: PaymentTableProps) {  
   // Function to check if the payment is an active online transaction
-  const isActiveOnlineTransaction = (payment: PaymentWithDetails) => {
+  const isActiveOnlineTransaction = (payment: AdminPayment) => {
     return payment.isActive && payment.paymentMethod === "MAYA" && payment.paymentStatus === "PENDING";
   };
   
   // Function to get the background color class for the row
-  const getRowClassName = (payment: PaymentWithDetails) => {
+  const getRowClassName = (payment: AdminPayment) => {
     const baseClasses = isLoading ? "opacity-50" : "";
     
     if (isActiveOnlineTransaction(payment)) {

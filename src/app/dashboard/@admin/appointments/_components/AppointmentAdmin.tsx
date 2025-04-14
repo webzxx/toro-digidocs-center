@@ -6,7 +6,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarIcon, ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
-import { Appointment, AppointmentStatus } from "@prisma/client";
+import { AppointmentStatus } from "@prisma/client";
 import {
   Popover,
   PopoverContent,
@@ -19,23 +19,15 @@ import { useQueryState } from "nuqs";
 import { cn } from "@/lib/utils";
 import AppointmentTable from "./AppointmentTable";
 import AppointmentForm from "./AppointmentForm";
-import { ResidentForAppointment } from "@/types/types";
+import { AdminAppointment, AdminResidentForAppointment } from "@/types/admin";
 import { getAppointmentStatusBadge } from "@/components/utils";
 
 const ITEMS_PER_PAGE = 10;
 
-type AppointmentWithDetails = Appointment & {
-  resident: {
-    firstName: string;
-    lastName: string;
-    bahayToroSystemId: string | null;
-  };
-};
-
 interface AppointmentAdminProps {
-  initialAppointments: AppointmentWithDetails[];
+  initialAppointments: AdminAppointment[];
   initialTotal: number;
-  residents: ResidentForAppointment[];
+  residents: AdminResidentForAppointment[];
 }
 
 export default function AppointmentAdmin({ initialAppointments, initialTotal, residents }: AppointmentAdminProps) {

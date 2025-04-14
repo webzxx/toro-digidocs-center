@@ -13,17 +13,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { ManualPaymentInput } from "@/types/types";
+import { ManualPaymentInput } from "@/types/forms";
 import { createManualPayment } from "../actions";
 import { Loader2, Plus } from "lucide-react";
 import ManualPaymentForm from "./ManualPaymentForm";
-
-export type CertificateWithDetails = CertificateRequest & {
-  resident: Pick<Resident, "firstName" | "lastName" | "bahayToroSystemId">;
-};
+import { AdminCertificateForAwaitingPayment } from "@/types/admin";
 
 type ManualPaymentButtonProps = {
-  certificates: CertificateWithDetails[];
+  certificates: AdminCertificateForAwaitingPayment[];
   onSuccess?: () => void;
 };
 

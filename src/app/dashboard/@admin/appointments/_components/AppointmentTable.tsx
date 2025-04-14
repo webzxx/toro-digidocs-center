@@ -8,7 +8,7 @@ import { getAppointmentStatusBadge, getAppointmentTypeBadge } from "@/components
 import AppointmentActions from "./AppointmentActions";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AlertCircle } from "lucide-react";
-import { AdminAppointment } from "@/types/types";
+import { AdminAppointment } from "@/types/admin";
 
 interface AppointmentTableProps {
   appointments: AdminAppointment[];

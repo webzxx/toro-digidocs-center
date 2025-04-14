@@ -21,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
-import { ManualPaymentInput, manualPaymentSchema } from "@/types/types";
+import { ManualPaymentInput, manualPaymentSchema } from "@/types/forms";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, Upload, Check, ChevronsUpDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";

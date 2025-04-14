@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import AppointmentAdmin from "./_components/AppointmentAdmin";
-import { adminAppointmentWithRelations, ResidentForAppointment } from "@/types/types";
+import { adminAppointmentWithRelations, adminResidentForAppointment } from "@/types/admin";
 import { withAuth } from "@/lib/auth/withAuth";
 
 async function AppointmentsPage() {
@@ -18,17 +18,11 @@ async function AppointmentsPage() {
   
   // Fetch all residents for the appointment form
   const residents = await db.resident.findMany({
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      bahayToroSystemId: true,
-      userId: true,
-    },
+    ...adminResidentForAppointment,
     orderBy: {
       lastName: "asc",
     },
-  }) as ResidentForAppointment[];
+  });
   
   // Serialize the data to avoid date serialization issues
   const serializedAppointments = JSON.parse(JSON.stringify(appointments));

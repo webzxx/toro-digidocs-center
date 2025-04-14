@@ -6,7 +6,7 @@ import { Input } from "../../ui/input";
 import { DatePicker } from "../../DatePicker";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { personalInfoSchema, PersonalInfoInput } from "@/types/types";
+import { personalInfoSchema, PersonalInfoInput } from "@/types/forms";
 
 import {
   useStepper,

@@ -8,7 +8,7 @@ import {
   CardDescription, 
   CardFooter, 
 } from "@/components/ui/card";
-import { CertificateRequest, Payment, Resident } from "@prisma/client";
+import { CertificateRequest, Payment } from "@prisma/client";
 import RequestCertificateButton from "./RequestCertificateButton";
 import PaymentButton from "./PaymentButton";
 import { FileText } from "lucide-react";
@@ -32,17 +32,14 @@ import {
 } from "@/components/utils";
 import { formatDateTime } from "@/lib/utils";
 import { useQueryState } from "nuqs";
+import { UserResidentWithCertificateRequests } from "@/types/user";
 
 type CertificateWithPayment = CertificateRequest & {
   payments: Payment[];
 };
 
-type ResidentWithCertificates = Resident & {
-  certificateRequests: CertificateWithPayment[];
-};
-
 type CertificatesClientProps = {
-  residents: ResidentWithCertificates[],
+  residents: UserResidentWithCertificateRequests[];
 };
 
 export default function CertificatesClient({ residents }: CertificatesClientProps) {
@@ -138,7 +135,7 @@ export default function CertificatesClient({ residents }: CertificatesClientProp
   );
 }
 
-function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
+function CertificateList({ resident }: { resident: UserResidentWithCertificateRequests }) {
   const hasCertificates = resident.certificateRequests.length > 0;
 
   // Helper function to check if a certificate has been paid
@@ -239,7 +236,7 @@ function CertificateList({ resident }: { resident: ResidentWithCertificates }) {
                         <div>{certificate.remarks}</div>
                       </div>
                     )}
-                    {certificate.status === "AWAITING_PAYMENT" && !isCertificatePaid(certificate) && (
+                    {certificate.status === "AWAITING_PAYMENT" && !isCertificatePaid(certificate as CertificateWithPayment) && (
                       <div className="mt-2">
                         <PaymentButton certificateId={certificate.id} />
                       </div>

@@ -53,7 +53,7 @@ import {
   rescheduleAppointment,
   deleteAppointment,
 } from "../actions";
-import { AdminAppointment } from "@/types/types";
+import { AdminAppointment } from "@/types/admin";
 
 // Define form schema for scheduling appointments
 const scheduleFormSchema = z.object({

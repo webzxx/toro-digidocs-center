@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ResidentWithTypes } from "@/types/types";
+import { ResidentWithRelations } from "@/types/shared";
 
-export function useResidentForm(initialResident: ResidentWithTypes) {
-  const [editedResident, setEditedResident] = useState<ResidentWithTypes>(initialResident);
+export function useResidentForm(initialResident: ResidentWithRelations) {
+  const [editedResident, setEditedResident] = useState<ResidentWithRelations>(initialResident);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

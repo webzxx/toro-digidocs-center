@@ -1,6 +1,7 @@
 import { withAuth, WithAuthProps } from "@/lib/auth/withAuth";
 import { db } from "@/lib/db";
 import AppointmentsClient from "./_components/AppointmentsClient";
+import { userAppointmentWithRelations, userResidentForAppointment } from "@/types/user";
 
 async function AppointmentsPage({ user }: WithAuthProps) {
   const userId = parseInt(user.id as unknown as string);
@@ -10,12 +11,10 @@ async function AppointmentsPage({ user }: WithAuthProps) {
     where: {
       userId: userId,
     },
-    include: {
-      resident: true,
-    },
     orderBy: {
       scheduledDateTime: "asc",
     },
+    ...userAppointmentWithRelations,
   });
   
   // Fetch all residents linked to the current user
@@ -23,12 +22,7 @@ async function AppointmentsPage({ user }: WithAuthProps) {
     where: {
       userId: userId,
     },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      bahayToroSystemId: true,
-    },
+    ...userResidentForAppointment,
   });
 
   // Serialize the data to avoid "only plain objects can be passed to Client Components" warning

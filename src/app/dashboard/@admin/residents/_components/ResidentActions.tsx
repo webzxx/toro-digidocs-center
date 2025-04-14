@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Edit, Trash } from "lucide-react";
 import { deleteResident, updateResident } from "@/app/dashboard/@admin/residents/actions";
-import { ResidentWithTypes } from "@/types/types";
+import { ResidentWithRelations } from "@/types/shared";
 import { titleCase } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
@@ -21,7 +21,7 @@ import ResidentFormFields from "@/components/form/resident/ResidentFormFields";
 import { useResidentForm } from "@/hooks/useResidentForm";
 
 interface ResidentActionsProps {
-  resident: ResidentWithTypes;
+  resident: ResidentWithRelations;
   refetch: () => void;
 }
 

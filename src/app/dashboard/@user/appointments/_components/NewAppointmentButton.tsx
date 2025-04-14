@@ -31,9 +31,10 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useToast } from "@/components/ui/use-toast";
 import { createAppointmentRequest } from "../../appointments/actions";
-import { AppointmentRequestInput, appointmentRequestSchema } from "@/types/types";
+import { appointmentRequestSchema } from "@/types/forms";
 import { AppointmentType, TimeSlot } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { UserResidentForAppointment } from "@/types/user";
 
 // Use the centralized schema but restrict it to the fields needed for the form
 type AppointmentFormValues = {
@@ -44,35 +45,16 @@ type AppointmentFormValues = {
   residentId?: number;
 };
 
-// Create a form-specific schema by picking the relevant parts from the centralized schema
-const appointmentFormSchema = z.object({
-  appointmentType: appointmentRequestSchema.shape.appointmentType,
-  // Only use the Date part from the union schema
-  preferredDate: z.date({
-    required_error: "A preferred date is required",
-  }),
-  preferredTimeSlot: appointmentRequestSchema.shape.preferredTimeSlot,
-  notes: appointmentRequestSchema.shape.notes,
-  residentId: z.number().optional(),
-}) as z.ZodType<AppointmentFormValues>;
-
-export type Resident = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  bahayToroSystemId?: string;
-};
-
 interface NewAppointmentButtonProps {
   userId: number;
-  residents: Resident[];
+  residents: UserResidentForAppointment[];
 }
 
 export default function NewAppointmentButton({ userId, residents }: NewAppointmentButtonProps) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [residentSearchOpen, setResidentSearchOpen] = useState(false);
-  const [filteredResidents, setFilteredResidents] = useState<Resident[]>([]);
+  const [filteredResidents, setFilteredResidents] = useState<UserResidentForAppointment[]>([]);
   const [residentSearchValue, setResidentSearchValue] = useState("");
   
   // State to control calendar visibility
@@ -95,7 +77,7 @@ export default function NewAppointmentButton({ userId, residents }: NewAppointme
   };
 
   const form = useForm<AppointmentFormValues>({
-    resolver: zodResolver(appointmentFormSchema),
+    resolver: zodResolver(appointmentRequestSchema),
     defaultValues,
   });
 
