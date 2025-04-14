@@ -120,3 +120,28 @@ export const formatTimeSlot = (timeSlot: TimeSlot) => {
     return "N/A";
   }
 };
+
+/**
+ * Extracts reference numbers from a string (VVFJ-XXXXX or APPT-XXXXX format)
+ * @param text The text to extract reference numbers from
+ * @returns The first found reference number or undefined if none found
+ */
+export function extractReferenceNumber(text: string): string | undefined {
+  // Pattern for certificate requests (VVFJ-XXXXX) and appointments (APPT-XXXXX)
+  const refNumberPattern = /\b(VVFJ|APPT)-\d{5}\b/i;
+  
+  const match = text.match(refNumberPattern);
+  return match ? match[0].toUpperCase() : undefined;
+}
+
+/**
+ * Converts enum values to more readable format
+ * @param value The enum value to format
+ * @returns Formatted string with spaces instead of underscores and proper capitalization
+ */
+export function formatEnumValue(value: string): string {
+  return value
+    .split("_")
+    .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+    .join(" ");
+}
