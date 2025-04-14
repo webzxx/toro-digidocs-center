@@ -15,10 +15,13 @@ async function CertificatesPage() {
 
   // Count total certificates for pagination
   const totalCount = await db.certificateRequest.count();
+  
+  // Serialize the data to avoid date serialization issues
+  const serializedCertificates = JSON.parse(JSON.stringify(certificates));
 
   return (
     <main className="flex min-h-[90vh] w-full flex-col gap-2">
-      <CertificateAdmin initialCertificates={JSON.stringify(certificates)} initialTotal={totalCount} />
+      <CertificateAdmin initialCertificates={serializedCertificates} initialTotal={totalCount} />
     </main>
   );
 }

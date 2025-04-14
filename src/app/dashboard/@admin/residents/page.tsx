@@ -18,10 +18,13 @@ async function ResidentsPage() {
 
   // Count total residents for pagination
   const totalCount = await db.resident.count();
+  
+  // Serialize the data to avoid date serialization issues
+  const serializedResidents = JSON.parse(JSON.stringify(residents));
 
   return (
     <main className="flex min-h-[90vh] w-full flex-col gap-2">
-      <ResidentAdmin initialResidents={JSON.stringify(residents)} initialTotal={totalCount} />
+      <ResidentAdmin initialResidents={serializedResidents} initialTotal={totalCount} />
     </main>
   );
 }

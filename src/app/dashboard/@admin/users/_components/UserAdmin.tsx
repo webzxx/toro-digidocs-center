@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
-import { UserRole } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import UserTable from "./UserTable";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,18 @@ import CreateUserButton from "./CreateUserButton";
 
 const ITEMS_PER_PAGE = 10;
 
+// Define a specific type for the user data
+type UserWithDetails = User & {
+  resident?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    bahayToroSystemId: string | null;
+  } | null;
+};
+
 interface UserAdminProps {
-  initialUsers: string;
+  initialUsers: UserWithDetails[]; // More specific type
   initialTotal: number;
 }
 
@@ -30,7 +40,7 @@ export default function UserAdmin({ initialUsers, initialTotal }: UserAdminProps
   
   // Keep track of previous data for optimistic UI updates
   const previousDataRef = useRef({
-    users: JSON.parse(initialUsers),
+    users: initialUsers,
     total: initialTotal,
     page: 1,
     totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE),

@@ -13,10 +13,13 @@ async function UsersPage() {
 
   // Count total users for pagination
   const totalCount = await db.user.count();
+  
+  // Serialize the data to avoid date serialization issues
+  const serializedUsers = JSON.parse(JSON.stringify(users));
 
   return (
     <main className="flex min-h-[90vh] w-full flex-col gap-2">
-      <UserAdmin initialUsers={JSON.stringify(users)} initialTotal={totalCount} />
+      <UserAdmin initialUsers={serializedUsers} initialTotal={totalCount} />
     </main>
   );
 }

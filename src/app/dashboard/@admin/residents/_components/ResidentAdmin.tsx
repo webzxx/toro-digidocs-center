@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
-import { CivilStatus, Gender, Sector } from "@prisma/client";
+import { CivilStatus, Gender, Sector, Resident } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ResidentTable from "./ResidentTable";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,32 @@ import { getCivilStatusBadge, getGenderBadge, getSectorBadge } from "@/component
 
 const ITEMS_PER_PAGE = 10;
 
+// Define a specific type for the resident data
+type ResidentWithDetails = Resident & {
+  address: {
+    id: string;
+    street: string;
+    barangay: string;
+    city: string;
+    province: string;
+    zipCode: string;
+  };
+  emergencyContact: {
+    id: string;
+    name: string;
+    relationship: string;
+    contactNumber: string;
+  } | null;
+  proofOfIdentity: {
+    id: string;
+    idType: string;
+    idNumber: string;
+    idImageUrl: string;
+  } | null;
+};
+
 interface ResidentAdminProps {
-  initialResidents: string;
+  initialResidents: ResidentWithDetails[]; // More specific type
   initialTotal: number;
 }
 
@@ -32,7 +56,7 @@ export default function ResidentAdmin({ initialResidents, initialTotal }: Reside
   
   // Keep track of previous data for optimistic UI updates
   const previousDataRef = useRef({
-    residents: JSON.parse(initialResidents),
+    residents: initialResidents,
     total: initialTotal,
     page: 1,
     totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE),

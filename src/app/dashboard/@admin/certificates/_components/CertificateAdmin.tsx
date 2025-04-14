@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Loader2, Search } from "lucide-react";
-import { CertificateStatus, CertificateType } from "@prisma/client";
+import { CertificateStatus, CertificateType, CertificateRequest } from "@prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CertificateTable from "./CertificateTable";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,22 @@ import { getCertificateStatusBadge } from "@/components/utils";
 
 const ITEMS_PER_PAGE = 10;
 
+// Define a specific type for the certificate data
+type CertificateWithDetails = CertificateRequest & {
+  resident: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    bahayToroSystemId: string | null;
+  };
+  payment?: {
+    id: string;
+    status: string;
+  } | null;
+};
+
 interface CertificateAdminProps {
-  initialCertificates: string,
+  initialCertificates: CertificateWithDetails[]; // More specific type
   initialTotal: number;
 }
 
@@ -27,7 +41,7 @@ export default function CertificateAdmin({ initialCertificates, initialTotal }: 
   const isInitialLoadRef = useRef(true);
 
   const previousDataRef = useRef({
-    certificates: JSON.parse(initialCertificates),
+    certificates: initialCertificates, // Removed JSON.parse
     total: initialTotal,
     page: 1,
     totalPages: Math.ceil(initialTotal / ITEMS_PER_PAGE),
