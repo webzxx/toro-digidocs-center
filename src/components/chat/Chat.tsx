@@ -15,7 +15,6 @@ import { STORAGE_KEYS } from "@/lib/utils";
 const Chat: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
-  const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [messages, setMessages] = useState<JSX.Element[]>([]);
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -174,11 +173,7 @@ const Chat: FC = () => {
   };
 
   const handleToggleChat = () => {
-    setIsAnimating(true);
     setIsOpen(!isOpen);
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 300);
   };
 
   const handleClearChat = () => {
