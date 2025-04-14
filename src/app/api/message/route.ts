@@ -89,7 +89,7 @@ export async function POST(req: Request) {
           "X-Title": "Barangay Chatbot",
         },
         body: JSON.stringify({
-          model: "deepseek/deepseek-r1:free",
+          model: "google/gemini-2.5-pro-exp-03-25:free",
           messages: augmentedMessages,
           temperature: 0.5,
           max_tokens: 500,
