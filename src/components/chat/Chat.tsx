@@ -10,7 +10,7 @@ import { Message } from "@/lib/validators/message";
 import { useMutation } from "@tanstack/react-query";
 import BotMessage from "./BotMessage";
 import UserMessage from "./UserMessage";
-import { STORAGE_KEYS } from "@/lib/utils";
+import { STORAGE_KEYS, convertNewlinesToHtml } from "@/lib/utils";
 
 const Chat: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -61,11 +61,14 @@ const Chat: FC = () => {
         else if (msg.type === BotMessage) {
           // Store the bot's processed message
           // Since fetchMessage is a function, we'll mark it to be loaded later
+          const botText = msg.props.children?.props?.dangerouslySetInnerHTML?.__html || 
+                  "Hello! How can I help you today?\n(Ask me anything or type 'start' to show quick commands)";
+          
+          // Convert newlines to HTML <br> tags for proper rendering
           messageData.push({
             id: `msg-${i}`,
             isUserMessage: false,
-            text: msg.props.children?.props?.dangerouslySetInnerHTML?.__html || 
-                  "Hello! How can I help you today? (Type 'start' to show quick links)",
+            text: convertNewlinesToHtml(botText),
           });
         }
       }

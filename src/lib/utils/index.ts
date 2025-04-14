@@ -48,6 +48,11 @@ export const formatTime = (date: Date | string) => {
   });
 };
 
+// Convert newlines to HTML <br> tags for chat messages
+export const convertNewlinesToHtml = (text: string): string => {
+  return text.replace(/\n/g, "<br>");
+};
+
 export const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat("en-PH", {
     style: "currency",
