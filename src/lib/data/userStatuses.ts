@@ -1,6 +1,5 @@
 // This file contains functions to query the database for user appointment and certificate statuses
 import { db } from "../db";
-import type { User } from "@prisma/client";
 
 // Function to get a user's certificate request statuses
 export async function getUserCertificateStatuses(userId: number) {

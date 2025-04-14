@@ -60,21 +60,6 @@ export function isStatusQuery(message: string): boolean {
   return keywordMatches >= 2;
 }
 
-// Function to generate help text about status checking
-export function getStatusCheckingHelp(): string {
-  return `
-You can check the status of your certificate requests or appointments by:
-
-1. Asking about your certificates or appointments
-   Example: "What's the status of my certificate requests?" or "Show me my appointments"
-
-2. Providing a specific reference number
-   Example: "Check VVFJ-12345" or "What's the status of APPT-67890"
-
-Note: You need to be logged in to check your status.
-`;
-}
-
 // Enhanced system prompt for the AI that includes status checking capabilities
 export function getEnhancedSystemPrompt(barangayContext: string): string {
   return `You are a helpful assistant for Barangay Bahay Toro. 
