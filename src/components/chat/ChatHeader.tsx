@@ -19,15 +19,17 @@ const ChatHeader: FC<ChatHeaderProps> = ({
   return (
     <div className='flex w-full items-center justify-between gap-3 border-b border-zinc-200 bg-white/80 px-4 py-3 text-zinc-800 backdrop-blur-sm'>
       <div className='flex items-center gap-3'>
-        {/* AI Avatar */}
-        <div className='relative hidden h-10 w-10 overflow-hidden rounded-full sm:block'>
-          <Image 
-            src="/man.png" 
-            alt="AI Assistant" 
-            width={40} 
-            height={40}
-            className="h-full w-full object-cover"
-          />
+        {/* AI Avatar with Status Indicator */}
+        <div className='relative hidden sm:block'>
+          <div className='h-10 w-10 overflow-hidden rounded-full'>
+            <Image 
+              src="/man.png" 
+              alt="AI Assistant" 
+              width={40} 
+              height={40}
+              className="h-full w-full object-cover"
+            />
+          </div>
           <div className={`absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full ${statusColors[status]} ring-2 ring-white`} />
         </div>
         
