@@ -1,24 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 
 interface BotMessageProps {
   fetchMessage: () => Promise<string>;
+  initialContent?: string;
 }
 
-export default function BotMessage({ fetchMessage }: BotMessageProps) {
-  const [isLoading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+export default function BotMessage({ fetchMessage, initialContent }: BotMessageProps) {
+  const [isLoading, setLoading] = useState(!initialContent);
+  const [message, setMessage] = useState(initialContent || "");
+  const hasFetchedRef = useRef(false);
 
   useEffect(() => {
-    async function loadMessage() {
-      const data = await fetchMessage();
+    // If we have initialContent, don't fetch the message again
+    if (initialContent) {
       setLoading(false);
-      setMessage(data);
+      setMessage(initialContent);
+      return;
+    }
+
+    // Prevent duplicate fetches
+    if (hasFetchedRef.current) return;
+    
+    async function loadMessage() {
+      if (hasFetchedRef.current) return;
+      hasFetchedRef.current = true;
+      
+      try {
+        const data = await fetchMessage();
+        setLoading(false);
+        setMessage(data);
+      } catch (error) {
+        console.error("Error loading bot message:", error);
+        setLoading(false);
+        setMessage("Sorry, I couldn't load this message. Please try again.");
+      }
     }
     loadMessage();
-  }, [fetchMessage]);
+  }, [fetchMessage, initialContent]);
 
   return (
     <div className="flex items-start">
