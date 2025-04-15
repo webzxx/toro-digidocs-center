@@ -102,6 +102,7 @@ const Chat: FC = () => {
                 key={`bot-${initialMessageId}`}
                 fetchMessage={async () => botResponse}
                 initialContent={botResponse}
+                isLoading={false}
               />,
             ]);
           })
@@ -144,7 +145,17 @@ const Chat: FC = () => {
     
     setInput("");
     
-    // Fetch the bot response first
+    // Add a loading bot message immediately
+    setMessages(prev => [
+      ...prev,
+      <BotMessage
+        key={`bot-${botMessageId}`}
+        fetchMessage={async () => ""}
+        isLoading={true}
+      />,
+    ]);
+    
+    // Fetch the bot response
     try {
       setIsLoading(true);
       const botResponse = await sendMessage(userMessage);
@@ -160,13 +171,14 @@ const Chat: FC = () => {
         },
       ];
       
-      // Add bot message with initialContent to prevent additional fetch
+      // Replace the loading message with the actual response
       setMessages(prev => [
-        ...prev,
+        ...prev.slice(0, -1),
         <BotMessage
           key={`bot-${botMessageId}`}
           fetchMessage={async () => botResponse}
           initialContent={botResponse}
+          isLoading={false}
         />,
       ]);
     } catch (error) {
@@ -207,6 +219,7 @@ const Chat: FC = () => {
             key={`bot-${initialMessageId}`}
             fetchMessage={async () => botResponse}
             initialContent={botResponse}
+            isLoading={false}
           />,
         ]);
       })

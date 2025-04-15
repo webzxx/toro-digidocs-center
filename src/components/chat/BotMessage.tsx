@@ -7,12 +7,16 @@ import { convertNewlinesToHtml } from "@/lib/utils";
 interface BotMessageProps {
   fetchMessage: () => Promise<string>;
   initialContent?: string;
+  isLoading?: boolean;
 }
 
-export default function BotMessage({ fetchMessage, initialContent }: BotMessageProps) {
+export default function BotMessage({ fetchMessage, initialContent, isLoading: externalLoading }: BotMessageProps) {
   const [isLoading, setLoading] = useState(!initialContent);
   const [message, setMessage] = useState(initialContent || "");
   const hasFetchedRef = useRef(false);
+  
+  // Use external loading state if provided, otherwise use internal state
+  const showLoading = externalLoading !== undefined ? externalLoading : isLoading;
 
   useEffect(() => {
     // If we have initialContent, don't fetch the message again
@@ -56,7 +60,7 @@ export default function BotMessage({ fetchMessage, initialContent }: BotMessageP
         </div>
       </div>
       <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-zinc-100 px-4 py-2 text-sm text-zinc-800 shadow-sm">
-        {isLoading ? (
+        {showLoading ? (
           <div className="flex items-center gap-1.5">
             <div className="h-2 w-2 animate-bounce rounded-full bg-zinc-400 [animation-delay:-0.3s]"></div>
             <div className="h-2 w-2 animate-bounce rounded-full bg-zinc-400 [animation-delay:-0.15s]"></div>
