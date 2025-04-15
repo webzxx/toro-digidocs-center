@@ -105,10 +105,16 @@ const NavigationMenu = ({ isAuthenticated, userRole }: NavigationMenuProps) => {
                 FAQ
               </li>
             </Link>
-            {isAuthenticated && (
+            {isAuthenticated ? (
               <Link href="/dashboard">
                 <li onClick={() => setMenuOpen(false)} className="cursor-pointer py-4">
                   {userRole === "ADMIN" ? "Dashboard" : "My Account"}
+                </li>
+              </Link>
+            ) : (
+              <Link href="/sign-in">
+                <li onClick={() => setMenuOpen(false)} className="cursor-pointer py-4">
+                  Sign In
                 </li>
               </Link>
             )}
