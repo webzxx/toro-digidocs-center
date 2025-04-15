@@ -1,28 +1,23 @@
-import { ReactNode } from "react"
-import DashboardSideBar from "./(components)/DashboardSideBar"
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-// import DashboardTopNav from "./_components/dashbord-top-nav"
+import { ReactNode } from "react";
+import DashboardSideBar from "./_components/DashboardSideBar";
+import getSession from "@/lib/auth/getSession";
 
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const session = await getServerSession(authOptions);
+interface DashboardLayoutProps {
+  children: ReactNode;
+  admin: ReactNode;
+  user: ReactNode;
+}
 
-  if (!session) {
-    redirect("/sign-in");
-  }
-  else if (session.user.role !== "ADMIN") {
-    redirect("/");
-  }
+export default async function DashboardLayout({ children, admin, user }: DashboardLayoutProps) {
+  const session = await getSession();
+  const role = session?.user?.role;
 
   return (
-    <div className="container grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-      <DashboardSideBar />
-      {/* <DashboardTopNav > */}
-        <main className="flex flex-col gap-4 p-4 lg:gap-6">
-          {children}
-        </main>
-      {/* </DashboardTopNav> */}
+    <div className="container my-6 flex min-h-screen w-full flex-col px-1 min-[420px]:px-9 lg:grid lg:grid-cols-[280px_1fr]">
+      <DashboardSideBar role={role} />
+      <main className="flex w-full flex-col gap-4 overflow-x-hidden pt-4 lg:gap-6 lg:p-4">
+        {role === "ADMIN" ? admin : user}
+      </main>
     </div>
-  )
+  );
 }

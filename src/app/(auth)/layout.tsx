@@ -1,14 +1,13 @@
 import { FC, ReactNode } from "react";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import getSession from "@/lib/auth/getSession";
 
 interface AuthLayoutProps {
     children: ReactNode;
 }
 
 const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
 
   if (session) {
     if (session.user.role === "ADMIN")
@@ -18,14 +17,14 @@ const AuthLayout: FC<AuthLayoutProps> = async ({ children }) => {
   }
 
   return (
-    <main className="flex min-h-screen justify-center items-center">
-        <section id="first-section" className="relative w-full">
-            <div className="w-[30rem] h-[48rem] mx-auto relative flex flex-col items-center bg-slate-300 pt-10">
-                {children}
-            </div>
-        </section>
+    <main className="flex min-h-screen items-center justify-center">
+      <section id="first-section" className="relative w-full">
+        <div className="relative mx-auto flex h-[48rem] w-[30rem] flex-col items-center bg-slate-300 pt-10">
+          {children}
+        </div>
+      </section>
     </main>
-  )
-}
+  );
+};
 
 export default AuthLayout;

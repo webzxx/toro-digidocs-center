@@ -1,0 +1,18 @@
+/*
+  Warnings:
+
+  - You are about to drop the column `userId` on the `CertificateRequest` table. All the data in the column will be lost.
+  - Added the required column `userId` to the `Resident` table without a default value. This is not possible if the table is not empty.
+
+*/
+-- DropForeignKey
+ALTER TABLE "CertificateRequest" DROP CONSTRAINT "CertificateRequest_userId_fkey";
+
+-- AlterTable
+ALTER TABLE "CertificateRequest" DROP COLUMN "userId";
+
+-- AlterTable
+ALTER TABLE "Resident" ADD COLUMN     "userId" INTEGER NOT NULL;
+
+-- AddForeignKey
+ALTER TABLE "Resident" ADD CONSTRAINT "Resident_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

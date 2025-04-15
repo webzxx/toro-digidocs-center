@@ -8,13 +8,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
-  password  String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  Int                  @id @default(autoincrement())
+  email               String               @unique
+  username            String               @unique
+  password            String
+  role                UserRole             @default(USER)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  residents           Resident[]
+  appointments        Appointment[]
 }
 
 model Resident {
@@ -33,12 +35,13 @@ model Resident {
   sector              Sector?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
+  userId              Int
   address             Address?
-  certificateRequests CertificateRequest[]
+  certificateRequests CertificateRequest[] @relation("UserRequests")
   emergencyContact    EmergencyContact?
   proofOfIdentity     ProofOfIdentity?
-
-  @@unique([id, email])
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments        Appointment[]
 }
 
 model EmergencyContact {
@@ -66,18 +69,6 @@ model Address {
   resident         Resident      @relation(fields: [residentId], references: [id], onDelete: Cascade)
 }
 
-model CertificateRequest {
-  id              Int               @id @default(autoincrement())
-  referenceNumber String            @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'::regclass), 'FM00000'::text))"))
-  residentId      Int
-  certificateType CertificateType
-  purpose         String
-  additionalInfo  Json?
-  requestDate     DateTime          @default(now())
-  status          CertificateStatus @default(PENDING)
-  resident        Resident          @relation(fields: [residentId], references: [id], onDelete: Cascade)
-}
-
 model ProofOfIdentity {
   id                  Int      @id @default(autoincrement())
   residentId          Int      @unique
@@ -87,6 +78,58 @@ model ProofOfIdentity {
   holdingIdPhoto1Path String
   holdingIdPhoto2Path String
   resident            Resident @relation(fields: [residentId], references: [id], onDelete: Cascade)
+}
+model CertificateRequest {
+  id              Int               @id @default(autoincrement())
+  referenceNumber String            @unique @default(dbgenerated("concat('VVFJ-', to_char(nextval('reference_number_seq'::regclass), 'FM00000'::text))"))
+  residentId      Int
+  certificateType CertificateType
+  purpose         String
+  additionalInfo  Json?
+  remarks         String?           // For rejection reasons or special notes
+  requestDate     DateTime          @default(now())
+  status          CertificateStatus @default(PENDING)
+  resident        Resident          @relation("UserRequests", fields: [residentId], references: [id], onDelete: Cascade)
+  payments        Payment[]
+}
+
+model Payment {
+  id                    Int                 @id @default(autoincrement())
+  transactionReference  String              @unique
+  certificateRequestId  Int
+  amount                Decimal             @db.Decimal(10, 2)
+  paymentMethod         PaymentMethod
+  paymentStatus         PaymentStatus       @default(PENDING)
+  isActive              Boolean             @default(true)    // Added to track current active payment
+  paymentDate           DateTime?           // Null until payment is confirmed
+  receiptNumber         String?             // For official receipts
+  notes                 String?
+  proofOfPaymentPath    String?             // Path to uploaded payment proof
+  metadata              Json?               // Additional payment details, transaction IDs, etc.
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  certificateRequest    CertificateRequest  @relation(fields: [certificateRequestId], references: [id], onDelete: Cascade)
+}
+
+enum PaymentMethod {
+  CASH
+  GCASH_DIRECT
+  MAYA
+  BANK_TRANSFER
+  CREDIT_CARD
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING       // Payment initiated but not confirmed
+  SUCCEEDED     // Payment automatically confirmed by payment gateway
+  VERIFIED      // Payment manually verified by admin (for cash, checks, etc.)
+  REJECTED      // Payment was rejected or failed
+  REFUNDED      // Payment was returned to the payer
+  WAIVED        // Fee was waived (for seniors, PWDs, etc.)
+  CANCELLED     // User cancelled a payment attempt
+  EXPIRED       // Payment session/link expired without completion
+  VOIDED        // Payment was administratively invalidated after authorization but before settlement
 }
 
 enum UserRole {
@@ -150,7 +193,50 @@ enum CertificateType {
 }
 
 enum CertificateStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
+  PENDING              // Initial submission
+  UNDER_REVIEW         // Staff reviewing the request
+  AWAITING_PAYMENT     // Request valid, waiting for payment
+  PROCESSING           // Certificate is being prepared
+  READY_FOR_PICKUP     // Certificate ready for collection
+  IN_TRANSIT           // Certificate is being delivered to resident
+  COMPLETED            // Certificate delivered/collected
+  REJECTED             // Request denied
+  CANCELLED            // User cancelled the request
+}
+
+model Appointment {
+  id                Int                 @id @default(autoincrement())
+  referenceNumber   String              @unique @default(dbgenerated("concat('APPT-', to_char(nextval('appointment_number_seq'::regclass), 'FM00000'::text))"))
+  userId            Int                 // Direct link to user
+  residentId        Int?                // Made optional
+  appointmentType   AppointmentType
+  status            AppointmentStatus   @default(REQUESTED) // Default is now REQUESTED instead of SCHEDULED
+  scheduledDateTime DateTime?           // Made optional as it will be set by admin when approving
+  preferredDate     DateTime            // User's preferred date
+  preferredTimeSlot TimeSlot            // User's preferred time slot
+  duration          Int                 @default(30)  // Duration in minutes
+  notes             String?             // Can store basic subpoena info here temporarily
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resident          Resident?           @relation(fields: [residentId], references: [id], onDelete: SetNull)
+}
+
+enum TimeSlot {
+  MORNING     // 8:00 AM - 12:00 PM
+  AFTERNOON   // 1:00 PM - 5:00 PM
+}
+
+enum AppointmentType {
+  DOCUMENT_PICKUP
+  SUBPOENA_MEETING
+}
+
+enum AppointmentStatus {
+  REQUESTED      // Initial state when user requests an appointment
+  SCHEDULED      // Admin has reviewed and scheduled the appointment
+  COMPLETED      // Appointment has taken place
+  CANCELLED      // Appointment was cancelled
+  RESCHEDULED    // Appointment was rescheduled
+  NO_SHOW        // Client didn't show up
 }
