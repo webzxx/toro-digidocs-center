@@ -11,6 +11,8 @@ import getSession from "@/lib/auth/getSession";
 import { isStatusQuery, getEnhancedSystemPrompt } from "@/lib/utils/ai";
 import { formatDateTime, formatDateOnly, extractReferenceNumber, formatEnumValue } from "@/lib/utils";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   // Handle simple menu-based responses first
   try {
