@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import { convertNewlinesToHtml } from "@/lib/utils";
 
 interface BotMessageProps {
   fetchMessage: () => Promise<string>;
@@ -17,7 +18,7 @@ export default function BotMessage({ fetchMessage, initialContent }: BotMessageP
     // If we have initialContent, don't fetch the message again
     if (initialContent) {
       setLoading(false);
-      setMessage(initialContent);
+      setMessage(convertNewlinesToHtml(initialContent));
       return;
     }
 
@@ -31,7 +32,7 @@ export default function BotMessage({ fetchMessage, initialContent }: BotMessageP
       try {
         const data = await fetchMessage();
         setLoading(false);
-        setMessage(data);
+        setMessage(convertNewlinesToHtml(data));
       } catch (error) {
         console.error("Error loading bot message:", error);
         setLoading(false);

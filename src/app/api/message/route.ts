@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     
     // Extract reference number if present
     const referenceNumber = extractReferenceNumber(message.text);
-    
+    console.log("Extracted reference number:", referenceNumber);
     // Handle status inquiries if user is logged in
     if (statusQuery && session?.user) {
       const userId = parseInt((session.user as any).id);
@@ -214,6 +214,9 @@ export async function POST(req: Request) {
     // Prepend the system message to the sanitized messages array
     const augmentedMessages = [systemMessage, ...sanitizedMessages];
 
+    // Log the augmented messages for debugging
+    console.log("Augmented messages:", augmentedMessages);
+
     // Use fetch to call OpenRouter API without streaming
     try {
       const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -225,7 +228,7 @@ export async function POST(req: Request) {
           "X-Title": "Barangay Chatbot",
         },
         body: JSON.stringify({
-          model: "google/gemini-2.5-pro-exp-03-25:free",
+          model: "deepseek/deepseek-r1:free",
           messages: augmentedMessages,
           temperature: 0.5,
           max_tokens: 500,
@@ -234,6 +237,7 @@ export async function POST(req: Request) {
       });
 
       const data = await response.json();
+      console.log("OpenRouter response:", data);
       
       // Return just the assistant's message
       return Response.json({ 
