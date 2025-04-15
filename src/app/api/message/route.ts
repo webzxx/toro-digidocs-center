@@ -231,7 +231,7 @@ export async function POST(req: Request) {
           model: "deepseek/deepseek-r1:free",
           messages: augmentedMessages,
           temperature: 0.5,
-          max_tokens: 500,
+          max_tokens: 700,
           stream: false, // Set to false for non-streaming response
         }),
       });
