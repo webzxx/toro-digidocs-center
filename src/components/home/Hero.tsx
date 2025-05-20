@@ -39,34 +39,35 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-1/2 -mb-20 w-full -translate-x-1/2 transform rounded-lg bg-white p-4 shadow-lg lg:h-[10rem] lg:w-[82rem]">
+      <div className="absolute bottom-0 left-1/2 -mb-20 hidden w-full -translate-x-1/2 transform rounded-lg bg-white p-4 shadow-lg lg:h-[10rem] lg:w-[82rem] xl:block">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-          <div className="flex-row rounded-lg p-2 text-center">
-            <Briefcase className="mx-auto h-20 w-20 text-green-primary" />
+          <div className="flex flex-col items-center rounded-lg p-2 text-center">
+            <Briefcase className="h-20 w-20 text-green-primary" />
             <span className="text-xl">Offices</span>
           </div>
-          <div className="flex-row rounded-lg p-2 text-center">
-            <Car className="mx-auto h-20 w-20 text-green-primary" />
+          <div className="flex flex-col items-center rounded-lg p-2 text-center">
+            <Car className="h-20 w-20 text-green-primary" />
             <span className="text-xl">Parking</span>
           </div>
-          <div className="flex-row rounded-lg p-2 text-center">
-            <Building2 className="mx-auto h-20 w-20 text-green-primary" />
+          <div className="flex flex-col items-center rounded-lg p-2 text-center">
+            <Building2 className="h-20 w-20 text-green-primary" />
             <span className="text-xl">Hospital</span>
           </div>
-          <div className="flex-row rounded-lg p-2 text-center">
-            <Trees className="mx-auto h-20 w-20 text-green-primary" />
+          <div className="flex flex-col items-center rounded-lg p-2 text-center">
+            <Trees className="h-20 w-20 text-green-primary" />
             <span className="text-xl">Recreation</span>
           </div>
-          <div className="flex-row rounded-lg p-2 text-center">
-            <Government className="mx-auto h-20 w-20 text-green-primary" />
+          <div className="flex flex-col items-center rounded-lg p-2 text-center">
+            <Government className="h-20 w-20 text-green-primary" />
             <span className="text-xl">Government</span>
           </div>
-          <div className="flex-row rounded-lg p-2 text-center">
-            <LandPlot className="mx-auto h-20 w-20 text-green-primary" />
+          <div className="flex flex-col items-center rounded-lg p-2 text-center">
+            <LandPlot className="h-20 w-20 text-green-primary" />
             <span className="text-xl">Housing</span>
           </div>
         </div>
       </div>
+
     </div>
   );
 };
