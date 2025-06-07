@@ -239,6 +239,7 @@ function CertificateList({ resident }: { resident: UserResidentWithCertificateRe
                     {certificate.status === "AWAITING_PAYMENT" && !isCertificatePaid(certificate as CertificateWithPayment) && (
                       <div className="mt-2">
                         <PaymentButton certificateId={certificate.id} />
+                        <p className="pt-4 text-sm text-muted-foreground">Note: If you want to pay cash, you can pay directly to barangay office.</p>
                       </div>
                     )}
                   </div>

@@ -303,7 +303,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
             ) : checkoutUrl ? (
               "Reopen Checkout"
             ) : (
-              "Pay Now"
+              "Pay Online Now"
             )}
           </Button>
         </DialogTrigger>
@@ -333,7 +333,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
                   </div>
                 </Label>
               </div>
-              <div className="flex items-center space-x-2 rounded-md border p-4">
+              {/* <div className="flex items-center space-x-2 rounded-md border p-4">
                 <RadioGroupItem value="delivery" id="delivery" />
                 <Label htmlFor="delivery" className="flex cursor-pointer items-center gap-3">
                   <Truck className="h-5 w-5" />
@@ -342,7 +342,7 @@ export default function PaymentButton({ certificateId }: PaymentButtonProps) {
                     <p className="text-sm text-gray-500">Additional ₱50.00 shipping fee</p>
                   </div>
                 </Label>
-              </div>
+              </div> */}
             </RadioGroup>
 
             <DialogFooter>
