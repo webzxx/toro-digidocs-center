@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [{ hostname: "kfqcxybie3.ufs.sh" }],
+    remotePatterns: [{ hostname: "d1wid94e49.ufs.sh" }],
   },
 };
 
