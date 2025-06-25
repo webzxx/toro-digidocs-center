@@ -75,7 +75,7 @@ export default function CertificateRequestWizard() {
     systemId: "",
   });
 
-  const validateAndSubmit: () => Promise<boolean> = async () => {
+  const validateAndSubmit : () => Promise<boolean> = async () => {
     const result = completeCertificateFormSchema.safeParse(formData);
     if (result.success) {
       const files = new FormData();
@@ -83,20 +83,19 @@ export default function CertificateRequestWizard() {
       photoIdArray.forEach((file, index) => {
         files.append(`photoId[${index}]`, file);
       });
-      const photoHoldingIdArray = result.data.proofOfIdentity
-        .photoHoldingId as File[];
+      const photoHoldingIdArray = result.data.proofOfIdentity.photoHoldingId as File[];
       photoHoldingIdArray.forEach((file, index) => {
         files.append(`photoHoldingId[${index}]`, file);
       });
 
-      const data: CompleteCertificateFormInputWithoutFiles = {
+      const data : CompleteCertificateFormInputWithoutFiles = {
         personalInfo: result.data.personalInfo,
         address: result.data.address,
         certificate: result.data.certificate,
         proofOfIdentity: {
           signature: result.data.proofOfIdentity.signature,
         },
-      };
+      };      
 
       let success = true;
       try {
@@ -117,7 +116,7 @@ export default function CertificateRequestWizard() {
           });
           success = false;
         }
-
+        
         if (res?.success) {
           toast({
             title: "Success",
