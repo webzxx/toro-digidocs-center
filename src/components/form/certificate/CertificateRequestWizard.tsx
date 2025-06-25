@@ -4,12 +4,7 @@ import { Button } from "@/components/ui/button";
 import { House, Scroll, User, ScanFace, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
-import {
-  Step,
-  StepItem,
-  Stepper,
-  useStepper,
-} from "@/components/ui/stepper";
+import { Step, StepItem, Stepper, useStepper } from "@/components/ui/stepper";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import PersonalInfoForm from "./PersonalInfoForm";
@@ -17,15 +12,18 @@ import AddressForm from "./AddressForm";
 import { useState } from "react";
 import CertificateForm from "./CertificateForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
-import { CompleteCertificateFormInputWithoutFiles, completeCertificateFormSchema } from "@/types/forms";
+import {
+  CompleteCertificateFormInputWithoutFiles,
+  completeCertificateFormSchema,
+} from "@/types/forms";
 import { scrollToForm } from "./StepperFormActions";
 import { createCertificateRequest } from "@/actions/certificate-request";
 import { useToast } from "@/components/ui/use-toast";
 
 const steps = [
-  { label: "Step 1", description: "Personal Info", icon: User },
-  { label: "Step 2", description: "Address", icon: House },
-  { label: "Step 3", description: "Important Information", icon: Scroll },
+  { label: "Step 1", description: "Important Information", icon: Scroll },
+  { label: "Step 2", description: "Personal Info", icon: User },
+  { label: "Step 3", description: "Address", icon: House },
   { label: "Step 4", description: "Proof of Identity", icon: ScanFace },
 ] satisfies StepItem[];
 
@@ -72,9 +70,12 @@ const initialFormData = {
 export default function CertificateRequestWizard() {
   const { toast } = useToast();
   const [formData, setFormData] = useState(initialFormData);
-  const [requestDetails, setRequestDetails] = useState({ referenceNumber: "", systemId: "" });
+  const [requestDetails, setRequestDetails] = useState({
+    referenceNumber: "",
+    systemId: "",
+  });
 
-  const validateAndSubmit : () => Promise<boolean> = async () => {
+  const validateAndSubmit: () => Promise<boolean> = async () => {
     const result = completeCertificateFormSchema.safeParse(formData);
     if (result.success) {
       const files = new FormData();
@@ -82,19 +83,20 @@ export default function CertificateRequestWizard() {
       photoIdArray.forEach((file, index) => {
         files.append(`photoId[${index}]`, file);
       });
-      const photoHoldingIdArray = result.data.proofOfIdentity.photoHoldingId as File[];
+      const photoHoldingIdArray = result.data.proofOfIdentity
+        .photoHoldingId as File[];
       photoHoldingIdArray.forEach((file, index) => {
         files.append(`photoHoldingId[${index}]`, file);
       });
 
-      const data : CompleteCertificateFormInputWithoutFiles = {
+      const data: CompleteCertificateFormInputWithoutFiles = {
         personalInfo: result.data.personalInfo,
         address: result.data.address,
         certificate: result.data.certificate,
         proofOfIdentity: {
           signature: result.data.proofOfIdentity.signature,
         },
-      };      
+      };
 
       let success = true;
       try {
@@ -115,7 +117,7 @@ export default function CertificateRequestWizard() {
           });
           success = false;
         }
-        
+
         if (res?.success) {
           toast({
             title: "Success",
@@ -148,11 +150,16 @@ export default function CertificateRequestWizard() {
     }
   };
 
-  const resetFormData = () => { 
+  const resetFormData = () => {
     setFormData(initialFormData);
   };
 
-  const handleChange = (section: string, field: string, value: string | File[] | null, reset: boolean = false) => {
+  const handleChange = (
+    section: string,
+    field: string,
+    value: string | File[] | null,
+    reset: boolean = false,
+  ) => {
     setFormData((prevData) => ({
       ...prevData,
       [section]: reset
@@ -168,7 +175,16 @@ export default function CertificateRequestWizard() {
     <div className="flex w-full flex-col gap-4">
       <Stepper initialStep={0} steps={steps} variant="circle-alt">
         {steps.map((stepProps, index) => {
-          if(index === 0) {
+          if (index === 0) {
+            return (
+              <Step key={stepProps.label} {...stepProps}>
+                <CertificateForm
+                  data={formData.certificate}
+                  onChange={handleChange}
+                />
+              </Step>
+            );
+          } else if (index === 1) {
             return (
               <Step key={stepProps.label} {...stepProps}>
                 <PersonalInfoForm
@@ -177,24 +193,10 @@ export default function CertificateRequestWizard() {
                 />
               </Step>
             );
-          }
-          else if(index === 1) {
+          } else if (index === 2) {
             return (
               <Step key={stepProps.label} {...stepProps}>
-                <AddressForm 
-                  data={formData.address}
-                  onChange={handleChange}
-                />
-              </Step>
-            );
-          }
-          else if(index === 2) {
-            return (
-              <Step key={stepProps.label} {...stepProps}>
-                <CertificateForm 
-                  data={formData.certificate}
-                  onChange={handleChange}
-                />
+                <AddressForm data={formData.address} onChange={handleChange} />
               </Step>
             );
           }
@@ -244,23 +246,34 @@ function Footer({ details, resetFormData }: FooterProps) {
         </h2>
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm font-medium text-gray-500">REFERENCE NUMBER</p>
+            <p className="text-sm font-medium text-gray-500">
+              REFERENCE NUMBER
+            </p>
             <p className="text-lg font-bold">{details.referenceNumber}</p>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-500">BAHAY TORO SYSTEM ID</p>
+            <p className="text-sm font-medium text-gray-500">
+              BAHAY TORO SYSTEM ID
+            </p>
             <p className="text-lg font-bold">{details.systemId}</p>
           </div>
         </div>
         <p className="mb-4 text-sm text-gray-600">
-          We will get in touch with you using the details you have provided. Thank you.
+          We will get in touch with you using the details you have provided.
+          Thank you.
         </p>
         <div className="text-sm text-gray-500">
-          <Link href="/dashboard/certificates" className="text-green-primary hover:underline">
+          <Link
+            href="/dashboard/certificates"
+            className="text-green-primary hover:underline"
+          >
             View all certificates
           </Link>
           <span className="mx-2">·</span>
-          <button onClick={resetMultiForm} className="text-green-primary hover:underline">
+          <button
+            onClick={resetMultiForm}
+            className="text-green-primary hover:underline"
+          >
             New request for different resident
           </button>
         </div>
