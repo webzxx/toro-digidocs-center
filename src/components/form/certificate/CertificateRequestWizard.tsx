@@ -13,11 +13,12 @@ import { useState } from "react";
 import CertificateForm from "./CertificateForm";
 import ProofOfIdentityForm from "./ProofOfIdentityForm";
 import {
+  certificateSchema,
   CompleteCertificateFormInputWithoutFiles,
   completeCertificateFormSchema,
 } from "@/types/forms";
 import { scrollToForm } from "./StepperFormActions";
-import { createCertificateRequest } from "@/actions/certificate-request";
+import { createCertificateRequest, createCertificateRequestWithResident } from "@/actions/certificate-request";
 import { useToast } from "@/components/ui/use-toast";
 
 const steps = [
@@ -67,7 +68,11 @@ const initialFormData = {
   },
 };
 
-export default function CertificateRequestWizard() {
+export default function CertificateRequestWizard({
+  hasResident,
+}: {
+  hasResident: boolean;
+}) {
   const { toast } = useToast();
   const [formData, setFormData] = useState(initialFormData);
   const [requestDetails, setRequestDetails] = useState({
@@ -75,77 +80,133 @@ export default function CertificateRequestWizard() {
     systemId: "",
   });
 
-  const validateAndSubmit : () => Promise<boolean> = async () => {
-    const result = completeCertificateFormSchema.safeParse(formData);
-    if (result.success) {
-      const files = new FormData();
-      const photoIdArray = result.data.proofOfIdentity.photoId as File[];
-      photoIdArray.forEach((file, index) => {
-        files.append(`photoId[${index}]`, file);
-      });
-      const photoHoldingIdArray = result.data.proofOfIdentity.photoHoldingId as File[];
-      photoHoldingIdArray.forEach((file, index) => {
-        files.append(`photoHoldingId[${index}]`, file);
-      });
+  const validateAndSubmit: () => Promise<boolean> = async () => {
+    if (!hasResident) {
+      const result = completeCertificateFormSchema.safeParse(formData);
+      if (result.success) {
+        const files = new FormData();
+        const photoIdArray = result.data.proofOfIdentity.photoId as File[];
+        photoIdArray.forEach((file, index) => {
+          files.append(`photoId[${index}]`, file);
+        });
+        const photoHoldingIdArray = result.data.proofOfIdentity.photoHoldingId as File[];
+        photoHoldingIdArray.forEach((file, index) => {
+          files.append(`photoHoldingId[${index}]`, file);
+        });
 
-      const data : CompleteCertificateFormInputWithoutFiles = {
-        personalInfo: result.data.personalInfo,
-        address: result.data.address,
-        certificate: result.data.certificate,
-        proofOfIdentity: {
-          signature: result.data.proofOfIdentity.signature,
-        },
-      };      
+        const data : CompleteCertificateFormInputWithoutFiles = {
+          personalInfo: result.data.personalInfo,
+          address: result.data.address,
+          certificate: result.data.certificate,
+          proofOfIdentity: {
+            signature: result.data.proofOfIdentity.signature,
+          },
+        };      
 
-      let success = true;
-      try {
-        const res = await createCertificateRequest(data, files);
-        if (res?.fieldErrors) {
-          toast({
-            title: "Error",
-            description: "Certificate form is invalid.",
-            variant: "destructive",
-          });
-          success = false;
-        }
-        if (res?.serverError) {
-          toast({
-            title: "Error",
-            description: res.serverError || "Oops! Something went wrong!",
-            variant: "destructive",
-          });
-          success = false;
-        }
+        let success = true;
+        try {
+          const res = await createCertificateRequestWithResident(data, files);
+          if (res?.fieldErrors) {
+            toast({
+              title: "Error",
+              description: "Certificate form is invalid.",
+              variant: "destructive",
+            });
+            success = false;
+          }
+          if (res?.serverError) {
+            toast({
+              title: "Error",
+              description: res.serverError || "Oops! Something went wrong!",
+              variant: "destructive",
+            });
+            success = false;
+          }
         
-        if (res?.success) {
-          toast({
-            title: "Success",
-            description: "Certificate has been created successfully!",
-            variant: "default",
-          });
+          if (res?.success) {
+            toast({
+              title: "Success",
+              description: "Certificate has been created successfully!",
+              variant: "default",
+            });
 
-          setRequestDetails({
-            referenceNumber: res?.data.referenceNumber || "ERROR",
-            systemId: res?.data.bahayToroSystemId || "ERROR",
+            setRequestDetails({
+              referenceNumber: res?.data.referenceNumber || "ERROR",
+              systemId: res?.data.bahayToroSystemId || "ERROR",
+            });
+          }
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "An unexpected error occurred.",
+            variant: "destructive",
           });
+          success = false;
         }
-      } catch (error) {
+        return success;
+      } else {
+        console.error("Invalid form data", result.error.errors);
         toast({
           title: "Error",
-          description: "An unexpected error occurred.",
+          description: "Certificate form is invalid.",
           variant: "destructive",
         });
-        success = false;
+        return false;
       }
-      return success;
-    } else {
-      console.error("Invalid form data", result.error.errors);
-      toast({
-        title: "Error",
-        description: "Certificate form is invalid.",
-        variant: "destructive",
-      });
-      return false;
+    }
+    else{
+      const result = certificateSchema.safeParse(formData.certificate);
+      if (result.success) {
+        let success = true;
+        try {
+          const res = await createCertificateRequest(result.data);
+          if (res?.fieldErrors) {
+            toast({
+              title: "Error",
+              description: "Certificate form is invalid.",
+              variant: "destructive",
+            });
+            success = false;
+          }
+          if (res?.serverError) {
+            toast({
+              title: "Error",
+              description: res.serverError || "Oops! Something went wrong!",
+              variant: "destructive",
+            });
+            success = false;
+          }
+        
+          if (res?.success) {
+            toast({
+              title: "Success",
+              description: "Certificate has been created successfully!",
+              variant: "default",
+            });
+
+            setRequestDetails({
+              referenceNumber: res?.data.referenceNumber || "ERROR",
+              systemId: res?.data.bahayToroSystemId || "ERROR",
+            });
+          }
+        } catch (error) {
+          toast({
+            title: "Error",
+            description: "An unexpected error occurred.",
+            variant: "destructive",
+          });
+          success = false;
+        }
+        return success;
+      } else {
+        console.error("Invalid form data", result.error.errors);
+        toast({
+          title: "Error",
+          description: "Certificate form is invalid.",
+          variant: "destructive",
+        });
+        return false;
+      }
     }
   };
 
@@ -179,7 +240,9 @@ export default function CertificateRequestWizard() {
               <Step key={stepProps.label} {...stepProps}>
                 <CertificateForm
                   data={formData.certificate}
+                  hasResident
                   onChange={handleChange}
+                  validateAndSubmit={validateAndSubmit}
                 />
               </Step>
             );
@@ -273,7 +336,7 @@ function Footer({ details, resetFormData }: FooterProps) {
             onClick={resetMultiForm}
             className="text-green-primary hover:underline"
           >
-            New request for different resident
+            New request certificate
           </button>
         </div>
       </CardContent>

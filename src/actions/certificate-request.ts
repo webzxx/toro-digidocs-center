@@ -3,6 +3,8 @@
 import {
   completeCertificateFormSchema,
   CompleteCertificateFormInputWithoutFiles,
+  CertificateInput,
+  certificateSchema,
 } from "@/types/forms";
 import { db } from "@/lib/db";
 import { UTApi } from "uploadthing/server";
@@ -12,7 +14,8 @@ import { UploadFileResult } from "uploadthing/types";
 function generateFile(file: File, prefix: string, email?: string): File {
   const emailPrefix = email ? `${email.split("@")[0]}-` : "";
   const now = new Date();
-  const dateStr = now.getFullYear().toString() +
+  const dateStr =
+    now.getFullYear().toString() +
     (now.getMonth() + 1).toString().padStart(2, "0") +
     now.getDate().toString().padStart(2, "0") +
     now.getHours().toString().padStart(2, "0") +
@@ -22,11 +25,66 @@ function generateFile(file: File, prefix: string, email?: string): File {
   return new File([file], fileName, { type: file.type });
 }
 
-export async function createCertificateRequest(
+export async function createCertificateRequest(value: CertificateInput) {
+  try {
+    const session = await getSession();
+    if (!session?.user) {
+      return {
+        serverError: "Unauthorized",
+      };
+    }
+    const validatedData = await certificateSchema.safeParseAsync(value);
+
+    if (!validatedData.success) {
+      const err = validatedData.error.flatten();
+      return { fieldErrors: err.fieldErrors };
+    }
+    const userId = parseInt(session.user?.id as unknown as string);
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: { resident: true },
+    });
+    if (!user?.resident) {
+      return {
+        serverError: "No resident",
+      };
+    }
+    const { certificateType, purpose, ...restOfCertificateInfo } =
+      validatedData.data;
+    const certificateRequest = await db.certificateRequest.create({
+      data: {
+        residentId: user.resident.id,
+        certificateType: certificateType,
+        purpose: purpose,
+        additionalInfo: {
+          ...restOfCertificateInfo,
+        },
+      },
+    });
+
+    console.log(
+      `CertificateRequest created with ID: ${certificateRequest.id} for resident ID: ${user.resident.id}`,
+    );
+    return {
+      success: true,
+      data: {
+        bahayToroSystemId: user.resident.bahayToroSystemId,
+        referenceNumber: certificateRequest.referenceNumber,
+      },
+    };
+  } catch (error) {
+    console.error("Error creating certificate:", error);
+    return {
+      serverError: "Unable to process request",
+    };
+  }
+}
+
+export async function createCertificateRequestWithResident(
   values: CompleteCertificateFormInputWithoutFiles,
   files: FormData,
 ) {
-  let uploadedFiles : UploadFileResult[] = [];
+  let uploadedFiles: UploadFileResult[] = [];
   const utApi = new UTApi();
   const cleanupFiles = async () => {
     for (const file of uploadedFiles) {
@@ -81,25 +139,39 @@ export async function createCertificateRequest(
       proofOfIdentity.signature.split(",")[1],
       "base64",
     );
-    
+
     // Use session user's email if personalInfo.email is null or undefined
     // Convert to undefined if null to match the expected type for generateFile
     const emailForFiles = personalInfo.email || session.user.email || undefined;
-    
+
     const signatureFile = generateFile(
       new File([signatureBuffer], "signpadimg.png", { type: "image/png" }),
       "signature",
       emailForFiles,
     );
-    const [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature] = 
+    const [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature] =
       await utApi.uploadFiles([
         generateFile(proofOfIdentity.photoId[0], "id1", emailForFiles),
         generateFile(proofOfIdentity.photoId[1], "id2", emailForFiles),
-        generateFile(proofOfIdentity.photoHoldingId[0], "holding1", emailForFiles),
-        generateFile(proofOfIdentity.photoHoldingId[1], "holding2", emailForFiles),
+        generateFile(
+          proofOfIdentity.photoHoldingId[0],
+          "holding1",
+          emailForFiles,
+        ),
+        generateFile(
+          proofOfIdentity.photoHoldingId[1],
+          "holding2",
+          emailForFiles,
+        ),
         generateFile(signatureFile, "signature", emailForFiles),
       ]);
-    uploadedFiles = [idPhoto1, idPhoto2, holdingIdPhoto1, holdingIdPhoto2, signature];
+    uploadedFiles = [
+      idPhoto1,
+      idPhoto2,
+      holdingIdPhoto1,
+      holdingIdPhoto2,
+      signature,
+    ];
 
     if (
       !idPhoto1.data ||
@@ -169,7 +241,8 @@ export async function createCertificateRequest(
       console.log(`ProofOfIdentity created for resident ID: ${resident.id}`);
 
       // Create CertificateRequest
-      const { certificateType, purpose, ...restOfCertificateInfo } = certificate;
+      const { certificateType, purpose, ...restOfCertificateInfo } =
+        certificate;
 
       const certificateRequest = await prisma.certificateRequest.create({
         data: {

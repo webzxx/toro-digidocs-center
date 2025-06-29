@@ -15,7 +15,7 @@ model User {
   role                UserRole             @default(USER)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
-  residents           Resident[]
+  resident            Resident?            
   appointments        Appointment[]
 }
 
@@ -35,7 +35,7 @@ model Resident {
   sector              Sector?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
-  userId              Int
+  userId              Int                  @unique
   address             Address?
   certificateRequests CertificateRequest[] @relation("UserRequests")
   emergencyContact    EmergencyContact?

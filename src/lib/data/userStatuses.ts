@@ -8,23 +8,18 @@ export async function getUserCertificateStatuses(userId: number) {
     const user = await db.user.findUnique({
       where: { id: userId },
       include: {
-        residents: true,
+        resident: true,
       },
     });
 
-    if (!user || user.residents.length === 0) {
+    if (!user || !user.resident) {
       return { success: false, message: "No resident profiles found for this user" };
     }
-
-    // Get resident IDs from the user
-    const residentIds = user.residents.map((resident) => resident.id);
 
     // Get all certificate requests for these residents
     const certificates = await db.certificateRequest.findMany({
       where: {
-        residentId: {
-          in: residentIds,
-        },
+        residentId: user.resident.id,
       },
       include: {
         resident: {
