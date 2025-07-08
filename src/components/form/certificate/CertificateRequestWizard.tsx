@@ -240,7 +240,7 @@ export default function CertificateRequestWizard({
               <Step key={stepProps.label} {...stepProps}>
                 <CertificateForm
                   data={formData.certificate}
-                  hasResident
+                  hasResident={hasResident}
                   onChange={handleChange}
                   validateAndSubmit={validateAndSubmit}
                 />

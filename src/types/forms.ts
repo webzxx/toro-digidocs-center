@@ -95,7 +95,7 @@ const certificateSchema = z
   .and(
     z.discriminatedUnion("certificateType", [
       z.object({
-        certificateType: z.enum(["BARANGAY_CLEARANCE", "BARANGAY_ID"]),
+        certificateType: z.enum(["CEDULA", "BARANGAY_CLEARANCE", "BARANGAY_ID"]),
       }),
       z.object({
         certificateType: z.literal("GOOD_MORAL"),

@@ -9,7 +9,6 @@ async function Services({ user }: WithAuthProps) {
     where: { id: userId },
     include: { resident: true },
   });
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-0">
       <section

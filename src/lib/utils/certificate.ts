@@ -3,17 +3,18 @@ import { CertificateType } from "@prisma/client";
 
 export const getCertificateTypeLabel = (type: CertificateType): string => {
   const labels: Record<CertificateType, string> = {
-    BARANGAY_CLEARANCE: "Barangay Clearance",
-    BARANGAY_ID: "Barangay ID",
-    SOLO_PARENT: "Solo Parent",
-    COHABITATION: "Cohabitation",
-    GOOD_MORAL: "Good Moral",
-    NO_INCOME: "No Income",
-    FIRST_TIME_JOB_SEEKER: "First Time Job Seeker",
-    RESIDENCY: "Residency",
-    TRANSFER_OF_RESIDENCY: "Transfer of Residency",
-    LIVING_STILL: "Living Still",
-    BIRTH_FACT: "Birth Fact",
+    CEDULA: "📃 Cedula",
+    BARANGAY_CLEARANCE: "📃 Barangay Clearance",
+    BARANGAY_ID: "📃 Barangay ID",
+    SOLO_PARENT: "📃 Solo Parent",
+    COHABITATION: "📃 Cohabitation",
+    GOOD_MORAL: "📃 Good Moral",
+    NO_INCOME: "📃 No Income",
+    FIRST_TIME_JOB_SEEKER: "📃 First Time Job Seeker",
+    RESIDENCY: "📃 Residency",
+    TRANSFER_OF_RESIDENCY: "📃 Transfer of Residency",
+    LIVING_STILL: "📃 Living Still",
+    BIRTH_FACT: "📃 Birth Fact",
   };
   return labels[type];
 };
@@ -22,6 +23,7 @@ export const getRequiredFields = (certificateType: CertificateType): string[] =>
   const baseFields = ["purpose"];
   
   const fieldMap: Record<CertificateType, string[]> = {
+    CEDULA: [],
     BARANGAY_CLEARANCE: [],
     BARANGAY_ID: [],
     SOLO_PARENT: ["childName", "soloParentSince", "presentedBy", "registryNo", "requestOf"],
