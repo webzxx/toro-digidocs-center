@@ -179,6 +179,7 @@ enum ResidencyType {
 }
 
 enum CertificateType {
+  CEDULA
   BARANGAY_CLEARANCE
   BARANGAY_ID
   SOLO_PARENT
